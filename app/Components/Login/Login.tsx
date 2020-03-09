@@ -2,7 +2,6 @@ import React from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 
 interface ILoginProps {
-    name: string;
     signIn: () => Promise<void>;
 }
 
@@ -14,7 +13,7 @@ export default class Login extends React.Component<ILoginProps> {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.header}>Sign In With Google {this.props.name}</Text>
+        <Text style={styles.header}>Sign In With Google</Text>
         <Button title="Sign in with Google" onPress={() => this.props.signIn()} />
       </View>
     );
