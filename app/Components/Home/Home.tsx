@@ -1,11 +1,21 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Button,
+  TouchableOpacity
+} from "react-native";
 import "firebase/firestore";
+import { ParamListBase } from "@react-navigation/native";
 
 import { User } from "../../Models/User";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 interface IHomeProps {
   user: User;
+  navigation: StackNavigationProp<ParamListBase>;
 }
 
 interface IHomeState {}
@@ -13,6 +23,26 @@ interface IHomeState {}
 export default class Home extends React.Component<IHomeProps, IHomeState> {
   constructor(props) {
     super(props);
+    console.log("in Home");
+  }
+
+  componentDidMount() {
+    console.log("navigation = " + typeof this.props.navigation);
+    this.props.navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() =>
+            this.props.navigation.navigate("Profile", { name: "Arthur" })
+          }
+          style={{
+            backgroundColor: "transparent",
+            paddingRight: 15
+          }}
+        >
+          <ProfileImage />
+        </TouchableOpacity>
+      )
+    });
   }
 
   render() {
@@ -24,6 +54,15 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       </View>
     );
   }
+}
+
+function ProfileImage() {
+  return (
+    <Image
+      style={{ width: 25, height: 25 }}
+      source={require("../../../assets/profilePicture.png")}
+    />
+  );
 }
 
 const styles = StyleSheet.create({

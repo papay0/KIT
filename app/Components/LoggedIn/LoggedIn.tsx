@@ -5,14 +5,17 @@ import "firebase/firestore";
 
 import { User } from "../../Models/User";
 import Home from "../Home/Home";
+import { ParamListBase } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 interface ILoggedInProps {
   userUuid: string;
   signOut: () => Promise<void>;
+  navigation: StackNavigationProp<ParamListBase>;
 }
 
 interface ILoggedInState {
-  user: User;
+  user: User | undefined;
 }
 
 export default class LoggedIn extends React.Component<
@@ -53,7 +56,7 @@ export default class LoggedIn extends React.Component<
     const user = this.state && this.state.user;
     return (
       <View style={styles.container}>
-        {user && <Home user={user} />}
+        {user && <Home user={user} navigation={this.props.navigation} />}
         <Button title="Sign Out" onPress={() => this.props.signOut()} />
       </View>
     );

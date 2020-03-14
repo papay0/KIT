@@ -7,6 +7,8 @@ import * as Localization from "expo-localization";
 import ApiKeys from "../../Constants/ApiKeys";
 import LoggedIn from "../LoggedIn/LoggedIn";
 import Login from "../Login/Login";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { ParamListBase } from "@react-navigation/native";
 
 interface IConfigGoogleAuth {
   androidClientId: string;
@@ -14,7 +16,11 @@ interface IConfigGoogleAuth {
   scopes: string[];
 }
 
-export default class Root extends React.Component {
+interface IRootProps {
+    navigation: StackNavigationProp<ParamListBase>;
+  }
+
+export default class Root extends React.Component<IRootProps> {
   constructor(props) {
     super(props);
   }
@@ -79,7 +85,7 @@ export default class Root extends React.Component {
     return (
       <View style={styles.container}>
         {currentUser ? (
-          <LoggedIn userUuid={currentUser.uid} signOut={this.signOut} />
+          <LoggedIn userUuid={currentUser.uid} signOut={this.signOut} navigation={this.props.navigation} />
         ) : (
           <Login signIn={this.signIn} />
         )}
