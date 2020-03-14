@@ -43,7 +43,8 @@ export default class LoggedIn extends React.Component<
         data.photoUrl,
         data.userUuid,
         data.firstname,
-        data.lastname
+        data.lastname,
+        data.timezone
       );
       this.setState({ user });
     }
