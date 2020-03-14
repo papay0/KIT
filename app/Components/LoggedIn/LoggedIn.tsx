@@ -4,6 +4,7 @@ import * as firebase from "firebase";
 import "firebase/firestore";
 
 import { User } from "../../Models/User";
+import Home from "../Home/Home";
 
 interface ILoggedInProps {
   userUuid: string;
@@ -21,8 +22,6 @@ export default class LoggedIn extends React.Component<
   constructor(props) {
     super(props);
   }
-
-  state = { user: null };
 
   componentDidMount = async () => {
     await this.getUserByUuid(this.props.userUuid);
@@ -51,17 +50,10 @@ export default class LoggedIn extends React.Component<
   };
 
   render() {
-    const user = this.state.user;
+    const user = this.state && this.state.user;
     return (
       <View style={styles.container}>
-        {user ? (
-          <View>
-            <Text style={styles.header}>Welcome: {user.firstname}</Text>
-            <Image style={styles.image} source={{ uri: user.photoUrl }} />
-          </View>
-        ) : (
-          <View />
-        )}
+        {user && <Home user={user} />}
         <Button title="Sign Out" onPress={() => this.props.signOut()} />
       </View>
     );
