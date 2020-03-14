@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import * as Localization from "expo-localization";
 
 import ApiKeys from "./App/Constants/ApiKeys";
 import * as firebase from "firebase";
@@ -50,7 +51,8 @@ export default class App extends React.Component {
           result.user.photoUrl,
           firebase.auth().currentUser.uid,
           result.user.givenName,
-          result.user.familyName
+          result.user.familyName,
+          Localization.timezone
         );
         this.updateUser(user);
         this.forceUpdate();
