@@ -4,7 +4,6 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { User } from "../../Models/User";
 import Routes from "../Routes/Routes";
-import PillButton from "../PlatformUI/PillButton";
 import FloatingButton from "../FloatingButton/FloatingButton";
 import FriendListItem from "../Friends/FriendsListItem";
 
@@ -26,9 +25,13 @@ export default class SummarySendKit extends React.Component<
   ISummarySendKitProps,
   ISummarySendKitState
 > {
-  constructor(props) {
+  constructor(props: ISummarySendKitProps) {
     super(props);
     this.state = {};
+  }
+
+  onPress = () => {
+    this.props.navigation.navigate(Routes.ROOT, {});
   }
 
   render() {
@@ -44,7 +47,7 @@ export default class SummarySendKit extends React.Component<
           )}
           keyExtractor={user => user.userUuid}
         />
-        <FloatingButton title="Send" onPress={() => {}} isHidden={false} />
+        <FloatingButton title="Send" onPress={this.onPress} isHidden={false} />
       </SafeAreaView>
     );
   }
