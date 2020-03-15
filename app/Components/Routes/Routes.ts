@@ -3,7 +3,8 @@ enum Routes {
   PROFILE = "profile",
   ADD_FRIEND = "add_friend",
   SEND_KIT = "send_kit",
-  TIME_KIT = "time_kit"
+  TIME_KIT = "time_kit",
+  SUMMARY_SEND_KIT = "summary_send_kit"
 }
 
 export default Routes;

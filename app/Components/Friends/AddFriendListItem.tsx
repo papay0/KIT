@@ -4,30 +4,29 @@ import moment from "moment-timezone";
 
 import { User } from "../../Models/User";
 
-interface IFriendListItemProps {
+interface IAddFriendListItemProps {
   user: User;
   currentFriendsUuid: string[];
-  addFriend: (userUuid: string) => Promise<void> | undefined;
-  shouldShowAddButton: boolean;
+  onPress: () => void;
 }
 
-interface IFriendListItemState {
+interface IAddFriendListItemState {
   title: string;
   disabled: boolean;
 }
 
-export default class FriendListItem extends React.Component<
-  IFriendListItemProps,
-  IFriendListItemState
+export default class AddFriendListItem extends React.Component<
+IAddFriendListItemProps,
+IAddFriendListItemState
 > {
-  constructor(props: IFriendListItemProps) {
+  constructor(props: IAddFriendListItemProps) {
     super(props);
     const alreadyFriend = props.currentFriendsUuid.includes(
       props.user.userUuid
     );
     this.state = {
       title: alreadyFriend ? "Added" : "Add",
-      disabled: alreadyFriend || props.currentFriendsUuid.length === 0
+      disabled: alreadyFriend
     };
   }
 
@@ -36,7 +35,7 @@ export default class FriendListItem extends React.Component<
       title: "Added",
       disabled: true
     });
-    this.props.addFriend(this.props.user.userUuid);
+    this.props.onPress();
   };
 
   render() {
@@ -49,7 +48,6 @@ export default class FriendListItem extends React.Component<
           <Text style={styles.title}>{user.displayName}</Text>
           <Text style={styles.localTime}>Local time: {localTime}</Text>
         </View>
-        {this.props.shouldShowAddButton && (
           <View style={styles.addButton}>
             <Button
               title={this.state.title}
@@ -57,7 +55,6 @@ export default class FriendListItem extends React.Component<
               onPress={() => this.onPressButton()}
             />
           </View>
-        )}
       </TouchableOpacity>
     );
   }

@@ -51,7 +51,6 @@ export default class TimeKit extends React.Component<
   render() {
     return (
       <View>
-        {/* <Text style={styles.header}>How long are you available?</Text> */}
         <ScrollView
           style={styles.container}
           horizontal={true}

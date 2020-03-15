@@ -7,7 +7,7 @@ import { User } from "../../Models/User";
 import Routes from "../Routes/Routes";
 import * as firebase from "firebase";
 import Collections from "../Collections/Collections";
-import FriendListItem from "./FriendListItem";
+import FriendsListItem from "./FriendsListItem";
 
 interface IFriendsProps {
   user: User;
@@ -94,11 +94,8 @@ export default class Friends extends React.Component<
         <FlatList
           data={this.state.friends}
           renderItem={({ item }) => (
-            <FriendListItem
+            <FriendsListItem
               user={item}
-              shouldShowAddButton={false}
-              addFriend={undefined}
-              currentFriendsUuid={[]}
             />
           )}
           keyExtractor={user => user.userUuid}

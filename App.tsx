@@ -11,6 +11,7 @@ import Routes from "./App/Components/Routes/Routes";
 import AddFriend from "./App/Components/Friends/AddFriend";
 import SendKit from "./App/Components/KIT/SendKit";
 import TimeKit from "./App/Components/KIT/TimeKit";
+import SummarySendKit from "./App/Components/KIT/SummarySendKit";
 
 const Stack = createStackNavigator();
 
@@ -31,6 +32,7 @@ export default class App extends React.Component {
           <Stack.Screen name={Routes.ADD_FRIEND} component={AddFriend} options={{ title: "Add a friend"}}/>
           <Stack.Screen name={Routes.SEND_KIT} component={SendKit} options={{ title: "Select time & friends"}}/>
           <Stack.Screen name={Routes.TIME_KIT} component={TimeKit} options={{ title: "Select your availability"}}/>
+          <Stack.Screen name={Routes.SUMMARY_SEND_KIT} component={SummarySendKit} options={{ title: "Double check..."}}/>
         </Stack.Navigator>
       </NavigationContainer>
     );

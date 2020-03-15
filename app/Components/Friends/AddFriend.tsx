@@ -7,7 +7,7 @@ import { User } from "../../Models/User";
 import * as firebase from "firebase";
 import Collections from "../Collections/Collections";
 import Routes from "../Routes/Routes";
-import FriendListItem from "./FriendListItem";
+import AddFriendListItem from "./AddFriendListItem";
 
 interface IAddFriendProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -78,10 +78,9 @@ export default class AddFriend extends React.Component<
           data={this.state.users}
           renderItem={({ item }) =>
             item.userUuid !== user.userUuid && (
-              <FriendListItem
+              <AddFriendListItem
                 user={item}
-                addFriend={this.addFriend}
-                shouldShowAddButton={true}
+                onPress={() => {this.addFriend(item.userUuid)}}
                 currentFriendsUuid={this.props.route.params.currentFriendsUuid}
               />
             )

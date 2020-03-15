@@ -34,11 +34,19 @@ export default class Root extends React.Component<IRootProps, IRootState> {
     };
   }
 
+  unsubscribe = () => {};
   componentDidMount = async () => {
-    firebase.auth().onAuthStateChanged(user => {
-      this.setState({ currentFirebaseUser: user, currentFirebaseUserLoaded: true });
+    this.unsubscribe = firebase.auth().onAuthStateChanged(user => {
+      this.setState({
+        currentFirebaseUser: user,
+        currentFirebaseUserLoaded: true
+      });
     });
   };
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
 
   updateUser = async (user: User) => {
     // firebase

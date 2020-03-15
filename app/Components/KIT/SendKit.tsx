@@ -73,7 +73,7 @@ export default class SendKit extends React.Component<
     return undefined;
   };
 
-  unsubscribe = () => {}
+  unsubscribe = () => {};
 
   getCurrentFriends = async (userUuid: string) => {
     const db = firebase.firestore();
@@ -93,8 +93,11 @@ export default class SendKit extends React.Component<
       });
   };
 
-  routeToSelectTime = () => {
-    // this.props.navigation.navigate(Routes.TIME_KIT, {});
+  routeToSummarySendKit = () => {
+    this.props.navigation.navigate(Routes.SUMMARY_SEND_KIT, {
+      friends: this.state.selectedFriends,
+      time: this.state.time
+    });
   };
 
   onSelectFriend = (user: User, selected: boolean) => {
@@ -117,8 +120,10 @@ export default class SendKit extends React.Component<
     const friendsNumber = this.state.selectedFriends.length;
     const friendsString = friendsNumber > 1 ? " friends " : " friend ";
     const timeString = this.state.time + " min";
-    const title = "Continue - " + friendsNumber + friendsString + " - " + timeString;
-    const isContinueButtonHidden = this.state.selectedFriends.length === 0 || this.state.time === undefined;
+    const title =
+      "Continue - " + friendsNumber + friendsString + " - " + timeString;
+    const isContinueButtonHidden =
+      this.state.selectedFriends.length === 0 || this.state.time === undefined;
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.timeKit}>
@@ -133,7 +138,7 @@ export default class SendKit extends React.Component<
         />
         <FloatingButton
           title={title}
-          onPress={this.routeToSelectTime}
+          onPress={this.routeToSummarySendKit}
           isHidden={isContinueButtonHidden}
         />
       </SafeAreaView>
