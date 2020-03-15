@@ -21,6 +21,7 @@ type AddFriendNavigatorParams = {
 
 interface IAddFriendState {
   users: User[];
+  currentFriendsUuid: string[];
 }
 
 export default class AddFriend extends React.Component<
@@ -31,9 +32,10 @@ export default class AddFriend extends React.Component<
     super(props);
   }
 
-  state = { users: Array<User>() };
+  state = { users: Array<User>(), currentFriendsUuid: Array<string>() };
 
   componentDidMount = async () => {
+    await this.getCurrentFriendsUuid(this.props.route.params.user.userUuid);
     await this.getUsers();
   };
 
@@ -56,6 +58,22 @@ export default class AddFriend extends React.Component<
     this.setState({ users });
   };
 
+  getCurrentFriendsUuid = async (userUuid: string) => {
+    const db = firebase.firestore();
+    const document = await db
+      .collection(Collections.FRIENDS)
+      .doc(userUuid)
+      .get();
+    const currentFriendsUuid = Array<string>();
+    if (document.exists) {
+      const data = document.data();
+      for (const userUuid of data.friendsUuid) {
+        currentFriendsUuid.push(userUuid);
+      }
+    }
+    this.setState({ currentFriendsUuid });
+  };
+
   addFriend = async (friendUuid: string) => {
     const db = firebase.firestore();
     console.log("route user = " + this.props.route.params.user.userUuid);
@@ -76,7 +94,11 @@ export default class AddFriend extends React.Component<
           data={this.state.users}
           renderItem={({ item }) =>
             item.userUuid !== user.userUuid && (
-              <FriendListItem user={item} addFriend={this.addFriend} />
+              <FriendListItem
+                user={item}
+                addFriend={this.addFriend}
+                currentFriendsUuid={this.state.currentFriendsUuid}
+              />
             )
           }
           keyExtractor={user => user.userUuid}
@@ -88,6 +110,7 @@ export default class AddFriend extends React.Component<
 
 interface IFriendListItemProps {
   user: User;
+  currentFriendsUuid: string[];
   addFriend: (userUuid: string) => Promise<void>;
 }
 
@@ -100,6 +123,17 @@ class FriendListItem extends React.Component<
   IFriendListItemProps,
   IFriendListItemState
 > {
+  constructor(props: IFriendListItemProps) {
+    super(props);
+    const alreadyFriend = props.currentFriendsUuid.includes(
+      props.user.userUuid
+    );
+    this.state = {
+      title: alreadyFriend ? "Added" : "Add",
+      disabled: alreadyFriend
+    };
+  }
+
   onPressButton = () => {
     this.setState({
       title: "Added",
@@ -108,7 +142,7 @@ class FriendListItem extends React.Component<
     this.props.addFriend(this.props.user.userUuid);
   };
 
-  state = { title: "Add", disabled: false };
+  //   state = { title: "Add", disabled: false };
 
   render() {
     const user = this.props.user;
