@@ -24,7 +24,7 @@ export default class Friends extends React.Component<
 > {
   constructor(props) {
     super(props);
-    this.state = {friends: []};
+    this.state = { friends: [] };
   }
 
   componentDidMount = async () => {
@@ -57,16 +57,17 @@ export default class Friends extends React.Component<
     const document = await db
       .collection(Collections.FRIENDS)
       .doc(userUuid)
-      .get();
-    const friends = Array<User>();
-    if (document.exists) {
-      const data = document.data();
-      for (const userUuid of data.friendsUuid) {
-        const friend = await this.getUserByUuid(userUuid);
-        friends.push(friend);
-      }
-    }
-    this.setState({ friends });
+      .onSnapshot(async document => {
+        const friends = Array<User>();
+        if (document.exists) {
+          const data = document.data();
+          for (const userUuid of data.friendsUuid) {
+            const friend = await this.getUserByUuid(userUuid);
+            friends.push(friend);
+          }
+        }
+        this.setState({ friends });
+      });
   };
 
   render() {
@@ -78,20 +79,22 @@ export default class Friends extends React.Component<
           onPress={() =>
             this.props.navigation.navigate(Routes.ADD_FRIEND, {
               user: this.props.user,
-              currentFriendsUuid: this.state.friends.map(friend => friend.userUuid)
+              currentFriendsUuid: this.state.friends.map(
+                friend => friend.userUuid
+              )
             })
           }
         />
         <FlatList
           data={this.state.friends}
-          renderItem={({ item }) =>
-              <FriendListItem
-                user={item}
-                shouldShowAddButton={false}
-                addFriend={undefined}
-                currentFriendsUuid={[]}
-              />
-          }
+          renderItem={({ item }) => (
+            <FriendListItem
+              user={item}
+              shouldShowAddButton={false}
+              addFriend={undefined}
+              currentFriendsUuid={[]}
+            />
+          )}
           keyExtractor={user => user.userUuid}
         />
       </View>
@@ -101,7 +104,7 @@ export default class Friends extends React.Component<
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
     // backgroundColor: "#fff",
     // alignItems: "center",
     // justifyContent: "center"
