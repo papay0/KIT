@@ -6,6 +6,7 @@ import { ParamListBase, RouteProp } from "@react-navigation/native";
 import * as firebase from "firebase";
 import { User } from "../../Models/User";
 import Routes from "../Routes/Routes";
+import MyProfile from "./MyProfile";
 
 type ProfileNavigatorParams = {
   [Routes.PROFILE]: {
@@ -29,10 +30,12 @@ export default class Profile extends React.Component<IProfileProps> {
   };
 
   render() {
+    const user = this.props.route.params.user;
     return (
       <SafeAreaView style={styles.container}>
+        <MyProfile user={user}/>
         <Friends
-          user={this.props.route.params.user}
+          user={user}
           navigation={this.props.navigation}
         />
         <Button title="Sign Out" onPress={() => this.signOut()} />
