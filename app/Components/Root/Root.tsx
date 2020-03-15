@@ -17,13 +17,24 @@ interface IConfigGoogleAuth {
 }
 
 interface IRootProps {
-    navigation: StackNavigationProp<ParamListBase>;
-  }
+  navigation: StackNavigationProp<ParamListBase>;
+}
 
-export default class Root extends React.Component<IRootProps> {
+interface IRootState {
+  currentFirebaseUser: firebase.User | undefined;
+}
+
+export default class Root extends React.Component<IRootProps, IRootState> {
   constructor(props) {
     super(props);
+    this.state = { currentFirebaseUser: undefined };
   }
+
+  componentDidMount = async () => {
+    firebase.auth().onAuthStateChanged(user => {
+      this.setState({ currentFirebaseUser: user });
+    });
+  };
 
   updateUser = async (user: User) => {
     // firebase
@@ -80,12 +91,15 @@ export default class Root extends React.Component<IRootProps> {
   }
 
   render() {
-    const currentUser = firebase.auth().currentUser;
-    console.log("currentUser = " + JSON.stringify(currentUser));
+    const user = this.state.currentFirebaseUser;
     return (
       <View style={styles.container}>
-        {currentUser ? (
-          <LoggedIn userUuid={currentUser.uid} signOut={this.signOut} navigation={this.props.navigation} />
+        {user ? (
+          <LoggedIn
+            userUuid={user.uid}
+            signOut={this.signOut}
+            navigation={this.props.navigation}
+          />
         ) : (
           <Login signIn={this.signIn} />
         )}

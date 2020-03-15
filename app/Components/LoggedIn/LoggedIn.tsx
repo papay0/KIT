@@ -32,14 +32,12 @@ export default class LoggedIn extends React.Component<
 
   getUserByUuid = async (userUuid: string) => {
     const db = firebase.firestore();
-    console.log("userUuid = " + userUuid);
     const document = await db
       .collection("users")
       .doc(userUuid)
       .get();
     if (document.exists) {
       const data = document.data();
-      console.log("data = " + JSON.stringify(data));
       const user = new User(
         data.displayName,
         data.photoUrl,

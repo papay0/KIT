@@ -27,7 +27,6 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   }
 
   componentDidMount() {
-    console.log("navigation = " + typeof this.props.navigation);
     this.props.navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
