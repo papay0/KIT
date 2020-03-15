@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View, Image, Button } from "react-native";
+import moment from "moment-timezone";
 
 import { User } from "../../Models/User";
 
@@ -40,12 +41,13 @@ export default class FriendListItem extends React.Component<
 
   render() {
     const user = this.props.user;
+    const localTime = moment.tz(new Date(), user.timezone).format("HH:mm");
     return (
       <View style={styles.containerFriendList}>
         <Image source={{ uri: user.photoUrl }} style={styles.image} />
         <View style={styles.container_content}>
-          <Text style={styles.title}>{user.firstname}</Text>
-          <Text style={styles.title}>{user.lastname}</Text>
+          <Text style={styles.title}>{user.displayName}</Text>
+          <Text style={styles.localTime}>Local time: {localTime}</Text>
         </View>
         {this.props.shouldShowAddButton && (
           <View style={styles.addButton}>
@@ -90,7 +92,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     color: "#000",
-    justifyContent: "flex-start"
+    justifyContent: "flex-start",
+    fontWeight: 'bold'
+  },
+  localTime: {
+    fontSize: 14,
   },
   container_content: {
     flex: 1,
