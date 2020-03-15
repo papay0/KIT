@@ -31,6 +31,10 @@ export default class Friends extends React.Component<
     await this.getCurrentFriends(this.props.user.userUuid);
   };
 
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
   getUserByUuid = async (userUuid: string): Promise<User | undefined> => {
     const db = firebase.firestore();
     const document = await db
@@ -52,9 +56,11 @@ export default class Friends extends React.Component<
     return undefined;
   };
 
+  unsubscribe = () => {}
+
   getCurrentFriends = async (userUuid: string) => {
     const db = firebase.firestore();
-    const document = await db
+    this.unsubscribe = await db
       .collection(Collections.FRIENDS)
       .doc(userUuid)
       .onSnapshot(async document => {
@@ -104,8 +110,5 @@ export default class Friends extends React.Component<
 const styles = StyleSheet.create({
   container: {
     flex: 1
-    // backgroundColor: "#fff",
-    // alignItems: "center",
-    // justifyContent: "center"
   }
 });
