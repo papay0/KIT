@@ -15,6 +15,7 @@ import Routes from "../Routes/Routes";
 import Collections from "../Collections/Collections";
 import SelectFriendsListItem from "../Friends/SelectFriendsListItem";
 import FloatingButton from "../FloatingButton/FloatingButton";
+import TimeKit from "./TimeKit";
 
 interface ISendKitProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -30,6 +31,7 @@ type SENDKITNavigatorParams = {
 interface ISendKitState {
   friends: User[];
   selectedFriends: User[];
+  time: number | undefined;
 }
 
 export default class SendKit extends React.Component<
@@ -38,7 +40,7 @@ export default class SendKit extends React.Component<
 > {
   constructor(props) {
     super(props);
-    this.state = { friends: [], selectedFriends: [] };
+    this.state = { friends: [], selectedFriends: [], time: undefined };
   }
 
   componentDidMount = async () => {
@@ -84,9 +86,11 @@ export default class SendKit extends React.Component<
       });
   };
 
-  routeToSelectTime = () => {};
+  routeToSelectTime = () => {
+    // this.props.navigation.navigate(Routes.TIME_KIT, {});
+  };
 
-  onSelect = (user: User, selected: boolean) => {
+  onSelectFriend = (user: User, selected: boolean) => {
     let selectedFriends = this.state.selectedFriends;
     if (selected) {
       selectedFriends.push(user);
@@ -98,20 +102,32 @@ export default class SendKit extends React.Component<
     this.setState({ selectedFriends });
   };
 
+  onSelectTime = (time: number | undefined) => {
+    this.setState({ time });
+  };
+
   render() {
+    const friendsNumber = this.state.selectedFriends.length;
+    const friendsString = friendsNumber > 1 ? " friends " : " friend ";
+    const timeString = this.state.time + " min";
+    const title = "Continue - " + friendsNumber + friendsString + " - " + timeString;
+    const isContinueButtonHidden = this.state.selectedFriends.length === 0 || this.state.time === undefined;
     return (
       <SafeAreaView style={styles.container}>
+        <View style={styles.timeKit}>
+          <TimeKit onSelectTime={this.onSelectTime} />
+        </View>
         <FlatList
           data={this.state.friends}
           renderItem={({ item }) => (
-            <SelectFriendsListItem user={item} onSelect={this.onSelect} />
+            <SelectFriendsListItem user={item} onSelect={this.onSelectFriend} />
           )}
           keyExtractor={user => user.userUuid}
         />
         <FloatingButton
-          title="Continue"
+          title={title}
           onPress={this.routeToSelectTime}
-          isHidden={this.state.selectedFriends.length === 0}
+          isHidden={isContinueButtonHidden}
         />
       </SafeAreaView>
     );
@@ -121,6 +137,9 @@ export default class SendKit extends React.Component<
 const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+  timeKit: {
+    margin: 10
   },
   header: {
     fontSize: 25
