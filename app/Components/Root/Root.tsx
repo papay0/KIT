@@ -22,17 +22,21 @@ interface IRootProps {
 
 interface IRootState {
   currentFirebaseUser: firebase.User | undefined;
+  currentFirebaseUserLoaded: boolean;
 }
 
 export default class Root extends React.Component<IRootProps, IRootState> {
   constructor(props) {
     super(props);
-    this.state = { currentFirebaseUser: undefined };
+    this.state = {
+      currentFirebaseUser: undefined,
+      currentFirebaseUserLoaded: false
+    };
   }
 
   componentDidMount = async () => {
     firebase.auth().onAuthStateChanged(user => {
-      this.setState({ currentFirebaseUser: user });
+      this.setState({ currentFirebaseUser: user, currentFirebaseUserLoaded: true });
     });
   };
 
@@ -92,9 +96,12 @@ export default class Root extends React.Component<IRootProps, IRootState> {
 
   render() {
     const user = this.state.currentFirebaseUser;
+    const currentFirebaseUserLoaded = this.state.currentFirebaseUserLoaded;
     return (
       <View style={styles.container}>
-        {user ? (
+        {!currentFirebaseUserLoaded ? (
+          <Text>Loading...</Text>
+        ) : user ? (
           <LoggedIn
             userUuid={user.uid}
             signOut={this.signOut}
