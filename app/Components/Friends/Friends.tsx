@@ -73,7 +73,6 @@ export default class Friends extends React.Component<
   render() {
     return (
       <View style={styles.container}>
-        <Text>Friends!</Text>
         <Button
           title="Add friend"
           onPress={() =>

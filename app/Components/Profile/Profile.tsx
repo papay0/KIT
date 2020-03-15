@@ -1,16 +1,17 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Button, SafeAreaView } from "react-native";
 import Friends from "../Friends/Friends";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase, RouteProp } from "@react-navigation/native";
+import * as firebase from "firebase";
 import { User } from "../../Models/User";
 import Routes from "../Routes/Routes";
 
 type ProfileNavigatorParams = {
   [Routes.PROFILE]: {
-    user: User
-  }
-}
+    user: User;
+  };
+};
 
 interface IProfileProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -22,12 +23,20 @@ export default class Profile extends React.Component<IProfileProps> {
     super(props);
   }
 
+  signOut = async () => {
+    this.props.navigation.navigate(Routes.ROOT, {});
+    await firebase.auth().signOut();
+  };
+
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Profile of {this.props.route.params.user.firstname}!</Text>
-        <Friends user={this.props.route.params.user} navigation={this.props.navigation}/>
-      </View>
+      <SafeAreaView style={styles.container}>
+        <Friends
+          user={this.props.route.params.user}
+          navigation={this.props.navigation}
+        />
+        <Button title="Sign Out" onPress={() => this.signOut()} />
+      </SafeAreaView>
     );
   }
 }

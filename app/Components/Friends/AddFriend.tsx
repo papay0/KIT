@@ -60,7 +60,6 @@ export default class AddFriend extends React.Component<
 
   addFriend = async (friendUuid: string) => {
     const db = firebase.firestore();
-    console.log("route user = " + this.props.route.params.user.userUuid);
     await db
       .collection(Collections.FRIENDS)
       .doc(this.props.route.params.user.userUuid)

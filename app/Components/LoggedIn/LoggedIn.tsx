@@ -53,30 +53,9 @@ export default class LoggedIn extends React.Component<
   render() {
     const user = this.state && this.state.user;
     return (
-      <View style={styles.container}>
+      <View style={{flex: 1}}>
         {user && <Home user={user} navigation={this.props.navigation} />}
-        <Button title="Sign Out" onPress={() => this.props.signOut()} />
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  header: {
-    fontSize: 25
-  },
-  image: {
-    marginTop: 15,
-    width: 150,
-    height: 150,
-    borderColor: "rgba(0,0,0,0.2)",
-    borderWidth: 3,
-    borderRadius: 150
-  }
-});

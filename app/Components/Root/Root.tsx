@@ -101,7 +101,7 @@ export default class Root extends React.Component<IRootProps, IRootState> {
             navigation={this.props.navigation}
           />
         ) : (
-          <Login signIn={this.signIn} />
+          <Login signIn={this.signIn} navigation={this.props.navigation} />
         )}
       </View>
     );
@@ -111,8 +111,6 @@ export default class Root extends React.Component<IRootProps, IRootState> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
+    backgroundColor: "#fff"
   }
 });

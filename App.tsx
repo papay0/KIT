@@ -24,7 +24,7 @@ export default class App extends React.Component {
     return (
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name={Routes.ROOT} component={Root} options={{ title: "Coucou"}}/>
+          <Stack.Screen name={Routes.ROOT} component={Root} options={{ title: "Coucou", headerShown: true}}/>
           <Stack.Screen name={Routes.PROFILE} component={Profile} options={{ title: "Your profile"}}/>
           <Stack.Screen name={Routes.ADD_FRIEND} component={AddFriend} options={{ title: "Add a friend"}}/>
         </Stack.Navigator>
