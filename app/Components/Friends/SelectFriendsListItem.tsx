@@ -50,10 +50,9 @@ export default class SelectFriendsListItem extends React.Component<
         </View>
 
         <View style={styles.selectCheckbox}>
-          <Button
-            title={this.state.title}
-            onPress={() => this.onPressButton()}
-          />
+          <Text>
+            {this.state.title}
+          </Text>
         </View>
       </TouchableOpacity>
     );

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, Button } from "react-native";
+import { StyleSheet, Text, View, Image, Button, TouchableOpacity } from "react-native";
 import moment from "moment-timezone";
 
 import { User } from "../../Models/User";
@@ -43,7 +43,7 @@ export default class FriendListItem extends React.Component<
     const user = this.props.user;
     const localTime = moment.tz(new Date(), user.timezone).format("HH:mm");
     return (
-      <View style={styles.containerFriendList}>
+      <TouchableOpacity disabled={this.state.disabled} style={styles.containerFriendList} onPress={() => this.onPressButton()}>
         <Image source={{ uri: user.photoUrl }} style={styles.image} />
         <View style={styles.container_content}>
           <Text style={styles.title}>{user.displayName}</Text>
@@ -58,7 +58,7 @@ export default class FriendListItem extends React.Component<
             />
           </View>
         )}
-      </View>
+      </TouchableOpacity>
     );
   }
 }
