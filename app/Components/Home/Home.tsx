@@ -14,6 +14,7 @@ import { ParamListBase } from "@react-navigation/native";
 import { User } from "../../Models/User";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Routes from "../Routes/Routes";
+import FloatingButton from "../FloatingButton/FloatingButton";
 
 interface IHomeProps {
   user: User;
@@ -49,7 +50,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   }
 
   routeToSendKIT = () => {
-    this.props.navigation.navigate(Routes.SEND_KIT, {});
+    this.props.navigation.navigate(Routes.SEND_KIT, {user: this.props.user});
   };
 
   render() {
@@ -59,46 +60,8 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         <View style={styles.contentView}>
           <Image style={styles.image} source={{ uri: user.photoUrl }} />
         </View>
-        <FloatingButton routeToSendKIT={this.routeToSendKIT} />
+        <FloatingButton title="Send a Coucou" onPress={this.routeToSendKIT} isHidden={false}/>
       </SafeAreaView>
-    );
-  }
-}
-
-interface IFloatingButtonProps {
-  routeToSendKIT: () => void;
-}
-
-interface IFloatingButtonState {}
-
-class FloatingButton extends React.Component<
-  IFloatingButtonProps,
-  IFloatingButtonState
-> {
-  render() {
-    return (
-      <View style={styles.floatingButton}>
-        <TouchableOpacity
-          onPress={() => this.props.routeToSendKIT()}
-          style={{
-            backgroundColor: "#007AFF",
-            borderRadius: 24,
-            height: 40,
-            justifyContent: "center"
-          }}
-        >
-          <Text
-            style={{
-              color: "white",
-              textAlign: "center",
-              paddingLeft: 20,
-              paddingRight: 20
-            }}
-          >
-            Send a Coucou
-          </Text>
-        </TouchableOpacity>
-      </View>
     );
   }
 }
@@ -117,7 +80,9 @@ const styles = StyleSheet.create({
     flex: 1
   },
   contentView: {
-    flex: 1
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   floatingButton: {
     justifyContent: "center",
