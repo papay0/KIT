@@ -1,10 +1,19 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, Button, CheckBox } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Button,
+  CheckBox,
+  TouchableOpacity
+} from "react-native";
 
 import { User } from "../../Models/User";
 
 interface ISelectFriendsListItemProps {
   user: User;
+  onSelect: (user: User, selected: boolean) => void;
 }
 
 interface ISelectFriendsListItemState {
@@ -18,10 +27,11 @@ export default class SelectFriendsListItem extends React.Component<
 > {
   constructor(props: ISelectFriendsListItemProps) {
     super(props);
-    this.state = {title: "☑️", selected: false}
+    this.state = { title: "☑️", selected: false };
   }
 
   onPressButton = () => {
+    this.props.onSelect(this.props.user, !this.state.selected);
     this.setState({
       title: this.state.selected ? "☑️" : "✅",
       selected: !this.state.selected
@@ -31,7 +41,7 @@ export default class SelectFriendsListItem extends React.Component<
   render() {
     const user = this.props.user;
     return (
-      <View style={styles.containerFriendList}>
+      <TouchableOpacity style={styles.containerFriendList} onPress={() => this.onPressButton()}>
         <Image source={{ uri: user.photoUrl }} style={styles.image} />
         <View style={styles.container_content}>
           <Text style={styles.title}>{user.firstname}</Text>
@@ -39,12 +49,12 @@ export default class SelectFriendsListItem extends React.Component<
         </View>
 
         <View style={styles.selectCheckbox}>
-            <Button
-              title = {this.state.title}
-              onPress={() => this.onPressButton()}
-            />
+          <Button
+            title={this.state.title}
+            onPress={() => this.onPressButton()}
+          />
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

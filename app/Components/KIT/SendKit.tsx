@@ -29,6 +29,7 @@ type SENDKITNavigatorParams = {
 
 interface ISendKitState {
   friends: User[];
+  selectedFriends: User[];
 }
 
 export default class SendKit extends React.Component<
@@ -37,7 +38,7 @@ export default class SendKit extends React.Component<
 > {
   constructor(props) {
     super(props);
-    this.state = { friends: [] };
+    this.state = { friends: [], selectedFriends: [] };
   }
 
   componentDidMount = async () => {
@@ -85,18 +86,32 @@ export default class SendKit extends React.Component<
 
   routeToSelectTime = () => {};
 
+  onSelect = (user: User, selected: boolean) => {
+    let selectedFriends = this.state.selectedFriends;
+    if (selected) {
+      selectedFriends.push(user);
+    } else {
+      selectedFriends = selectedFriends.filter(
+        friend => friend.userUuid !== user.userUuid
+      );
+    }
+    this.setState({ selectedFriends });
+  };
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
         <FlatList
           data={this.state.friends}
-          renderItem={({ item }) => <SelectFriendsListItem user={item} />}
+          renderItem={({ item }) => (
+            <SelectFriendsListItem user={item} onSelect={this.onSelect} />
+          )}
           keyExtractor={user => user.userUuid}
         />
         <FloatingButton
           title="Continue"
           onPress={this.routeToSelectTime}
-          isHidden={true}
+          isHidden={this.state.selectedFriends.length === 0}
         />
       </SafeAreaView>
     );
