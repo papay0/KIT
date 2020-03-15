@@ -96,7 +96,8 @@ export default class SendKit extends React.Component<
   routeToSummarySendKit = () => {
     this.props.navigation.navigate(Routes.SUMMARY_SEND_KIT, {
       friends: this.state.selectedFriends,
-      time: this.state.time
+      time: this.state.time,
+      user: this.props.route.params.user
     });
   };
 
