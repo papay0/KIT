@@ -12,6 +12,7 @@ import { ParamListBase } from "@react-navigation/native";
 
 import { User } from "../../Models/User";
 import { StackNavigationProp } from "@react-navigation/stack";
+import Routes from "../Routes/Routes";
 
 interface IHomeProps {
   user: User;
@@ -23,7 +24,6 @@ interface IHomeState {}
 export default class Home extends React.Component<IHomeProps, IHomeState> {
   constructor(props) {
     super(props);
-    console.log("in Home");
   }
 
   componentDidMount() {
@@ -31,9 +31,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     this.props.navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
-          onPress={() =>
-            this.props.navigation.navigate("Profile", { name: "Arthur" })
-          }
+          onPress={() => this.props.navigation.navigate(Routes.PROFILE, {user: this.props.user})}
           style={{
             backgroundColor: "transparent",
             paddingRight: 15
