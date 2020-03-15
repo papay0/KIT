@@ -9,6 +9,7 @@ import Root from "./App/Components/Root/Root";
 import Profile from "./App/Components/Profile/Profile";
 import Routes from "./App/Components/Routes/Routes";
 import AddFriend from "./App/Components/Friends/AddFriend";
+import SendKit from "./App/Components/KIT/SendKit";
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,7 @@ export default class App extends React.Component {
           <Stack.Screen name={Routes.ROOT} component={Root} options={{ title: "Coucou", headerShown: true}}/>
           <Stack.Screen name={Routes.PROFILE} component={Profile} options={{ title: "Your profile"}}/>
           <Stack.Screen name={Routes.ADD_FRIEND} component={AddFriend} options={{ title: "Add a friend"}}/>
+          <Stack.Screen name={Routes.SEND_KIT} component={SendKit} options={{ title: "Select friends"}}/>
         </Stack.Navigator>
       </NavigationContainer>
     );

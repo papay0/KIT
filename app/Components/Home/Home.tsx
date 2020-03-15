@@ -48,6 +48,10 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     });
   }
 
+  routeToSendKIT = () => {
+    this.props.navigation.navigate(Routes.SEND_KIT, {});
+  };
+
   render() {
     const user = this.props.user;
     return (
@@ -55,39 +59,48 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         <View style={styles.contentView}>
           <Image style={styles.image} source={{ uri: user.photoUrl }} />
         </View>
-        <FloatingButton />
+        <FloatingButton routeToSendKIT={this.routeToSendKIT} />
       </SafeAreaView>
     );
   }
 }
 
-function FloatingButton(): JSX.Element {
-  return (
-    <View style={styles.floatingButton}>
-      <TouchableOpacity
-        onPress={() => {}
-          // this.props.navigation.navigate("KitStarter", { name: "Arthur" })
-        }
-        style={{
-          backgroundColor: "#007AFF",
-          borderRadius: 24,
-          height: 40,
-          justifyContent: "center"
-        }}
-      >
-        <Text
+interface IFloatingButtonProps {
+  routeToSendKIT: () => void;
+}
+
+interface IFloatingButtonState {}
+
+class FloatingButton extends React.Component<
+  IFloatingButtonProps,
+  IFloatingButtonState
+> {
+  render() {
+    return (
+      <View style={styles.floatingButton}>
+        <TouchableOpacity
+          onPress={() => this.props.routeToSendKIT()}
           style={{
-            color: "white",
-            textAlign: "center",
-            paddingLeft: 20,
-            paddingRight: 20
+            backgroundColor: "#007AFF",
+            borderRadius: 24,
+            height: 40,
+            justifyContent: "center"
           }}
         >
-          Send a Coucou
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
+          <Text
+            style={{
+              color: "white",
+              textAlign: "center",
+              paddingLeft: 20,
+              paddingRight: 20
+            }}
+          >
+            Send a Coucou
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 }
 
 function ProfileImage(): JSX.Element {
