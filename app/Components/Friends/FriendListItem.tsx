@@ -27,7 +27,7 @@ export default class FriendListItem extends React.Component<
     );
     this.state = {
       title: alreadyFriend ? "Added" : "Add",
-      disabled: alreadyFriend
+      disabled: alreadyFriend || props.currentFriendsUuid.length === 0
     };
   }
 
@@ -40,6 +40,7 @@ export default class FriendListItem extends React.Component<
   };
 
   render() {
+    console.log("disabled = " + this.state.disabled);
     const user = this.props.user;
     const localTime = moment.tz(new Date(), user.timezone).format("HH:mm");
     return (
