@@ -5,6 +5,7 @@ interface IUser {
   firstname: string;
   lastname: string;
   timezone: string;
+  email: string;
 }
 
 export class User implements IUser {
@@ -14,13 +15,15 @@ export class User implements IUser {
   firstname: string;
   lastname: string;
   timezone: string;
+  email: string;
   constructor(
     displayName: string,
     photoUrl: string,
     userUuid: string,
     firtname: string,
     lastname: string,
-    timezone: string
+    timezone: string,
+    email: string
   ) {
     this.displayName = displayName;
     this.photoUrl = photoUrl;
@@ -28,5 +31,6 @@ export class User implements IUser {
     this.firstname = firtname;
     this.lastname = lastname;
     this.timezone = timezone;
+    this.email = email;
   }
 }

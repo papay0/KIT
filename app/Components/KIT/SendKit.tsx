@@ -47,6 +47,10 @@ export default class SendKit extends React.Component<
     await this.getCurrentFriends(this.props.route.params.user.userUuid);
   };
 
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
   getUserByUuid = async (userUuid: string): Promise<User | undefined> => {
     const db = firebase.firestore();
     const document = await db
@@ -61,16 +65,19 @@ export default class SendKit extends React.Component<
         data.userUuid,
         data.firstname,
         data.lastname,
-        data.timezone
+        data.timezone,
+        data.email
       );
       return user;
     }
     return undefined;
   };
 
+  unsubscribe = () => {}
+
   getCurrentFriends = async (userUuid: string) => {
     const db = firebase.firestore();
-    const document = await db
+    this.unsubscribe = await db
       .collection(Collections.FRIENDS)
       .doc(userUuid)
       .onSnapshot(async document => {

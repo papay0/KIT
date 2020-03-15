@@ -49,7 +49,8 @@ export default class Friends extends React.Component<
         data.userUuid,
         data.firstname,
         data.lastname,
-        data.timezone
+        data.timezone,
+        data.email,
       );
       return user;
     }

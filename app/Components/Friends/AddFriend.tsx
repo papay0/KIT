@@ -51,7 +51,8 @@ export default class AddFriend extends React.Component<
         userData.userUuid,
         userData.firstname,
         userData.lastname,
-        userData.timezone
+        userData.timezone,
+        userData.email,
       );
       users.push(user);
     }

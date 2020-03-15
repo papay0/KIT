@@ -68,7 +68,6 @@ export default class TimeKit extends React.Component<
                 key={time}
                 title={title}
                 onPress={() => {
-                  console.log("on press");
                   this.onPress(time, !isSelected);
                 }}
               />

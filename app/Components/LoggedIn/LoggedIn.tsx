@@ -44,7 +44,8 @@ export default class LoggedIn extends React.Component<
         data.userUuid,
         data.firstname,
         data.lastname,
-        data.timezone
+        data.timezone,
+        data.email
       );
       this.setState({ user });
     }

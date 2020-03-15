@@ -69,7 +69,8 @@ export default class Root extends React.Component<IRootProps, IRootState> {
           firebase.auth().currentUser.uid,
           result.user.givenName,
           result.user.familyName,
-          Localization.timezone
+          Localization.timezone,
+          result.user.email
         );
         this.updateUser(user);
         this.forceUpdate();
