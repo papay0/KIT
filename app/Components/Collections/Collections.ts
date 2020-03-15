@@ -1,4 +1,5 @@
 enum Collections {
+    USERS = "users",
     FRIENDS = "friends"
 }
 

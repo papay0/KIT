@@ -7,6 +7,7 @@ import { User } from "../../Models/User";
 import * as firebase from "firebase";
 import Collections from "../Collections/Collections";
 import Routes from "../Routes/Routes";
+import FriendListItem from "./FriendListItem";
 
 interface IAddFriendProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -16,12 +17,12 @@ interface IAddFriendProps {
 type AddFriendNavigatorParams = {
   [Routes.ADD_FRIEND]: {
     user: User;
+    currentFriendsUuid: string[];
   };
 };
 
 interface IAddFriendState {
   users: User[];
-  currentFriendsUuid: string[];
 }
 
 export default class AddFriend extends React.Component<
@@ -32,10 +33,9 @@ export default class AddFriend extends React.Component<
     super(props);
   }
 
-  state = { users: Array<User>(), currentFriendsUuid: Array<string>() };
+  state = { users: Array<User>(), currentFriends: Array<string>() };
 
   componentDidMount = async () => {
-    await this.getCurrentFriendsUuid(this.props.route.params.user.userUuid);
     await this.getUsers();
   };
 
@@ -56,22 +56,6 @@ export default class AddFriend extends React.Component<
       users.push(user);
     }
     this.setState({ users });
-  };
-
-  getCurrentFriendsUuid = async (userUuid: string) => {
-    const db = firebase.firestore();
-    const document = await db
-      .collection(Collections.FRIENDS)
-      .doc(userUuid)
-      .get();
-    const currentFriendsUuid = Array<string>();
-    if (document.exists) {
-      const data = document.data();
-      for (const userUuid of data.friendsUuid) {
-        currentFriendsUuid.push(userUuid);
-      }
-    }
-    this.setState({ currentFriendsUuid });
   };
 
   addFriend = async (friendUuid: string) => {
@@ -97,7 +81,8 @@ export default class AddFriend extends React.Component<
               <FriendListItem
                 user={item}
                 addFriend={this.addFriend}
-                currentFriendsUuid={this.state.currentFriendsUuid}
+                shouldShowAddButton={true}
+                currentFriendsUuid={this.props.route.params.currentFriendsUuid}
               />
             )
           }
@@ -108,106 +93,8 @@ export default class AddFriend extends React.Component<
   }
 }
 
-interface IFriendListItemProps {
-  user: User;
-  currentFriendsUuid: string[];
-  addFriend: (userUuid: string) => Promise<void>;
-}
-
-interface IFriendListItemState {
-  title: string;
-  disabled: boolean;
-}
-
-class FriendListItem extends React.Component<
-  IFriendListItemProps,
-  IFriendListItemState
-> {
-  constructor(props: IFriendListItemProps) {
-    super(props);
-    const alreadyFriend = props.currentFriendsUuid.includes(
-      props.user.userUuid
-    );
-    this.state = {
-      title: alreadyFriend ? "Added" : "Add",
-      disabled: alreadyFriend
-    };
-  }
-
-  onPressButton = () => {
-    this.setState({
-      title: "Added",
-      disabled: true
-    });
-    this.props.addFriend(this.props.user.userUuid);
-  };
-
-  //   state = { title: "Add", disabled: false };
-
-  render() {
-    const user = this.props.user;
-    return (
-      <View style={styles.containerFriendList}>
-        <Image source={{ uri: user.photoUrl }} style={styles.image} />
-        <View style={styles.container_content}>
-          <Text style={styles.title}>{user.firstname}</Text>
-          <Text style={styles.title}>{user.lastname}</Text>
-        </View>
-        <View style={styles.addButton}>
-          <Button
-            title={this.state.title}
-            disabled={this.state.disabled}
-            onPress={() => this.onPressButton()}
-          />
-        </View>
-      </View>
-    );
-  }
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1
-  },
-  addButton: {
-    justifyContent: "center"
-  },
-  image: {
-    width: 50,
-    height: 50,
-    borderColor: "rgba(0,0,0,0.2)",
-    borderWidth: 3,
-    borderRadius: 150
-  },
-  containerFriendList: {
-    flex: 1,
-    flexDirection: "row",
-    padding: 10,
-    marginLeft: 16,
-    marginRight: 16,
-    marginTop: 8,
-    marginBottom: 8,
-    borderRadius: 5,
-    backgroundColor: "#FFF"
-    // elevation: 2
-  },
-  title: {
-    fontSize: 16,
-    color: "#000",
-    justifyContent: "flex-start"
-  },
-  container_content: {
-    flex: 1,
-    flexDirection: "column",
-    marginLeft: 12,
-    justifyContent: "center"
-  },
-  description: {
-    fontSize: 11,
-    fontStyle: "italic"
-  },
-  photo: {
-    height: 50,
-    width: 50
   }
 });
