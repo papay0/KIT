@@ -20,7 +20,14 @@ export default class Friends extends React.Component<IFriendsProps> {
     return (
       <View style={styles.container}>
         <Text>Friends!</Text>
-        <Button title="Add friend" onPress={() => this.props.navigation.navigate(Routes.ADD_FRIEND, {})} />
+        <Button
+          title="Add friend"
+          onPress={() =>
+            this.props.navigation.navigate(Routes.ADD_FRIEND, {
+              user: this.props.user
+            })
+          }
+        />
       </View>
     );
   }
