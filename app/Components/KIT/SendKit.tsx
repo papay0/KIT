@@ -87,7 +87,7 @@ export default class SendKit extends React.Component<
 
   getCurrentFriends = async (userUuid: string) => {
     const db = firebase.firestore();
-    this.unsubscribe = await db
+    this.unsubscribe = db
       .collection(Collections.FRIENDS)
       .doc(userUuid)
       .onSnapshot(async document => {

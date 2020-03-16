@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   SafeAreaView
 } from "react-native";
+import * as firebase from "firebase";
 import "firebase/firestore";
 import { ParamListBase } from "@react-navigation/native";
 
@@ -16,28 +17,48 @@ import Routes from "../Routes/Routes";
 import FloatingButton from "../FloatingButton/FloatingButton";
 import RequestsKit from "../KIT/RequestsKit";
 import { UserProfile } from "../../Models/UserProfile";
+import Collections from "../Collections/Collections";
+import { Profile } from "../../Models/Profile";
 
 interface IHomeProps {
   userProfile: UserProfile;
   navigation: StackNavigationProp<ParamListBase>;
 }
 
-interface IHomeState {}
+interface IHomeState {
+  profile: Profile;
+}
 
 export default class Home extends React.Component<IHomeProps, IHomeState> {
   constructor(props) {
     super(props);
+    this.state = {profile: this.props.userProfile.profile}
   }
 
+  unsubscribe = () => {}
   componentDidMount() {
+    const db = firebase.firestore();
+    this.unsubscribe = db
+      .collection(Collections.PROFILES)
+      .doc(this.props.userProfile.user.userUuid)
+      .onSnapshot(async document => {
+        if (document.exists) {
+          const data = document.data();
+          const profile = new Profile(data.userUuid, data.color);
+          this.setState({ profile });
+        }
+      });
+
     this.props.navigation.setOptions({
       headerShown: true,
       headerRight: () => (
         <TouchableOpacity
-          onPress={() =>
+          onPress={() => {
+            const userProfile = new UserProfile(this.props.userProfile.user, this.state.profile); 
             this.props.navigation.navigate(Routes.PROFILE, {
-              userProfile: this.props.userProfile
+              userProfile: userProfile
             })
+          }
           }
           style={{
             backgroundColor: "transparent",
@@ -48,6 +69,10 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         </TouchableOpacity>
       )
     });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   routeToSendKIT = () => {
