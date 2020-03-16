@@ -8,6 +8,7 @@ import * as firebase from "firebase";
 import FloatingButton from "../FloatingButton/FloatingButton";
 import FriendListItem from "../Friends/FriendsListItem";
 import Collections from "../Collections/Collections";
+import IRequestKit from "../../Models/RequestKit";
 
 interface ISummarySendKitProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -19,17 +20,11 @@ type SUMMARYSENDKITNavigatorParams = {
     friends: User[];
     time: number;
     user: User;
+    requestsFromMe: IRequestKit[];
   };
 };
 
 interface ISummarySendKitState {}
-
-interface IRequestKit {
-  senderUuid: string;
-  receiverUuid: string;
-  availableUntil: string;
-  available: boolean;
-}
 
 export default class SummarySendKit extends React.Component<
   ISummarySendKitProps,
@@ -45,6 +40,7 @@ export default class SummarySendKit extends React.Component<
     const friends = this.props.route.params.friends;
     const time = this.props.route.params.time;
     const user = this.props.route.params.user;
+    const requestsFromMe = this.props.route.params.requestsFromMe;
     const requests = Array<IRequestKit>();
     const now = new Date();
     for (const friend of friends) {
@@ -59,7 +55,23 @@ export default class SummarySendKit extends React.Component<
       requests.push(requestObject);
     }
     for (const request of requests) {
-      await db.collection(Collections.REQUESTS).add(request);
+      const requestAlreadyMade =
+        requestsFromMe.filter(requestFromMe => {
+          return requestFromMe.senderUuid === request.senderUuid;
+        }).length > 0;
+      if (requestAlreadyMade) {
+        const requestFromMe = await db
+          .collection(Collections.REQUESTS)
+          .where("senderUuid", "==", request.senderUuid)
+          .where("receiverUuid", "==", request.receiverUuid)
+          .get();
+        if (requestFromMe.docs.length > 0) {
+          const myRequestIdToUpdate = requestFromMe.docs[0];
+          myRequestIdToUpdate.ref.update({ ...request });
+        }
+      } else {
+        await db.collection(Collections.REQUESTS).add(request);
+      }
     }
   };
 

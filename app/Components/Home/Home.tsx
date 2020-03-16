@@ -15,6 +15,7 @@ import { User } from "../../Models/User";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Routes from "../Routes/Routes";
 import FloatingButton from "../FloatingButton/FloatingButton";
+import RequestsKit from "../KIT/RequestsKit";
 
 interface IHomeProps {
   user: User;
@@ -57,6 +58,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     const user = this.props.user;
     return (
       <SafeAreaView style={styles.container}>
+        <RequestsKit user={user}/>
         <View style={styles.contentView}>
           <Image style={styles.image} source={{ uri: user.photoUrl }} />
         </View>

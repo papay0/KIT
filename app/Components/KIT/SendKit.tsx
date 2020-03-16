@@ -5,7 +5,8 @@ import {
   View,
   Button,
   FlatList,
-  SafeAreaView
+  SafeAreaView,
+  TouchableOpacityBase
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase, RouteProp } from "@react-navigation/native";
@@ -16,6 +17,7 @@ import Collections from "../Collections/Collections";
 import SelectFriendsListItem from "../Friends/SelectFriendsListItem";
 import FloatingButton from "../FloatingButton/FloatingButton";
 import TimeKit from "./TimeKit";
+import IRequestKit from "../../Models/RequestKit";
 
 interface ISendKitProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -32,6 +34,7 @@ interface ISendKitState {
   friends: User[];
   selectedFriends: User[];
   time: number | undefined;
+  requestsFromMe: IRequestKit[];
 }
 
 export default class SendKit extends React.Component<
@@ -40,16 +43,38 @@ export default class SendKit extends React.Component<
 > {
   constructor(props) {
     super(props);
-    this.state = { friends: [], selectedFriends: [], time: undefined };
+    this.state = { friends: [], selectedFriends: [], time: undefined, requestsFromMe: []};
   }
 
   componentDidMount = async () => {
+    await this.getRequestsFromMe();
     await this.getCurrentFriends(this.props.route.params.user.userUuid);
   };
 
   componentWillUnmount() {
     this.unsubscribe();
   }
+
+  getRequestsFromMe = async () => {
+    const db = firebase.firestore();
+    const user = this.props.route.params.user;
+    const documents = await db
+      .collection(Collections.REQUESTS)
+      .where("senderUuid", "==", user.userUuid)
+      .get();
+    const requestsFromMe = Array<IRequestKit>();
+    for (const doc of documents.docs) {
+      const data = doc.data();
+      const request: IRequestKit = {
+        senderUuid: data.senderUuid,
+        receiverUuid: data.receiverUuid,
+        availableUntil: data.availableUntil,
+        available: data.available
+      };
+      requestsFromMe.push(request);
+    }
+    this.setState({requestsFromMe});
+  };
 
   getUserByUuid = async (userUuid: string): Promise<User | undefined> => {
     const db = firebase.firestore();
@@ -97,7 +122,8 @@ export default class SendKit extends React.Component<
     this.props.navigation.navigate(Routes.SUMMARY_SEND_KIT, {
       friends: this.state.selectedFriends,
       time: this.state.time,
-      user: this.props.route.params.user
+      user: this.props.route.params.user,
+      requestsFromMe: this.state.requestsFromMe
     });
   };
 
