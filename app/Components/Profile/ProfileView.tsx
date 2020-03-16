@@ -7,6 +7,8 @@ import * as firebase from "firebase";
 import Routes from "../Routes/Routes";
 import MyProfile from "./MyProfile";
 import { UserProfile } from "../../Models/UserProfile";
+import Collections from "../Collections/Collections";
+import { Profile } from "../../Models/Profile";
 
 type ProfileNavigatorParams = {
   [Routes.PROFILE]: {
@@ -19,9 +21,34 @@ interface IProfileProps {
   route: RouteProp<ProfileNavigatorParams, Routes.PROFILE>;
 }
 
-export default class ProfileView extends React.Component<IProfileProps> {
+interface IProfileState {
+  profile: Profile;
+}
+
+export default class ProfileView extends React.Component<IProfileProps, IProfileState> {
   constructor(props: IProfileProps) {
     super(props);
+    this.state = {profile: props.route.params.userProfile.profile};
+  }
+
+  unsubscribe = () => {}
+  componentDidMount = async () => {
+    const userUuid = this.props.route.params.userProfile.user.userUuid;
+    const db = firebase.firestore();
+    this.unsubscribe = db
+      .collection(Collections.PROFILES)
+      .doc(userUuid)
+      .onSnapshot(async document => {
+        if (document.exists) {
+          const data = document.data();
+          const profile = new Profile(data.userUuid, data.color);
+          this.setState({ profile });
+        }
+      });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   signOut = async () => {
@@ -32,7 +59,7 @@ export default class ProfileView extends React.Component<IProfileProps> {
   render() {
     const userProfile = this.props.route.params.userProfile;
     const user = userProfile.user;
-    const profile = userProfile.profile;
+    const profile = this.state.profile;
     return (
       <SafeAreaView style={styles.container}>
         <MyProfile user={user} profile={profile} navigation={this.props.navigation}/>

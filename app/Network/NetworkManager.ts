@@ -24,6 +24,14 @@ export default class NetworkManager {
     return undefined;
   };
 
+  static updateProfile = async (profile: Profile) => {
+    const db = firebase.firestore();
+    await db
+      .collection(Collections.PROFILES)
+      .doc(profile.userUuid)
+      .set(JSON.parse(JSON.stringify(profile)), { merge: true });
+  };
+
   static createProfile = async (userUuid: string) => {
     const db = firebase.firestore();
     const profile = new Profile(userUuid);
@@ -32,7 +40,7 @@ export default class NetworkManager {
       .collection(Collections.PROFILES)
       .doc(userUuid)
       .set(JSON.parse(JSON.stringify(profile)));
-  }
+  };
 
   // User
 

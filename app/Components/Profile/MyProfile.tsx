@@ -18,21 +18,26 @@ export default class MyProfile extends React.Component<IMyProfileProps> {
   }
 
   onPressPickProfileColor = () => {
-    this.props.navigation.navigate(Routes.PROFILE_COLOR_PICKER, {})
-  }
+    this.props.navigation.navigate(Routes.PROFILE_COLOR_PICKER, {
+      profile: this.props.profile
+    });
+  };
 
   render() {
     const user = this.props.user;
     const profile = this.props.profile;
     return (
-      <View style={{...styles.container, backgroundColor: profile.color}}>
+      <View style={{ ...styles.container, backgroundColor: profile.color }}>
         <View style={styles.containerProfilePicture}>
           <Image style={styles.image} source={{ uri: user.photoUrl }} />
         </View>
         <View style={styles.containerInfoProfile}>
-            <Text style={styles.names}>{user.firstname}</Text>
-            <Text style={styles.names}>{user.lastname}</Text>
-            <Button title="Pick your profile color" onPress={this.onPressPickProfileColor}></Button>
+          <Text style={styles.names}>{user.firstname}</Text>
+          <Text style={styles.names}>{user.lastname}</Text>
+          <Button
+            title="Pick your profile color"
+            onPress={this.onPressPickProfileColor}
+          ></Button>
         </View>
       </View>
     );
@@ -44,7 +49,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     margin: 20,
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 10
   },
   containerProfilePicture: {
     alignItems: "flex-start"

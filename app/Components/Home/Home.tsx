@@ -30,7 +30,6 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   }
 
   componentDidMount() {
-    console.log("profile 3 = " + this.props.userProfile.profile);
     this.props.navigation.setOptions({
       headerShown: true,
       headerRight: () => (

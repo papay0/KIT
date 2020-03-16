@@ -36,7 +36,6 @@ export default class LoggedIn extends React.Component<
       profile = await NetworkManager.getProfileByUuid(this.props.userUuid);
     }
     const userProfile = new UserProfile(user, profile);
-    console.log("profile 4 = " + userProfile.profile);
     this.setState({ userProfile });
   };
 
