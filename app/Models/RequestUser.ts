@@ -1,7 +1,7 @@
-import { User } from "./User";
 import IRequestKit from "./RequestKit";
+import { UserProfile } from "./UserProfile";
 
 export default interface IRequestUser {
-  user: User;
+  userProfile: UserProfile;
   request: IRequestKit;
 }

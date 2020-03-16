@@ -10,10 +10,13 @@ import {
 import moment from "moment-timezone";
 
 import { User } from "../../Models/User";
+import { UserProfile } from "../../Models/UserProfile";
+import { Profile } from "../../Models/Profile";
 
 interface ISelectFriendsListItemProps {
   user: User;
-  onSelect: (user: User, selected: boolean) => void;
+  profile: Profile;
+  onSelect: (userProfile: UserProfile, selected: boolean) => void;
 }
 
 interface ISelectFriendsListItemState {
@@ -31,7 +34,8 @@ export default class SelectFriendsListItem extends React.Component<
   }
 
   onPressButton = () => {
-    this.props.onSelect(this.props.user, !this.state.selected);
+    const userProfile = new UserProfile(this.props.user, this.props.profile);
+    this.props.onSelect(userProfile, !this.state.selected);
     this.setState({
       title: this.state.selected ? "☑️" : "✅",
       selected: !this.state.selected
@@ -40,9 +44,10 @@ export default class SelectFriendsListItem extends React.Component<
 
   render() {
     const user = this.props.user;
+    const profile = this.props.profile;
     const localTime = moment.tz(new Date(), user.timezone).format("HH:mm");
     return (
-      <TouchableOpacity style={{...styles.containerFriendList, backgroundColor: user.profile.color}} onPress={() => this.onPressButton()}>
+      <TouchableOpacity style={{...styles.containerFriendList, backgroundColor: profile.color}} onPress={() => this.onPressButton()}>
         <Image source={{ uri: user.photoUrl }} style={styles.image} />
         <View style={styles.container_content}>
           <Text style={styles.title}>{user.displayName}</Text>

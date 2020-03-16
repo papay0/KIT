@@ -4,10 +4,12 @@ import { StyleSheet, Text, View, Image, FlatList, Button } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { User } from "../../Models/User";
+import { UserProfile } from "../../Models/UserProfile";
 import * as firebase from "firebase";
 import Collections from "../Collections/Collections";
 import Routes from "../Routes/Routes";
 import AddFriendListItem from "./AddFriendListItem";
+import NetworkManager from "../../Network/NetworkManager";
 
 interface IAddFriendProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -22,7 +24,7 @@ type AddFriendNavigatorParams = {
 };
 
 interface IAddFriendState {
-  users: User[];
+  userProfiles: UserProfile[];
 }
 
 export default class AddFriend extends React.Component<
@@ -33,7 +35,10 @@ export default class AddFriend extends React.Component<
     super(props);
   }
 
-  state = { users: Array<User>(), currentFriends: Array<string>() };
+  state = {
+    userProfiles: Array<UserProfile>(),
+    currentFriends: Array<string>()
+  };
 
   componentDidMount = async () => {
     await this.getUsers();
@@ -41,8 +46,9 @@ export default class AddFriend extends React.Component<
 
   getUsers = async () => {
     const db = firebase.firestore();
-    const documents = await db.collection("users").get();
+    const documents = await db.collection(Collections.USERS).get();
     const users = Array<User>();
+    const userProfiles = Array<UserProfile>();
     for (const doc of documents.docs) {
       const userData = doc.data();
       const user = new User(
@@ -52,12 +58,16 @@ export default class AddFriend extends React.Component<
         userData.firstname,
         userData.lastname,
         userData.timezone,
-        userData.email,
-        userData.profile
+        userData.email
       );
       users.push(user);
     }
-    this.setState({ users });
+    for (const user of users) {
+      const profile = await NetworkManager.getProfileByUuid(user.userUuid);
+      const userProfile = new UserProfile(user, profile);
+      userProfiles.push(userProfile);
+    }
+    this.setState({ userProfiles });
   };
 
   addFriend = async (friendUuid: string) => {
@@ -76,17 +86,20 @@ export default class AddFriend extends React.Component<
     return (
       <View style={styles.container}>
         <FlatList
-          data={this.state.users}
+          data={this.state.userProfiles}
           renderItem={({ item }) =>
-            item.userUuid !== user.userUuid && (
+            item.user.userUuid !== user.userUuid && (
               <AddFriendListItem
-                user={item}
-                onPress={() => {this.addFriend(item.userUuid)}}
+                user={item.user}
+                profile={item.profile}
+                onPress={() => {
+                  this.addFriend(item.user.userUuid);
+                }}
                 currentFriendsUuid={this.props.route.params.currentFriendsUuid}
               />
             )
           }
-          keyExtractor={user => user.userUuid}
+          keyExtractor={item => item.user.userUuid}
         />
       </View>
     );

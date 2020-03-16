@@ -17,13 +17,17 @@ export default class Login extends React.Component<ILoginProps> {
     this.props.navigation.setOptions({headerShown: false});
   }
 
+  onPressSignin = async () => {
+    await this.props.signIn();
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.header}>Sign In With Google</Text>
         <Button
           title="Sign in with Google"
-          onPress={() => this.props.signIn()}
+          onPress={this.onPressSignin}
         />
       </View>
     );

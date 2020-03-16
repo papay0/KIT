@@ -11,14 +11,14 @@ import {
 import "firebase/firestore";
 import { ParamListBase } from "@react-navigation/native";
 
-import { User } from "../../Models/User";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Routes from "../Routes/Routes";
 import FloatingButton from "../FloatingButton/FloatingButton";
 import RequestsKit from "../KIT/RequestsKit";
+import { UserProfile } from "../../Models/UserProfile";
 
 interface IHomeProps {
-  user: User;
+  userProfile: UserProfile;
   navigation: StackNavigationProp<ParamListBase>;
 }
 
@@ -30,13 +30,14 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   }
 
   componentDidMount() {
+    console.log("profile 3 = " + this.props.userProfile.profile);
     this.props.navigation.setOptions({
       headerShown: true,
       headerRight: () => (
         <TouchableOpacity
           onPress={() =>
             this.props.navigation.navigate(Routes.PROFILE, {
-              user: this.props.user
+              userProfile: this.props.userProfile
             })
           }
           style={{
@@ -51,11 +52,11 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   }
 
   routeToSendKIT = () => {
-    this.props.navigation.navigate(Routes.SEND_KIT, { user: this.props.user });
+    this.props.navigation.navigate(Routes.SEND_KIT, { user: this.props.userProfile.user });
   };
 
   render() {
-    const user = this.props.user;
+    const user = this.props.userProfile.user;
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.contentView}>

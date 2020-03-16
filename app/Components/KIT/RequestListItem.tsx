@@ -19,9 +19,10 @@ export default class RequestListItem extends React.Component<
 
   render() {
     const request = this.props.requestUser.request;
-    const user = this.props.requestUser.user;
+    const user = this.props.requestUser.userProfile.user;
+    const profile = this.props.requestUser.userProfile.profile;
     return (
-      <View style={{...styles.container, backgroundColor: user.profile.color}}>
+      <View style={{...styles.container, backgroundColor: profile.color}}>
         <View style={styles.containerProfilePicture}>
           <Image style={styles.image} source={{ uri: user.photoUrl }} />
         </View>

@@ -1,13 +1,45 @@
 import * as firebase from "firebase";
 import { User } from "../Models/User";
 import Collections from "../Components/Collections/Collections";
+import { Profile } from "../Models/Profile";
 
 export default class NetworkManager {
   constructor() {}
 
+  // Profile
+
+  static getProfileByUuid = async (
+    userUuid: string
+  ): Promise<Profile | undefined> => {
+    const db = firebase.firestore();
+    const document = await db
+      .collection(Collections.PROFILES)
+      .doc(userUuid)
+      .get();
+    if (document.exists) {
+      const data = document.data();
+      const profile = new Profile(userUuid, data.color);
+      return profile;
+    }
+    return undefined;
+  };
+
+  static createProfile = async (userUuid: string) => {
+    const db = firebase.firestore();
+    const profile = new Profile(userUuid);
+    console.log("I create a profile");
+    await db
+      .collection(Collections.PROFILES)
+      .doc(userUuid)
+      .set(JSON.parse(JSON.stringify(profile)));
+  }
+
+  // User
+
   static updateUser = async (user: User) => {
     const db = firebase.firestore();
-    await db.collection("users")
+    await db
+      .collection(Collections.USERS)
       .doc(user.userUuid)
       .set(JSON.parse(JSON.stringify(user)), { merge: true });
   };
@@ -29,8 +61,7 @@ export default class NetworkManager {
         data.firstname,
         data.lastname,
         data.timezone,
-        data.email,
-        data.profile
+        data.email
       );
       return user;
     }

@@ -12,6 +12,7 @@ import AddFriend from "./App/Components/Friends/AddFriend";
 import SendKit from "./App/Components/KIT/SendKit";
 import TimeKit from "./App/Components/KIT/TimeKit";
 import SummarySendKit from "./App/Components/KIT/SummarySendKit";
+import ProfileColorPicker from "./App/Components/Profile/ProfileColorPicker";
 
 const Stack = createStackNavigator();
 
@@ -33,6 +34,7 @@ export default class App extends React.Component {
           <Stack.Screen name={Routes.SEND_KIT} component={SendKit} options={{ title: "Select time & friends"}}/>
           <Stack.Screen name={Routes.TIME_KIT} component={TimeKit} options={{ title: "Select your availability"}}/>
           <Stack.Screen name={Routes.SUMMARY_SEND_KIT} component={SummarySendKit} options={{ title: "Double check..."}}/>
+          <Stack.Screen name={Routes.PROFILE_COLOR_PICKER} component={ProfileColorPicker} options={{ title: "Choose your profile color"}}/>
         </Stack.Navigator>
       </NavigationContainer>
     );

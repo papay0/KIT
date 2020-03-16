@@ -3,9 +3,11 @@ import { StyleSheet, Text, View, Image, Button, TouchableOpacity } from "react-n
 import moment from "moment-timezone";
 
 import { User } from "../../Models/User";
+import { Profile } from "../../Models/Profile";
 
 interface IFriendsListItemProps {
   user: User;
+  profile: Profile
 }
 
 interface IFriendsListItemState {
@@ -23,9 +25,10 @@ export default class FriendsListItem extends React.Component<
 
   render() {
     const user = this.props.user;
+    const profile = this.props.profile;
     const localTime = moment.tz(new Date(), user.timezone).format("HH:mm");
     return (
-      <View style={{...styles.containerFriendList, backgroundColor: user.profile.color}}>
+      <View style={{...styles.containerFriendList, backgroundColor: profile.color}}>
         <Image source={{ uri: user.photoUrl }} style={styles.image} />
         <View style={styles.container_content}>
           <Text style={styles.title}>{user.displayName}</Text>

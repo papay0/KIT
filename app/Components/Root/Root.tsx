@@ -67,8 +67,6 @@ export default class Root extends React.Component<IRootProps, IRootState> {
             .createUserWithEmailAndPassword(result.user.email, result.user.id);
         }
         const userUuid = firebase.auth().currentUser.uid;
-        const existingUser = await NetworkManager.getUserByUuid(userUuid)
-        const profile = existingUser ? existingUser.profile : new Profile()
         const user = new User(
           result.user.name,
           result.user.photoUrl,
@@ -76,8 +74,7 @@ export default class Root extends React.Component<IRootProps, IRootState> {
           result.user.givenName,
           result.user.familyName,
           Localization.timezone,
-          result.user.email,
-          profile
+          result.user.email
         );
         await NetworkManager.updateUser(user);
         this.forceUpdate();

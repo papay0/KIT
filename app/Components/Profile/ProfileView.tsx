@@ -4,13 +4,13 @@ import Friends from "../Friends/Friends";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase, RouteProp } from "@react-navigation/native";
 import * as firebase from "firebase";
-import { User } from "../../Models/User";
 import Routes from "../Routes/Routes";
 import MyProfile from "./MyProfile";
+import { UserProfile } from "../../Models/UserProfile";
 
 type ProfileNavigatorParams = {
   [Routes.PROFILE]: {
-    user: User;
+    userProfile: UserProfile;
   };
 };
 
@@ -20,7 +20,7 @@ interface IProfileProps {
 }
 
 export default class ProfileView extends React.Component<IProfileProps> {
-  constructor(props) {
+  constructor(props: IProfileProps) {
     super(props);
   }
 
@@ -30,12 +30,12 @@ export default class ProfileView extends React.Component<IProfileProps> {
   };
 
   render() {
-    const user = this.props.route.params.user;
-    console.log("user = " + user);
-    console.log("user = " + user.profile.color);
+    const userProfile = this.props.route.params.userProfile;
+    const user = userProfile.user;
+    const profile = userProfile.profile;
     return (
       <SafeAreaView style={styles.container}>
-        <MyProfile user={user}/>
+        <MyProfile user={user} profile={profile} navigation={this.props.navigation}/>
         <Friends
           user={user}
           navigation={this.props.navigation}

@@ -3,9 +3,11 @@ import { StyleSheet, Text, View, Image, Button, TouchableOpacity } from "react-n
 import moment from "moment-timezone";
 
 import { User } from "../../Models/User";
+import { Profile } from "../../Models/Profile";
 
 interface IAddFriendListItemProps {
   user: User;
+  profile: Profile;
   currentFriendsUuid: string[];
   onPress: () => void;
 }
@@ -40,9 +42,10 @@ IAddFriendListItemState
 
   render() {
     const user = this.props.user;
+    const profile = this.props.profile;
     const localTime = moment.tz(new Date(), user.timezone).format("HH:mm");
     return (
-      <TouchableOpacity disabled={this.state.disabled} style={{...styles.containerFriendList, backgroundColor: user.profile.color}} onPress={() => this.onPressButton()}>
+      <TouchableOpacity disabled={this.state.disabled} style={{...styles.containerFriendList, backgroundColor: profile.color}} onPress={() => this.onPressButton()}>
         <Image source={{ uri: user.photoUrl }} style={styles.image} />
         <View style={styles.container_content}>
           <Text style={styles.title}>{user.displayName}</Text>

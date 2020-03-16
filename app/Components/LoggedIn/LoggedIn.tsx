@@ -8,6 +8,7 @@ import Home from "../Home/Home";
 import { ParamListBase } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import NetworkManager from "../../Network/NetworkManager";
+import { UserProfile } from "../../Models/UserProfile";
 
 interface ILoggedInProps {
   userUuid: string;
@@ -16,7 +17,7 @@ interface ILoggedInProps {
 }
 
 interface ILoggedInState {
-  user: User | undefined;
+  userProfile: UserProfile | undefined;
 }
 
 export default class LoggedIn extends React.Component<
@@ -29,14 +30,21 @@ export default class LoggedIn extends React.Component<
 
   componentDidMount = async () => {
     const user = await NetworkManager.getUserByUuid(this.props.userUuid);
-    this.setState({ user });
+    let profile = await NetworkManager.getProfileByUuid(this.props.userUuid);
+    if (profile === undefined) {
+      await NetworkManager.createProfile(this.props.userUuid);
+      profile = await NetworkManager.getProfileByUuid(this.props.userUuid);
+    }
+    const userProfile = new UserProfile(user, profile);
+    console.log("profile 4 = " + userProfile.profile);
+    this.setState({ userProfile });
   };
 
   render() {
-    const user = this.state && this.state.user;
+    const userProfile = this.state && this.state.userProfile;
     return (
       <View style={{ flex: 1 }}>
-        {user && <Home user={user} navigation={this.props.navigation} />}
+        {userProfile && <Home userProfile={userProfile} navigation={this.props.navigation} />}
       </View>
     );
   }

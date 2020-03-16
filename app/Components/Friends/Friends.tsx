@@ -8,6 +8,8 @@ import Routes from "../Routes/Routes";
 import * as firebase from "firebase";
 import Collections from "../Collections/Collections";
 import FriendsListItem from "./FriendsListItem";
+import { UserProfile } from "../../Models/UserProfile";
+import NetworkManager from "../../Network/NetworkManager";
 
 interface IFriendsProps {
   user: User;
@@ -15,7 +17,7 @@ interface IFriendsProps {
 }
 
 interface IFriendsState {
-  friends: User[];
+  friendUserProfiles: UserProfile[];
 }
 
 export default class Friends extends React.Component<
@@ -24,7 +26,7 @@ export default class Friends extends React.Component<
 > {
   constructor(props) {
     super(props);
-    this.state = { friends: [] };
+    this.state = { friendUserProfiles: [] };
   }
 
   componentDidMount = async () => {
@@ -50,8 +52,7 @@ export default class Friends extends React.Component<
         data.firstname,
         data.lastname,
         data.timezone,
-        data.email,
-        data.profile
+        data.email
       );
       return user;
     }
@@ -66,15 +67,17 @@ export default class Friends extends React.Component<
       .collection(Collections.FRIENDS)
       .doc(userUuid)
       .onSnapshot(async document => {
-        const friends = Array<User>();
+        const friendUserProfiles = Array<UserProfile>();
         if (document.exists) {
           const data = document.data();
           for (const userUuid of data.friendsUuid) {
-            const friend = await this.getUserByUuid(userUuid);
-            friends.push(friend);
+            const friend = await NetworkManager.getUserByUuid(userUuid);
+            const profile = await NetworkManager.getProfileByUuid(userUuid);
+            const userProfile = new UserProfile(friend, profile);
+            friendUserProfiles.push(userProfile);
           }
         }
-        this.setState({ friends });
+        this.setState({ friendUserProfiles });
       });
   };
 
@@ -86,20 +89,21 @@ export default class Friends extends React.Component<
           onPress={() =>
             this.props.navigation.navigate(Routes.ADD_FRIEND, {
               user: this.props.user,
-              currentFriendsUuid: this.state.friends.map(
-                friend => friend.userUuid
+              currentFriendsUuid: this.state.friendUserProfiles.map(
+                friendProfile => friendProfile.user.userUuid
               )
             })
           }
         />
         <FlatList
-          data={this.state.friends}
+          data={this.state.friendUserProfiles}
           renderItem={({ item }) => (
             <FriendsListItem
-              user={item}
+              user={item.user}
+              profile={item.profile}
             />
           )}
-          keyExtractor={user => user.userUuid}
+          keyExtractor={item => item.user.userUuid}
         />
       </View>
     );

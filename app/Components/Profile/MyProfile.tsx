@@ -1,9 +1,15 @@
 import React from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Button } from "react-native";
 import { User } from "../../Models/User";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { ParamListBase } from "@react-navigation/native";
+import Routes from "../Routes/Routes";
+import { Profile } from "../../Models/Profile";
 
 interface IMyProfileProps {
   user: User;
+  profile: Profile;
+  navigation: StackNavigationProp<ParamListBase>;
 }
 
 export default class MyProfile extends React.Component<IMyProfileProps> {
@@ -11,16 +17,22 @@ export default class MyProfile extends React.Component<IMyProfileProps> {
     super(props);
   }
 
+  onPressPickProfileColor = () => {
+    this.props.navigation.navigate(Routes.PROFILE_COLOR_PICKER, {})
+  }
+
   render() {
     const user = this.props.user;
+    const profile = this.props.profile;
     return (
-      <View style={{...styles.container, backgroundColor: user.profile.color}}>
+      <View style={{...styles.container, backgroundColor: profile.color}}>
         <View style={styles.containerProfilePicture}>
           <Image style={styles.image} source={{ uri: user.photoUrl }} />
         </View>
         <View style={styles.containerInfoProfile}>
             <Text style={styles.names}>{user.firstname}</Text>
             <Text style={styles.names}>{user.lastname}</Text>
+            <Button title="Pick your profile color" onPress={this.onPressPickProfileColor}></Button>
         </View>
       </View>
     );

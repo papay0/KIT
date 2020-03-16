@@ -7,6 +7,7 @@ import { User } from "../../Models/User";
 import NetworkManager from "../../Network/NetworkManager";
 import RequestListItem from "./RequestListItem";
 import IRequestUser from "../../Models/RequestUser";
+import { UserProfile } from "../../Models/UserProfile";
 
 interface IRequestsKitProps {
   user: User;
@@ -55,8 +56,10 @@ export default class RequestsKit extends React.Component<
         const requestUsers = Array<IRequestUser>();
         for (const request of requests) {
           const user = await NetworkManager.getUserByUuid(request.senderUuid);
+          const profile = await NetworkManager.getProfileByUuid(request.senderUuid);
+          const userProfile = new UserProfile(user, profile);
           const requestUser: IRequestUser = {
-            user: user,
+            userProfile: userProfile,
             request: request
           };
           requestUsers.push(requestUser);
@@ -74,9 +77,9 @@ export default class RequestsKit extends React.Component<
         <FlatList
           data={this.state.requestUsers}
           renderItem={({ item }) => (
-            <RequestListItem key={item.user.userUuid} requestUser={item}/>
+            <RequestListItem key={item.userProfile.user.userUuid} requestUser={item}/>
           )}
-          keyExtractor={request => request.user.userUuid}
+          keyExtractor={request => request.userProfile.user.userUuid}
         />
       </View>
     );

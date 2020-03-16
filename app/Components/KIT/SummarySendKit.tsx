@@ -9,15 +9,17 @@ import FloatingButton from "../FloatingButton/FloatingButton";
 import FriendListItem from "../Friends/FriendsListItem";
 import Collections from "../Collections/Collections";
 import IRequestKit from "../../Models/RequestKit";
+import { Profile } from "../../Models/Profile";
+import { UserProfile } from "../../Models/UserProfile";
 
 interface ISummarySendKitProps {
   navigation: StackNavigationProp<ParamListBase>;
-  route: RouteProp<SUMMARYSENDKITNavigatorParams, Routes.SEND_KIT>;
+  route: RouteProp<SUMMARYSENDKITNavigatorParams, Routes.SUMMARY_SEND_KIT>;
 }
 
 type SUMMARYSENDKITNavigatorParams = {
-  [Routes.SEND_KIT]: {
-    friends: User[];
+  [Routes.SUMMARY_SEND_KIT]: {
+    friendUserProfiles: UserProfile[];
     time: number;
     user: User;
     requestsFromMe: IRequestKit[];
@@ -37,18 +39,18 @@ export default class SummarySendKit extends React.Component<
 
   sendRequest = async () => {
     const db = firebase.firestore();
-    const friends = this.props.route.params.friends;
+    const friendUserProfiles = this.props.route.params.friendUserProfiles;
     const time = this.props.route.params.time;
     const user = this.props.route.params.user;
     const requestsFromMe = this.props.route.params.requestsFromMe;
     const requests = Array<IRequestKit>();
     const now = new Date();
-    for (const friend of friends) {
+    for (const friendUserProfile of friendUserProfiles) {
       const availableUntil = new Date(now);
       availableUntil.setMinutes(now.getMinutes() + time);
       const requestObject: IRequestKit = {
         senderUuid: user.userUuid,
-        receiverUuid: friend.userUuid,
+        receiverUuid: friendUserProfile.user.userUuid,
         availableUntil: availableUntil.toISOString(),
         available: true
       };
@@ -81,7 +83,7 @@ export default class SummarySendKit extends React.Component<
   };
 
   render() {
-    const friends = this.props.route.params.friends;
+    const friendUserProfiles = this.props.route.params.friendUserProfiles;
     const time = this.props.route.params.time;
     return (
       <SafeAreaView style={styles.container}>
@@ -89,9 +91,9 @@ export default class SummarySendKit extends React.Component<
           I am available for {time} minutes.
         </Text>
         <FlatList
-          data={friends}
-          renderItem={({ item }) => <FriendListItem user={item} />}
-          keyExtractor={user => user.userUuid}
+          data={friendUserProfiles}
+          renderItem={({ item }) => <FriendListItem user={item.user} profile={item.profile} />}
+          keyExtractor={item => item.user.userUuid}
         />
         <FloatingButton title="Send" onPress={this.onPress} isHidden={false} />
       </SafeAreaView>

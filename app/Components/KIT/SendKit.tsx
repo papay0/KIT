@@ -18,6 +18,8 @@ import SelectFriendsListItem from "../Friends/SelectFriendsListItem";
 import FloatingButton from "../FloatingButton/FloatingButton";
 import TimeKit from "./TimeKit";
 import IRequestKit from "../../Models/RequestKit";
+import { UserProfile } from "../../Models/UserProfile";
+import NetworkManager from "../../Network/NetworkManager";
 
 interface ISendKitProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -31,8 +33,8 @@ type SENDKITNavigatorParams = {
 };
 
 interface ISendKitState {
-  friends: User[];
-  selectedFriends: User[];
+  friendUserProfiles: UserProfile[];
+  selectedFriendUserProfiles: UserProfile[];
   time: number | undefined;
   requestsFromMe: IRequestKit[];
 }
@@ -43,7 +45,12 @@ export default class SendKit extends React.Component<
 > {
   constructor(props) {
     super(props);
-    this.state = { friends: [], selectedFriends: [], time: undefined, requestsFromMe: []};
+    this.state = {
+      friendUserProfiles: [],
+      selectedFriendUserProfiles: [],
+      time: undefined,
+      requestsFromMe: []
+    };
   }
 
   componentDidMount = async () => {
@@ -73,30 +80,7 @@ export default class SendKit extends React.Component<
       };
       requestsFromMe.push(request);
     }
-    this.setState({requestsFromMe});
-  };
-
-  getUserByUuid = async (userUuid: string): Promise<User | undefined> => {
-    const db = firebase.firestore();
-    const document = await db
-      .collection(Collections.USERS)
-      .doc(userUuid)
-      .get();
-    if (document.exists) {
-      const data = document.data();
-      const user = new User(
-        data.displayName,
-        data.photoUrl,
-        data.userUuid,
-        data.firstname,
-        data.lastname,
-        data.timezone,
-        data.email,
-        data.profile
-      );
-      return user;
-    }
-    return undefined;
+    this.setState({ requestsFromMe });
   };
 
   unsubscribe = () => {};
@@ -107,37 +91,39 @@ export default class SendKit extends React.Component<
       .collection(Collections.FRIENDS)
       .doc(userUuid)
       .onSnapshot(async document => {
-        const friends = Array<User>();
+        const friendUserProfiles = Array<UserProfile>();
         if (document.exists) {
           const data = document.data();
           for (const userUuid of data.friendsUuid) {
-            const friend = await this.getUserByUuid(userUuid);
-            friends.push(friend);
+            const friend = await NetworkManager.getUserByUuid(userUuid);
+            const profile = await NetworkManager.getProfileByUuid(userUuid);
+            const userProfile = new UserProfile(friend, profile);
+            friendUserProfiles.push(userProfile);
           }
         }
-        this.setState({ friends });
+        this.setState({ friendUserProfiles });
       });
   };
 
   routeToSummarySendKit = () => {
     this.props.navigation.navigate(Routes.SUMMARY_SEND_KIT, {
-      friends: this.state.selectedFriends,
+      friendUserProfiles: this.state.selectedFriendUserProfiles,
       time: this.state.time,
       user: this.props.route.params.user,
       requestsFromMe: this.state.requestsFromMe
     });
   };
 
-  onSelectFriend = (user: User, selected: boolean) => {
-    let selectedFriends = this.state.selectedFriends;
+  onSelectFriend = (userProfile: UserProfile, selected: boolean) => {
+    let selectedFriendUserProfiles = this.state.selectedFriendUserProfiles;
     if (selected) {
-      selectedFriends.push(user);
+      selectedFriendUserProfiles.push(userProfile);
     } else {
-      selectedFriends = selectedFriends.filter(
-        friend => friend.userUuid !== user.userUuid
+      selectedFriendUserProfiles = selectedFriendUserProfiles.filter(
+        friendUserProfile => friendUserProfile.user.userUuid !== userProfile.user.userUuid
       );
     }
-    this.setState({ selectedFriends });
+    this.setState({ selectedFriendUserProfiles });
   };
 
   onSelectTime = (time: number | undefined) => {
@@ -145,24 +131,28 @@ export default class SendKit extends React.Component<
   };
 
   render() {
-    const friendsNumber = this.state.selectedFriends.length;
+    const friendsNumber = this.state.selectedFriendUserProfiles.length;
     const friendsString = friendsNumber > 1 ? " friends " : " friend ";
     const timeString = this.state.time + " min";
     const title =
       "Continue - " + friendsNumber + friendsString + " - " + timeString;
     const isContinueButtonHidden =
-      this.state.selectedFriends.length === 0 || this.state.time === undefined;
+      this.state.selectedFriendUserProfiles.length === 0 || this.state.time === undefined;
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.timeKit}>
           <TimeKit onSelectTime={this.onSelectTime} />
         </View>
         <FlatList
-          data={this.state.friends}
+          data={this.state.friendUserProfiles}
           renderItem={({ item }) => (
-            <SelectFriendsListItem user={item} onSelect={this.onSelectFriend} />
+            <SelectFriendsListItem
+              user={item.user}
+              profile={item.profile}
+              onSelect={this.onSelectFriend}
+            />
           )}
-          keyExtractor={user => user.userUuid}
+          keyExtractor={item => item.user.userUuid}
         />
         <FloatingButton
           title={title}
