@@ -37,11 +37,11 @@ export default class RequestsKit extends React.Component<
 
   getRequests = async () => {
     const db = firebase.firestore();
-    const requests = Array<IRequestKit>();
     this.unsubscribe = await db
       .collection(Collections.REQUESTS)
       .where("receiverUuid", "==", this.props.user.userUuid)
       .onSnapshot(async documents => {
+        const requests = Array<IRequestKit>();
         for (const doc of documents.docs) {
           const data = doc.data();
           const request: IRequestKit = {

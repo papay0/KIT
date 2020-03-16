@@ -14,7 +14,7 @@ export default class MyProfile extends React.Component<IMyProfileProps> {
   render() {
     const user = this.props.user;
     return (
-      <View style={styles.container}>
+      <View style={{...styles.container, backgroundColor: user.profile.color}}>
         <View style={styles.containerProfilePicture}>
           <Image style={styles.image} source={{ uri: user.photoUrl }} />
         </View>
@@ -30,7 +30,9 @@ export default class MyProfile extends React.Component<IMyProfileProps> {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    margin: 20
+    margin: 20,
+    padding: 10,
+    borderRadius: 10,
   },
   containerProfilePicture: {
     alignItems: "flex-start"
@@ -45,7 +47,6 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   image: {
-    marginTop: 15,
     width: 100,
     height: 100,
     borderColor: "rgba(0,0,0,0.2)",

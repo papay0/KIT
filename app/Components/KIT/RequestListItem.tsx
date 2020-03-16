@@ -21,7 +21,7 @@ export default class RequestListItem extends React.Component<
     const request = this.props.requestUser.request;
     const user = this.props.requestUser.user;
     return (
-      <View style={styles.container}>
+      <View style={{...styles.container, backgroundColor: user.profile.color}}>
         <View style={styles.containerProfilePicture}>
           <Image style={styles.image} source={{ uri: user.photoUrl }} />
         </View>
@@ -43,8 +43,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     margin: 10,
-    // backgroundColor: "blue",
-    backgroundColor: "rgba(0, 0, 255, 0.7)",
     borderRadius: 10
   },
   containerProfilePicture: {

@@ -91,7 +91,8 @@ export default class SendKit extends React.Component<
         data.firstname,
         data.lastname,
         data.timezone,
-        data.email
+        data.email,
+        data.profile
       );
       return user;
     }

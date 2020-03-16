@@ -19,7 +19,7 @@ interface IProfileProps {
   route: RouteProp<ProfileNavigatorParams, Routes.PROFILE>;
 }
 
-export default class Profile extends React.Component<IProfileProps> {
+export default class ProfileView extends React.Component<IProfileProps> {
   constructor(props) {
     super(props);
   }
@@ -31,6 +31,8 @@ export default class Profile extends React.Component<IProfileProps> {
 
   render() {
     const user = this.props.route.params.user;
+    console.log("user = " + user);
+    console.log("user = " + user.profile.color);
     return (
       <SafeAreaView style={styles.container}>
         <MyProfile user={user}/>

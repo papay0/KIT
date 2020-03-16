@@ -51,6 +51,7 @@ export default class Friends extends React.Component<
         data.lastname,
         data.timezone,
         data.email,
+        data.profile
       );
       return user;
     }
@@ -61,7 +62,7 @@ export default class Friends extends React.Component<
 
   getCurrentFriends = async (userUuid: string) => {
     const db = firebase.firestore();
-    this.unsubscribe = await db
+    this.unsubscribe = db
       .collection(Collections.FRIENDS)
       .doc(userUuid)
       .onSnapshot(async document => {

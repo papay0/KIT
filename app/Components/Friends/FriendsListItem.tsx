@@ -25,7 +25,7 @@ export default class FriendsListItem extends React.Component<
     const user = this.props.user;
     const localTime = moment.tz(new Date(), user.timezone).format("HH:mm");
     return (
-      <View style={styles.containerFriendList}>
+      <View style={{...styles.containerFriendList, backgroundColor: user.profile.color}}>
         <Image source={{ uri: user.photoUrl }} style={styles.image} />
         <View style={styles.container_content}>
           <Text style={styles.title}>{user.displayName}</Text>
@@ -55,8 +55,7 @@ const styles = StyleSheet.create({
     marginRight: 16,
     marginTop: 8,
     marginBottom: 8,
-    borderRadius: 5,
-    backgroundColor: "#FFF"
+    borderRadius: 5
   },
   title: {
     fontSize: 16,

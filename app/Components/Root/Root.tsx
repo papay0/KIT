@@ -10,6 +10,8 @@ import Login from "../Login/Login";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
 import NetworkManager from "../../Network/NetworkManager";
+import { ProfileColor } from "../../Models/ProfileColor";
+import { Profile } from "../../Models/Profile";
 
 interface IConfigGoogleAuth {
   androidClientId: string;
@@ -64,14 +66,18 @@ export default class Root extends React.Component<IRootProps, IRootState> {
             .auth()
             .createUserWithEmailAndPassword(result.user.email, result.user.id);
         }
+        const userUuid = firebase.auth().currentUser.uid;
+        const existingUser = await NetworkManager.getUserByUuid(userUuid)
+        const profile = existingUser ? existingUser.profile : new Profile()
         const user = new User(
           result.user.name,
           result.user.photoUrl,
-          firebase.auth().currentUser.uid,
+          userUuid,
           result.user.givenName,
           result.user.familyName,
           Localization.timezone,
-          result.user.email
+          result.user.email,
+          profile
         );
         await NetworkManager.updateUser(user);
         this.forceUpdate();

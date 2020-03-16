@@ -29,7 +29,8 @@ export default class NetworkManager {
         data.firstname,
         data.lastname,
         data.timezone,
-        data.email
+        data.email,
+        data.profile
       );
       return user;
     }

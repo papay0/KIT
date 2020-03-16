@@ -42,7 +42,7 @@ export default class SelectFriendsListItem extends React.Component<
     const user = this.props.user;
     const localTime = moment.tz(new Date(), user.timezone).format("HH:mm");
     return (
-      <TouchableOpacity style={styles.containerFriendList} onPress={() => this.onPressButton()}>
+      <TouchableOpacity style={{...styles.containerFriendList, backgroundColor: user.profile.color}} onPress={() => this.onPressButton()}>
         <Image source={{ uri: user.photoUrl }} style={styles.image} />
         <View style={styles.container_content}>
           <Text style={styles.title}>{user.displayName}</Text>

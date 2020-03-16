@@ -42,7 +42,7 @@ IAddFriendListItemState
     const user = this.props.user;
     const localTime = moment.tz(new Date(), user.timezone).format("HH:mm");
     return (
-      <TouchableOpacity disabled={this.state.disabled} style={styles.containerFriendList} onPress={() => this.onPressButton()}>
+      <TouchableOpacity disabled={this.state.disabled} style={{...styles.containerFriendList, backgroundColor: user.profile.color}} onPress={() => this.onPressButton()}>
         <Image source={{ uri: user.photoUrl }} style={styles.image} />
         <View style={styles.container_content}>
           <Text style={styles.title}>{user.displayName}</Text>

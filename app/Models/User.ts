@@ -1,3 +1,5 @@
+import { Profile } from "./Profile";
+
 interface IUser {
   displayName: string;
   photoUrl: string;
@@ -16,6 +18,7 @@ export class User implements IUser {
   lastname: string;
   timezone: string;
   email: string;
+  profile: Profile;
   constructor(
     displayName: string,
     photoUrl: string,
@@ -23,7 +26,8 @@ export class User implements IUser {
     firtname: string,
     lastname: string,
     timezone: string,
-    email: string
+    email: string,
+    profile: Profile
   ) {
     this.displayName = displayName;
     this.photoUrl = photoUrl;
@@ -32,5 +36,6 @@ export class User implements IUser {
     this.lastname = lastname;
     this.timezone = timezone;
     this.email = email;
+    this.profile = profile;
   }
 }
