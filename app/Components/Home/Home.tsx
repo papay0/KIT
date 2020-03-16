@@ -51,18 +51,21 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   }
 
   routeToSendKIT = () => {
-    this.props.navigation.navigate(Routes.SEND_KIT, {user: this.props.user});
+    this.props.navigation.navigate(Routes.SEND_KIT, { user: this.props.user });
   };
 
   render() {
     const user = this.props.user;
     return (
       <SafeAreaView style={styles.container}>
-        <RequestsKit user={user}/>
         <View style={styles.contentView}>
-          <Image style={styles.image} source={{ uri: user.photoUrl }} />
+          <RequestsKit user={user} />
         </View>
-        <FloatingButton title="Send a Coucou" onPress={this.routeToSendKIT} isHidden={false}/>
+        <FloatingButton
+          title="Send a Coucou"
+          onPress={this.routeToSendKIT}
+          isHidden={false}
+        />
       </SafeAreaView>
     );
   }
@@ -82,9 +85,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   contentView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    flex: 1
   },
   floatingButton: {
     justifyContent: "center",

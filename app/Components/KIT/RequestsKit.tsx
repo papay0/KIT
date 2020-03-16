@@ -4,13 +4,16 @@ import * as firebase from "firebase";
 import IRequestKit from "../../Models/RequestKit";
 import Collections from "../Collections/Collections";
 import { User } from "../../Models/User";
+import NetworkManager from "../../Network/NetworkManager";
+import RequestListItem from "./RequestListItem";
+import IRequestUser from "../../Models/RequestUser";
 
 interface IRequestsKitProps {
   user: User;
 }
 
 interface IRequestsKitState {
-  requests: IRequestKit[];
+  requestUsers: IRequestUser[];
 }
 
 export default class RequestsKit extends React.Component<
@@ -19,7 +22,7 @@ export default class RequestsKit extends React.Component<
 > {
   constructor(props: IRequestsKitProps) {
     super(props);
-    this.state = { requests: [] };
+    this.state = { requestUsers: [] };
   }
 
   componentDidMount() {
@@ -30,7 +33,7 @@ export default class RequestsKit extends React.Component<
     this.unsubscribe();
   }
 
-  unsubscribe = () => {}
+  unsubscribe = () => {};
 
   getRequests = async () => {
     const db = firebase.firestore();
@@ -49,17 +52,31 @@ export default class RequestsKit extends React.Component<
           };
           requests.push(request);
         }
-        this.setState({ requests });
+        const requestUsers = Array<IRequestUser>();
+        for (const request of requests) {
+          const user = await NetworkManager.getUserByUuid(request.senderUuid);
+          const requestUser: IRequestUser = {
+            user: user,
+            request: request
+          };
+          requestUsers.push(requestUser);
+        }
+        this.setState({ requestUsers: requestUsers });
       });
   };
 
   render() {
     return (
-      <View>
+      <View style={styles.container}>
+        <Text style={styles.availability}>
+          Friends available
+        </Text>
         <FlatList
-          data={this.state.requests}
-          renderItem={({ item }) => <Text key={item.senderUuid}>{item.availableUntil}</Text>}
-          keyExtractor={request => request.senderUuid}
+          data={this.state.requestUsers}
+          renderItem={({ item }) => (
+            <RequestListItem key={item.user.userUuid} requestUser={item}/>
+          )}
+          keyExtractor={request => request.user.userUuid}
         />
       </View>
     );
@@ -69,8 +86,10 @@ export default class RequestsKit extends React.Component<
 const styles = StyleSheet.create({
   container: { flex: 1 },
   availability: {
-    fontSize: 25,
-    padding: 10
+    fontSize: 17,
+    paddingTop: 20,
+    paddingLeft: 20,
+    fontWeight: "bold"
   },
   header: {
     fontSize: 25

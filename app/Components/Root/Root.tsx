@@ -9,6 +9,7 @@ import LoggedIn from "../LoggedIn/LoggedIn";
 import Login from "../Login/Login";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
+import NetworkManager from "../../Network/NetworkManager";
 
 interface IConfigGoogleAuth {
   androidClientId: string;
@@ -48,14 +49,6 @@ export default class Root extends React.Component<IRootProps, IRootState> {
     this.unsubscribe();
   }
 
-  updateUser = async (user: User) => {
-    // firebase
-    const db = firebase.firestore();
-    db.collection("users")
-      .doc(user.userUuid)
-      .set(JSON.parse(JSON.stringify(user)), { merge: true });
-  };
-
   signIn = async () => {
     try {
       const config = this.getConfig();
@@ -80,7 +73,7 @@ export default class Root extends React.Component<IRootProps, IRootState> {
           Localization.timezone,
           result.user.email
         );
-        this.updateUser(user);
+        await NetworkManager.updateUser(user);
         this.forceUpdate();
       } else {
         console.log("cancelled");
