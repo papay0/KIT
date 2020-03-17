@@ -19,6 +19,7 @@ import RequestsKit from "../KIT/RequestsKit";
 import { UserProfile } from "../../Models/UserProfile";
 import Collections from "../Collections/Collections";
 import { Profile } from "../../Models/Profile";
+import NetworkManager from "../../Network/NetworkManager";
 
 interface IHomeProps {
   userProfile: UserProfile;
@@ -27,18 +28,23 @@ interface IHomeProps {
 
 interface IHomeState {
   profile: Profile;
+  friendUserProfiles: UserProfile[];
 }
 
 export default class Home extends React.Component<IHomeProps, IHomeState> {
   constructor(props) {
     super(props);
-    this.state = {profile: this.props.userProfile.profile}
+    this.state = {
+      profile: this.props.userProfile.profile,
+      friendUserProfiles: []
+    };
   }
 
-  unsubscribe = () => {}
+  unsubscribeProfile = () => {};
+  unsubscribeFriends = () => {};
   componentDidMount() {
     const db = firebase.firestore();
-    this.unsubscribe = db
+    this.unsubscribeProfile = db
       .collection(Collections.PROFILES)
       .doc(this.props.userProfile.user.userUuid)
       .onSnapshot(async document => {
@@ -48,18 +54,44 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
           this.setState({ profile });
         }
       });
+    this.setHeaderOptions();
+    this.getFriends(this.props.userProfile.user.userUuid);
+  }
 
+  getFriends = async (userUuid: string) => {
+    const db = firebase.firestore();
+    this.unsubscribeFriends = db
+      .collection(Collections.FRIENDS)
+      .doc(userUuid)
+      .onSnapshot(async document => {
+        const friendUserProfiles = Array<UserProfile>();
+        if (document.exists) {
+          const data = document.data();
+          for (const userUuid of data.friendsUuid) {
+            const friend = await NetworkManager.getUserByUuid(userUuid);
+            const profile = await NetworkManager.getProfileByUuid(userUuid);
+            const userProfile = new UserProfile(friend, profile);
+            friendUserProfiles.push(userProfile);
+          }
+        }
+        this.setState({ friendUserProfiles });
+      });
+  };
+
+  setHeaderOptions = () => {
     this.props.navigation.setOptions({
       headerShown: true,
       headerRight: () => (
         <TouchableOpacity
           onPress={() => {
-            const userProfile = new UserProfile(this.props.userProfile.user, this.state.profile); 
+            const userProfile = new UserProfile(
+              this.props.userProfile.user,
+              this.state.profile
+            );
             this.props.navigation.navigate(Routes.PROFILE, {
               userProfile: userProfile
-            })
-          }
-          }
+            });
+          }}
           style={{
             backgroundColor: "transparent",
             paddingRight: 15
@@ -69,14 +101,18 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         </TouchableOpacity>
       )
     });
-  }
+  };
 
   componentWillUnmount() {
-    this.unsubscribe();
+    this.unsubscribeProfile();
+    this.unsubscribeFriends();
   }
 
   routeToSendKIT = () => {
-    this.props.navigation.navigate(Routes.SEND_KIT, { user: this.props.userProfile.user });
+    this.props.navigation.navigate(Routes.SEND_KIT, {
+      user: this.props.userProfile.user,
+      friendUserProfiles: this.state.friendUserProfiles
+    });
   };
 
   render() {

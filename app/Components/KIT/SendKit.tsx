@@ -29,11 +29,11 @@ interface ISendKitProps {
 type SENDKITNavigatorParams = {
   [Routes.SEND_KIT]: {
     user: User;
+    friendUserProfiles: UserProfile[];
   };
 };
 
 interface ISendKitState {
-  friendUserProfiles: UserProfile[];
   selectedFriendUserProfiles: UserProfile[];
   time: number | undefined;
   requestsFromMe: IRequestKit[];
@@ -46,7 +46,6 @@ export default class SendKit extends React.Component<
   constructor(props) {
     super(props);
     this.state = {
-      friendUserProfiles: [],
       selectedFriendUserProfiles: [],
       time: undefined,
       requestsFromMe: []
@@ -55,7 +54,6 @@ export default class SendKit extends React.Component<
 
   componentDidMount = async () => {
     await this.getRequestsFromMe();
-    await this.getCurrentFriends(this.props.route.params.user.userUuid);
   };
 
   componentWillUnmount() {
@@ -85,26 +83,6 @@ export default class SendKit extends React.Component<
   };
 
   unsubscribe = () => {};
-
-  getCurrentFriends = async (userUuid: string) => {
-    const db = firebase.firestore();
-    this.unsubscribe = db
-      .collection(Collections.FRIENDS)
-      .doc(userUuid)
-      .onSnapshot(async document => {
-        const friendUserProfiles = Array<UserProfile>();
-        if (document.exists) {
-          const data = document.data();
-          for (const userUuid of data.friendsUuid) {
-            const friend = await NetworkManager.getUserByUuid(userUuid);
-            const profile = await NetworkManager.getProfileByUuid(userUuid);
-            const userProfile = new UserProfile(friend, profile);
-            friendUserProfiles.push(userProfile);
-          }
-        }
-        this.setState({ friendUserProfiles });
-      });
-  };
 
   routeToSummarySendKit = () => {
     this.props.navigation.navigate(Routes.SUMMARY_SEND_KIT, {
@@ -139,13 +117,14 @@ export default class SendKit extends React.Component<
       "Continue - " + friendsNumber + friendsString + " - " + timeString;
     const isContinueButtonHidden =
       this.state.selectedFriendUserProfiles.length === 0 || this.state.time === undefined;
+    const friendUserProfiles = this.props.route.params.friendUserProfiles;
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.timeKit}>
           <TimeKit onSelectTime={this.onSelectTime} />
         </View>
         <FlatList
-          data={this.state.friendUserProfiles}
+          data={friendUserProfiles}
           renderItem={({ item }) => (
             <SelectFriendsListItem
               user={item.user}
