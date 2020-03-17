@@ -49,7 +49,8 @@ export default class RequestsKit extends React.Component<
             senderUuid: data.senderUuid,
             receiverUuid: data.receiverUuid,
             availableUntil: data.availableUntil,
-            available: data.available
+            isAvailable: data.isAvailable,
+            duration: data.duration
           };
           requests.push(request);
         }

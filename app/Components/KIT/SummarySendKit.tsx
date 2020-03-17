@@ -52,7 +52,8 @@ export default class SummarySendKit extends React.Component<
         senderUuid: user.userUuid,
         receiverUuid: friendUserProfile.user.userUuid,
         availableUntil: availableUntil.toISOString(),
-        available: true
+        isAvailable: true,
+        duration: time
       };
       requests.push(requestObject);
     }

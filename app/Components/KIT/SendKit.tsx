@@ -76,7 +76,8 @@ export default class SendKit extends React.Component<
         senderUuid: data.senderUuid,
         receiverUuid: data.receiverUuid,
         availableUntil: data.availableUntil,
-        available: data.available
+        isAvailable: data.isAvailable,
+        duration: data.duration
       };
       requestsFromMe.push(request);
     }
