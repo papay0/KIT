@@ -20,6 +20,7 @@ import { UserProfile } from "../../Models/UserProfile";
 import Collections from "../Collections/Collections";
 import { Profile } from "../../Models/Profile";
 import NetworkManager from "../../Network/NetworkManager";
+import KitsSent from "../KIT/KitsSent";
 
 interface IHomeProps {
   userProfile: UserProfile;
@@ -121,6 +122,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       <SafeAreaView style={styles.container}>
         <View style={styles.contentView}>
           <RequestsKit user={user} />
+          <KitsSent user={user} />
         </View>
         <FloatingButton
           title="Send a Coucou"

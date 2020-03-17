@@ -9,25 +9,25 @@ import RequestListItem from "./RequestListItem";
 import IRequestUser from "../../Models/RequestUser";
 import { UserProfile } from "../../Models/UserProfile";
 
-interface IRequestsKitProps {
-  user: User;
+interface IKitsSentProps {
+    user: User;
 }
 
-interface IRequestsKitState {
-  requestUsers: IRequestUser[];
+interface IKitsSentState {
+  kitsSent: IRequestUser[];
 }
 
-export default class RequestsKit extends React.Component<
-  IRequestsKitProps,
-  IRequestsKitState
+export default class KitsSent extends React.Component<
+IKitsSentProps,
+IKitsSentState
 > {
-  constructor(props: IRequestsKitProps) {
+  constructor(props: IKitsSentProps) {
     super(props);
-    this.state = { requestUsers: [] };
+    this.state = { kitsSent: [] };
   }
 
   componentDidMount() {
-    this.getRequests();
+    this.getKitSent()
   }
 
   componentWillUnmount() {
@@ -36,11 +36,11 @@ export default class RequestsKit extends React.Component<
 
   unsubscribe = () => {};
 
-  getRequests = async () => {
+  getKitSent = async () => {
     const db = firebase.firestore();
     this.unsubscribe = await db
       .collection(Collections.REQUESTS)
-      .where("receiverUuid", "==", this.props.user.userUuid)
+      .where("senderUuid", "==", this.props.user.userUuid)
       .onSnapshot(async documents => {
         const requests = Array<IRequestKit>();
         for (const doc of documents.docs) {
@@ -54,30 +54,30 @@ export default class RequestsKit extends React.Component<
           };
           requests.push(request);
         }
-        const requestUsers = Array<IRequestUser>();
+        const kitsSent = Array<IRequestUser>();
         for (const request of requests) {
-          const user = await NetworkManager.getUserByUuid(request.senderUuid);
-          const profile = await NetworkManager.getProfileByUuid(request.senderUuid);
+          const user = await NetworkManager.getUserByUuid(request.receiverUuid);
+          const profile = await NetworkManager.getProfileByUuid(request.receiverUuid);
           const userProfile = new UserProfile(user, profile);
-          const requestUser: IRequestUser = {
+          const kitSent: IRequestUser = {
             userProfile: userProfile,
             request: request
           };
-          requestUsers.push(requestUser);
+          kitsSent.push(kitSent);
         }
-        this.setState({ requestUsers: requestUsers });
+        this.setState({ kitsSent: kitsSent });
       });
   };
 
   render() {
     return (
-      this.state.requestUsers.length > 0 ? (
+      this.state.kitsSent.length > 0 ? (
       <View style={styles.container}>
         <Text style={styles.availability}>
-          Friends available
+          Requests sent
         </Text>
         <FlatList
-          data={this.state.requestUsers}
+          data={this.state.kitsSent}
           renderItem={({ item }) => (
             <RequestListItem key={item.userProfile.user.userUuid} requestUser={item}/>
           )}
