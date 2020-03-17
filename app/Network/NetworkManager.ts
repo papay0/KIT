@@ -69,10 +69,32 @@ export default class NetworkManager {
         data.firstname,
         data.lastname,
         data.timezone,
-        data.email
+        data.email,
+        data.pushNotificationToken
       );
       return user;
     }
     return undefined;
   };
+
+  static getUsers = async (): Promise<User[]> => {
+    const db = firebase.firestore();
+    const documents = await db.collection(Collections.USERS).get();
+    const users = Array<User>();
+    for (const doc of documents.docs) {
+      const userData = doc.data();
+      const user = new User(
+        userData.displayName,
+        userData.photoUrl,
+        userData.userUuid,
+        userData.firstname,
+        userData.lastname,
+        userData.timezone,
+        userData.email,
+        userData.pushNotificationToken
+      );
+      users.push(user);
+    }
+    return users;
+  }
 }

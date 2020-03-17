@@ -10,8 +10,8 @@ import Login from "../Login/Login";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
 import NetworkManager from "../../Network/NetworkManager";
-import { ProfileColor } from "../../Models/ProfileColor";
-import { Profile } from "../../Models/Profile";
+import { Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
 
 interface IConfigGoogleAuth {
   androidClientId: string;
@@ -67,6 +67,8 @@ export default class Root extends React.Component<IRootProps, IRootState> {
             .createUserWithEmailAndPassword(result.user.email, result.user.id);
         }
         const userUuid = firebase.auth().currentUser.uid;
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        const token = status === 'granted' ? await Notifications.getExpoPushTokenAsync() : "";
         const user = new User(
           result.user.name,
           result.user.photoUrl,
@@ -74,7 +76,8 @@ export default class Root extends React.Component<IRootProps, IRootState> {
           result.user.givenName,
           result.user.familyName,
           Localization.timezone,
-          result.user.email
+          result.user.email,
+          token
         );
         await NetworkManager.updateUser(user);
         this.forceUpdate();

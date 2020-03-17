@@ -45,23 +45,8 @@ export default class AddFriend extends React.Component<
   };
 
   getUsers = async () => {
-    const db = firebase.firestore();
-    const documents = await db.collection(Collections.USERS).get();
-    const users = Array<User>();
+    const users = await NetworkManager.getUsers();
     const userProfiles = Array<UserProfile>();
-    for (const doc of documents.docs) {
-      const userData = doc.data();
-      const user = new User(
-        userData.displayName,
-        userData.photoUrl,
-        userData.userUuid,
-        userData.firstname,
-        userData.lastname,
-        userData.timezone,
-        userData.email
-      );
-      users.push(user);
-    }
     for (const user of users) {
       const profile = await NetworkManager.getProfileByUuid(user.userUuid);
       const userProfile = new UserProfile(user, profile);

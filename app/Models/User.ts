@@ -6,6 +6,7 @@ interface IUser {
   lastname: string;
   timezone: string;
   email: string;
+  pushNotificationToken: string;
 }
 
 export class User implements IUser {
@@ -16,6 +17,7 @@ export class User implements IUser {
   lastname: string;
   timezone: string;
   email: string;
+  pushNotificationToken: string;
   constructor(
     displayName: string,
     photoUrl: string,
@@ -23,7 +25,8 @@ export class User implements IUser {
     firtname: string,
     lastname: string,
     timezone: string,
-    email: string
+    email: string,
+    pushNotificationToken: string
   ) {
     this.displayName = displayName;
     this.photoUrl = photoUrl;
@@ -32,5 +35,6 @@ export class User implements IUser {
     this.lastname = lastname;
     this.timezone = timezone;
     this.email = email;
+    this.pushNotificationToken = pushNotificationToken;
   }
 }
