@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
 import IRequestUser from "../../Models/RequestUser";
+import moment from "moment";
 
 interface IRequestListItemProps {
   requestUser: IRequestUser;
@@ -12,30 +13,49 @@ export default class RequestListItem extends React.Component<
   IRequestListItemProps,
   IRequestListItemState
 > {
+  interval: NodeJS.Timeout;
   constructor(props: IRequestListItemProps) {
     super(props);
     this.state = {};
   }
 
+  componentDidMount() {
+    this.interval = setInterval(() => this.setState({ time: Date.now() }), 10000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  remainingTime = (availableUntil: string): number | undefined => {
+    const availableUntilDate = moment(availableUntil);
+    const now = moment(new Date());
+    const duration = moment.duration(availableUntilDate.diff(now));
+    const minutes = duration.asMinutes();
+    return minutes > 0 ? Math.floor(minutes) : undefined;
+  };
+
   render() {
     const request = this.props.requestUser.request;
     const user = this.props.requestUser.userProfile.user;
     const profile = this.props.requestUser.userProfile.profile;
-    return (
-      <View style={{...styles.container, backgroundColor: profile.color}}>
+    const remainingTime = this.remainingTime(request.availableUntil);
+    return remainingTime ? (
+      <View style={{ ...styles.container, backgroundColor: profile.color }}>
         <View style={styles.containerProfilePicture}>
           <Image style={styles.image} source={{ uri: user.photoUrl }} />
         </View>
         <View style={styles.containerInfoProfile}>
           <Text style={styles.names}>{user.displayName}</Text>
-          <Text style={styles.availability}>Available for 20 minutes</Text>
+    <Text style={styles.availability}>Available for {remainingTime} {remainingTime > 1 ? "minutes" : "minute"}</Text>
           <View style={styles.containerAcceptCall}>
-            <TouchableOpacity >
+            <TouchableOpacity>
               <Text style={styles.names}>Accept call ☎️</Text>
             </TouchableOpacity>
           </View>
         </View>
       </View>
+    ) : (
+      <View />
     );
   }
 }
@@ -52,7 +72,7 @@ const styles = StyleSheet.create({
     marginLeft: 20
   },
   containerAcceptCall: {
-      backgroundColor: "rgba(255, 255, 255, 0.2)",
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     // backgroundColor: "red",
     borderRadius: 10,
     padding: 6
