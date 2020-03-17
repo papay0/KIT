@@ -90,7 +90,8 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
               this.state.profile
             );
             this.props.navigation.navigate(Routes.PROFILE, {
-              userProfile: userProfile
+              userProfile: userProfile,
+              friendUserProfiles: this.state.friendUserProfiles
             });
           }}
           style={{

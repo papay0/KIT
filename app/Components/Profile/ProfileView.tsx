@@ -13,6 +13,7 @@ import { Profile } from "../../Models/Profile";
 type ProfileNavigatorParams = {
   [Routes.PROFILE]: {
     userProfile: UserProfile;
+    friendUserProfiles: UserProfile[];
   };
 };
 
@@ -70,6 +71,7 @@ export default class ProfileView extends React.Component<
     const userProfile = this.props.route.params.userProfile;
     const user = userProfile.user;
     const profile = this.state.profile;
+    const friendUserProfiles = this.props.route.params.friendUserProfiles;
     return (
       <SafeAreaView style={styles.container}>
         <MyProfile
@@ -77,7 +79,7 @@ export default class ProfileView extends React.Component<
           profile={profile}
           navigation={this.props.navigation}
         />
-        <Friends user={user} navigation={this.props.navigation} />
+        <Friends user={user} navigation={this.props.navigation} friendUserProfiles={friendUserProfiles} />
         <Button title="Sign Out" onPress={() => this.signOut()} />
       </SafeAreaView>
     );

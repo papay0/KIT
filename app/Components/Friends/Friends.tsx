@@ -14,6 +14,7 @@ import NetworkManager from "../../Network/NetworkManager";
 interface IFriendsProps {
   user: User;
   navigation: StackNavigationProp<ParamListBase>;
+  friendUserProfiles: UserProfile[];
 }
 
 interface IFriendsState {
@@ -24,9 +25,9 @@ export default class Friends extends React.Component<
   IFriendsProps,
   IFriendsState
 > {
-  constructor(props) {
+  constructor(props: IFriendsProps) {
     super(props);
-    this.state = { friendUserProfiles: [] };
+    this.state = { friendUserProfiles: props.friendUserProfiles };
   }
 
   componentDidMount = async () => {
