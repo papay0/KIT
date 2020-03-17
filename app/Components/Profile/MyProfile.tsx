@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, Button } from "react-native";
+import { StyleSheet, Text, View, Image, Button, TouchableOpacity } from "react-native";
 import { User } from "../../Models/User";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
@@ -27,17 +27,15 @@ export default class MyProfile extends React.Component<IMyProfileProps> {
     const user = this.props.user;
     const profile = this.props.profile;
     return (
-      <View style={{ ...styles.container, backgroundColor: profile.color }}>
-        <View style={styles.containerProfilePicture}>
-          <Image style={styles.image} source={{ uri: user.photoUrl }} />
-        </View>
+      <View style={{ ...styles.container }}>
+        <TouchableOpacity style={styles.containerProfilePicture} onPress={this.onPressPickProfileColor}>
+            <Image
+              style={{ ...styles.image, borderColor: profile.color }}
+              source={{ uri: user.photoUrl }}
+            />
+        </TouchableOpacity>
         <View style={styles.containerInfoProfile}>
-          <Text style={styles.names}>{user.firstname}</Text>
-          <Text style={styles.names}>{user.lastname}</Text>
-          <Button
-            title="Pick your profile color"
-            onPress={this.onPressPickProfileColor}
-          ></Button>
+          <Text style={styles.names}>{user.displayName}</Text>
         </View>
       </View>
     );
@@ -46,28 +44,26 @@ export default class MyProfile extends React.Component<IMyProfileProps> {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    margin: 20,
-    padding: 10,
+    // flex: 1,
     borderRadius: 10
   },
   containerProfilePicture: {
-    alignItems: "flex-start"
+    alignItems: "center"
   },
   containerInfoProfile: {
-    flexDirection: "column",
     justifyContent: "center",
-    flex: 1,
-    margin: 10
+    alignItems: "center",
+    margin: 22
   },
   names: {
-    fontSize: 20
+    fontSize: 20,
+    fontWeight: "bold"
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 130,
+    height: 130,
     borderColor: "rgba(0,0,0,0.2)",
-    borderWidth: 3,
+    borderWidth: 4,
     borderRadius: 150
   }
 });

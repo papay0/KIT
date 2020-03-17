@@ -28,13 +28,41 @@ export default class App extends React.Component {
     return (
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name={Routes.ROOT} component={Root} options={{ title: "Coucou", headerShown: true}}/>
-          <Stack.Screen name={Routes.PROFILE} component={ProfileView} options={{ title: "Your profile"}}/>
-          <Stack.Screen name={Routes.ADD_FRIEND} component={AddFriend} options={{ title: "Add a friend"}}/>
-          <Stack.Screen name={Routes.SEND_KIT} component={SendKit} options={{ title: "Select time & friends"}}/>
-          <Stack.Screen name={Routes.TIME_KIT} component={TimeKit} options={{ title: "Select your availability"}}/>
-          <Stack.Screen name={Routes.SUMMARY_SEND_KIT} component={SummarySendKit} options={{ title: "Double check..."}}/>
-          <Stack.Screen name={Routes.PROFILE_COLOR_PICKER} component={ProfileColorPicker} options={{ title: "Choose your profile color"}}/>
+          <Stack.Screen
+            name={Routes.ROOT}
+            component={Root}
+            options={{ title: "Coucou", headerShown: true }}
+          />
+          <Stack.Screen
+            name={Routes.PROFILE}
+            component={ProfileView}
+            options={{ headerTitle: null }}
+          />
+          <Stack.Screen
+            name={Routes.ADD_FRIEND}
+            component={AddFriend}
+            options={{ title: "Add a friend" }}
+          />
+          <Stack.Screen
+            name={Routes.SEND_KIT}
+            component={SendKit}
+            options={{ title: "Select time & friends" }}
+          />
+          <Stack.Screen
+            name={Routes.TIME_KIT}
+            component={TimeKit}
+            options={{ title: "Select your availability" }}
+          />
+          <Stack.Screen
+            name={Routes.SUMMARY_SEND_KIT}
+            component={SummarySendKit}
+            options={{ title: "Double check..." }}
+          />
+          <Stack.Screen
+            name={Routes.PROFILE_COLOR_PICKER}
+            component={ProfileColorPicker}
+            options={{ title: "Choose your profile color" }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     );

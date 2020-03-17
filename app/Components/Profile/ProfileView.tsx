@@ -25,13 +25,16 @@ interface IProfileState {
   profile: Profile;
 }
 
-export default class ProfileView extends React.Component<IProfileProps, IProfileState> {
+export default class ProfileView extends React.Component<
+  IProfileProps,
+  IProfileState
+> {
   constructor(props: IProfileProps) {
     super(props);
-    this.state = {profile: props.route.params.userProfile.profile};
+    this.state = { profile: props.route.params.userProfile.profile };
   }
 
-  unsubscribe = () => {}
+  unsubscribe = () => {};
   componentDidMount = async () => {
     const userUuid = this.props.route.params.userProfile.user.userUuid;
     const db = firebase.firestore();
@@ -45,7 +48,14 @@ export default class ProfileView extends React.Component<IProfileProps, IProfile
           this.setState({ profile });
         }
       });
-  }
+      this.setHeaderStyle();
+  };
+
+  setHeaderStyle = () => {
+    this.props.navigation.setOptions({
+      headerStyle: { shadowColor: "transparent" }
+    });
+  };
 
   componentWillUnmount() {
     this.unsubscribe();
@@ -62,11 +72,12 @@ export default class ProfileView extends React.Component<IProfileProps, IProfile
     const profile = this.state.profile;
     return (
       <SafeAreaView style={styles.container}>
-        <MyProfile user={user} profile={profile} navigation={this.props.navigation}/>
-        <Friends
+        <MyProfile
           user={user}
+          profile={profile}
           navigation={this.props.navigation}
         />
+        <Friends user={user} navigation={this.props.navigation} />
         <Button title="Sign Out" onPress={() => this.signOut()} />
       </SafeAreaView>
     );
@@ -75,6 +86,7 @@ export default class ProfileView extends React.Component<IProfileProps, IProfile
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: "white"
   }
 });
