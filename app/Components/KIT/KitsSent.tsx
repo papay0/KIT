@@ -8,19 +8,16 @@ import NetworkManager from "../../Network/NetworkManager";
 import RequestListItem from "./RequestListItem";
 import IRequestUser from "../../Models/RequestUser";
 import { UserProfile } from "../../Models/UserProfile";
-import { useSelectMessaging } from "../PlatformUI/useSelectMessaging";
-import { connectActionSheet, ActionSheetOptions } from '@expo/react-native-action-sheet';
 
 interface IKitsSentProps {
     user: User;
-    showActionSheetWithOptions: (options: ActionSheetOptions, callback: (i: number) => void) => void;
 }
 
 interface IKitsSentState {
   kitsSent: IRequestUser[];
 }
 
-class KitsSent extends React.Component<
+export default class KitsSent extends React.Component<
 IKitsSentProps,
 IKitsSentState
 > {
@@ -72,35 +69,6 @@ IKitsSentState
       });
   };
 
-  callBackSelectMessaging = (index: number) => {
-    if (index === 0) {
-      Linking.openURL("fb-messenger://");
-    } else if (index === 1) {
-      Linking.openURL("whatsapp://");
-    } else if (index === 2) {
-
-    }
-  }
-
-  openMessagingActionSheet = (onChooseAction: (buttonIndex: number) => void) => {
-    const options = ["Messenger", "WhatsApp", "Cancel"];
-    const cancelButtonIndex = 2;
-
-    this.props.showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex
-      },
-      buttonIndex => {
-        onChooseAction(buttonIndex);
-      }
-    );
-  };
-
-  onCall = (kitSent: IRequestUser) => {
-    this.openMessagingActionSheet(this.callBackSelectMessaging);
-  }
-
   render() {
     return (
       this.state.kitsSent.length > 0 ? (
@@ -111,7 +79,7 @@ IKitsSentState
         <FlatList
           data={this.state.kitsSent}
           renderItem={({ item }) => (
-            <RequestListItem key={item.userProfile.user.userUuid} onCall={() => {this.onCall(item)}} requestUser={item}/>
+            <RequestListItem key={item.userProfile.user.userUuid} onCall={() => {}} requestUser={item}/>
           )}
           keyExtractor={request => request.userProfile.user.userUuid}
         />
@@ -132,5 +100,3 @@ const styles = StyleSheet.create({
     fontSize: 25
   }
 });
-
-export default connectActionSheet(KitsSent);

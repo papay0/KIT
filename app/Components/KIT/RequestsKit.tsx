@@ -8,16 +8,19 @@ import NetworkManager from "../../Network/NetworkManager";
 import RequestListItem from "./RequestListItem";
 import IRequestUser from "../../Models/RequestUser";
 import { UserProfile } from "../../Models/UserProfile";
+import AppLink from "react-native-app-link";
+import { ActionSheetOptions, connectActionSheet } from "@expo/react-native-action-sheet";
 
 interface IRequestsKitProps {
   user: User;
+  showActionSheetWithOptions: (options: ActionSheetOptions, callback: (i: number) => void) => void;
 }
 
 interface IRequestsKitState {
   requestUsers: IRequestUser[];
 }
 
-export default class RequestsKit extends React.Component<
+class RequestsKit extends React.Component<
   IRequestsKitProps,
   IRequestsKitState
 > {
@@ -69,6 +72,46 @@ export default class RequestsKit extends React.Component<
       });
   };
 
+  callBackSelectMessaging = (index: number) => {
+    if (index === 0) {
+      const url = "fb-messenger://";
+      AppLink.maybeOpenURL("fb-messenger://", { appName: "messenger", appStoreId: 454638411, appStoreLocale: "us", playStoreId: "com.facebook.orca" }).then(() => {
+        // do something
+      })
+      .catch((err) => {
+        // log
+        console.log("error = " + err);
+      });
+    } else if (index === 1) {
+      AppLink.maybeOpenURL("whatsapp://", { appName: "whatsapp-messenger", appStoreId: 310633997, appStoreLocale: "us", playStoreId: "com.whatsapp" }).then(() => {
+        // do something
+      })
+      .catch((err) => {
+        // log
+        console.log("error = " + err);
+      });
+    }
+  }
+
+  openMessagingActionSheet = (onChooseAction: (buttonIndex: number) => void) => {
+    const options = ["Messenger", "WhatsApp", "Cancel"];
+    const cancelButtonIndex = 2;
+
+    this.props.showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex
+      },
+      buttonIndex => {
+        onChooseAction(buttonIndex);
+      }
+    );
+  };
+
+  onCall = (kitSent: IRequestUser) => {
+    this.openMessagingActionSheet(this.callBackSelectMessaging);
+  }
+
   render() {
     return (
       this.state.requestUsers.length > 0 ? (
@@ -79,7 +122,7 @@ export default class RequestsKit extends React.Component<
         <FlatList
           data={this.state.requestUsers}
           renderItem={({ item }) => (
-            <RequestListItem key={item.userProfile.user.userUuid} requestUser={item}/>
+            <RequestListItem key={item.userProfile.user.userUuid} onCall={() => {this.onCall(item)}} requestUser={item}/>
           )}
           keyExtractor={request => request.userProfile.user.userUuid}
         />
@@ -100,3 +143,5 @@ const styles = StyleSheet.create({
     fontSize: 25
   }
 });
+
+export default connectActionSheet(RequestsKit);
