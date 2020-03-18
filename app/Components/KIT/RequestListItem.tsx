@@ -5,6 +5,7 @@ import moment from "moment";
 
 interface IRequestListItemProps {
   requestUser: IRequestUser;
+  onCall: () => void
 }
 
 interface IRequestListItemState {}
@@ -20,7 +21,10 @@ export default class RequestListItem extends React.Component<
   }
 
   componentDidMount() {
-    this.interval = setInterval(() => this.setState({ time: Date.now() }), 10000);
+    this.interval = setInterval(
+      () => this.setState({ time: Date.now() }),
+      10000
+    );
   }
   componentWillUnmount() {
     clearInterval(this.interval);
@@ -46,9 +50,12 @@ export default class RequestListItem extends React.Component<
         </View>
         <View style={styles.containerInfoProfile}>
           <Text style={styles.names}>{user.displayName}</Text>
-    <Text style={styles.availability}>Available for {remainingTime} {remainingTime > 1 ? "minutes" : "minute"}</Text>
+          <Text style={styles.availability}>
+            Available for {remainingTime}{" "}
+            {remainingTime > 1 ? "minutes" : "minute"}
+          </Text>
           <View style={styles.containerAcceptCall}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={this.props.onCall}>
               <Text style={styles.names}>Accept call ☎️</Text>
             </TouchableOpacity>
           </View>

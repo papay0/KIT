@@ -2,6 +2,7 @@ import React from "react";
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
 import ApiKeys from "./App/Constants/ApiKeys";
 import * as firebase from "firebase";
@@ -26,45 +27,54 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name={Routes.ROOT}
-            component={Root}
-            options={{ title: "", headerShown: true, headerStyle: { shadowColor: "transparent" } }}
-          />
-          <Stack.Screen
-            name={Routes.PROFILE}
-            component={ProfileView}
-            options={{ headerTitle: null, headerStyle: { shadowColor: "transparent" }}}
-          />
-          <Stack.Screen
-            name={Routes.ADD_FRIEND}
-            component={AddFriend}
-            options={{ title: "Add a friend" }}
-          />
-          <Stack.Screen
-            name={Routes.SEND_KIT}
-            component={SendKit}
-            options={{ title: "Select time & friends" }}
-          />
-          <Stack.Screen
-            name={Routes.TIME_KIT}
-            component={TimeKit}
-            options={{ title: "Select your availability" }}
-          />
-          <Stack.Screen
-            name={Routes.SUMMARY_SEND_KIT}
-            component={SummarySendKit}
-            options={{ title: "Double check..." }}
-          />
-          <Stack.Screen
-            name={Routes.PROFILE_COLOR_PICKER}
-            component={ProfileColorPicker}
-            options={{ title: "Choose your profile color" }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <ActionSheetProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name={Routes.ROOT}
+              component={Root}
+              options={{
+                title: "",
+                headerShown: true,
+                headerStyle: { shadowColor: "transparent" }
+              }}
+            />
+            <Stack.Screen
+              name={Routes.PROFILE}
+              component={ProfileView}
+              options={{
+                headerTitle: null,
+                headerStyle: { shadowColor: "transparent" }
+              }}
+            />
+            <Stack.Screen
+              name={Routes.ADD_FRIEND}
+              component={AddFriend}
+              options={{ title: "Add a friend" }}
+            />
+            <Stack.Screen
+              name={Routes.SEND_KIT}
+              component={SendKit}
+              options={{ title: "Select time & friends" }}
+            />
+            <Stack.Screen
+              name={Routes.TIME_KIT}
+              component={TimeKit}
+              options={{ title: "Select your availability" }}
+            />
+            <Stack.Screen
+              name={Routes.SUMMARY_SEND_KIT}
+              component={SummarySendKit}
+              options={{ title: "Double check..." }}
+            />
+            <Stack.Screen
+              name={Routes.PROFILE_COLOR_PICKER}
+              component={ProfileColorPicker}
+              options={{ title: "Choose your profile color" }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ActionSheetProvider>
     );
   }
 }
