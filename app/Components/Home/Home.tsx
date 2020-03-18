@@ -160,8 +160,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   profileImage: {
-    width: 30,
-    height: 30,
+    width: 40,
+    height: 40,
     borderColor: "rgba(0,0,0,0.2)",
     borderWidth: 1,
     borderRadius: 150
