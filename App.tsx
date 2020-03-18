@@ -31,12 +31,12 @@ export default class App extends React.Component {
           <Stack.Screen
             name={Routes.ROOT}
             component={Root}
-            options={{ title: "Coucou", headerShown: true }}
+            options={{ title: "", headerShown: true, headerStyle: { shadowColor: "transparent" } }}
           />
           <Stack.Screen
             name={Routes.PROFILE}
             component={ProfileView}
-            options={{ headerTitle: null }}
+            options={{ headerTitle: null, headerStyle: { shadowColor: "transparent" }}}
           />
           <Stack.Screen
             name={Routes.ADD_FRIEND}

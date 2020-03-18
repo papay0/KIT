@@ -82,6 +82,14 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   setHeaderOptions = () => {
     this.props.navigation.setOptions({
       headerShown: true,
+      // headerTitleStyle: { textAlign: "left" },
+      headerTitle: null,
+      headerLeft: () => (
+        <View style={{ flexDirection: "row", alignItems: "baseline", marginLeft: 20 }}>
+          <Text style={styles.headerTitleCoucou}>Coucou, </Text>
+          <Text style={styles.headerTitleName}>Arthur</Text>
+        </View>
+      ),
       headerRight: () => (
         <TouchableOpacity
           onPress={() => {
@@ -162,5 +170,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     margin: 10
+  },
+  headerTitleCoucou: {
+    fontWeight: "bold",
+    fontSize: 34
+  },
+  headerTitleName: {
+    fontWeight: "normal",
+    fontSize: 28
   }
 });
