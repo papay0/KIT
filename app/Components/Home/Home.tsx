@@ -99,7 +99,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
             paddingRight: 15
           }}
         >
-          <ProfileImage />
+          {ProfileImage(this.props.userProfile)}
         </TouchableOpacity>
       )
     });
@@ -135,11 +135,11 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   }
 }
 
-function ProfileImage(): JSX.Element {
+function ProfileImage(userProfile: UserProfile): JSX.Element {
   return (
     <Image
-      style={{ width: 25, height: 25 }}
-      source={require("../../../assets/profilePicture.png")}
+      style={{ ...styles.profileImage, borderColor: userProfile.profile.color }}
+      source={{ uri: userProfile.user.photoUrl }}
     />
   );
 }
@@ -151,17 +151,16 @@ const styles = StyleSheet.create({
   contentView: {
     flex: 1
   },
+  profileImage: {
+    width: 30,
+    height: 30,
+    borderColor: "rgba(0,0,0,0.2)",
+    borderWidth: 1,
+    borderRadius: 150
+  },
   floatingButton: {
     justifyContent: "center",
     alignItems: "center",
     margin: 10
-  },
-  image: {
-    marginTop: 15,
-    width: 150,
-    height: 150,
-    borderColor: "rgba(0,0,0,0.2)",
-    borderWidth: 3,
-    borderRadius: 150
   }
 });
