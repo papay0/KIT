@@ -50,7 +50,9 @@ IKitsSentState
             receiverUuid: data.receiverUuid,
             availableUntil: data.availableUntil,
             isAvailable: data.isAvailable,
-            duration: data.duration
+            duration: data.duration,
+            inCallWith: data.inCallWith,
+            inCallVia: data.inCallVia
           };
           requests.push(request);
         }

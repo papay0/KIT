@@ -4,4 +4,6 @@ export default interface IRequestKit {
   availableUntil: string;
   isAvailable: boolean;
   duration: number;
+  inCallWith?: string;
+  inCallVia?: string;
 }

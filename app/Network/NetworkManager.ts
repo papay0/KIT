@@ -2,6 +2,7 @@ import * as firebase from "firebase";
 import { User } from "../Models/User";
 import Collections from "../Components/Collections/Collections";
 import { Profile } from "../Models/Profile";
+import IRequestKit from "../Models/RequestKit";
 
 export default class NetworkManager {
   constructor() {}
@@ -96,5 +97,21 @@ export default class NetworkManager {
       users.push(user);
     }
     return users;
-  }
+  };
+
+  // Requests
+
+  static updateRequest = async (request: IRequestKit) => {
+    const db = firebase.firestore();
+    const requestDocument = await db
+      .collection(Collections.REQUESTS)
+      .where("senderUuid", "==", request.senderUuid)
+      .where("receiverUuid", "==", request.receiverUuid)
+      .where("availableUntil", "==", request.availableUntil)
+      .get();
+    if (requestDocument.docs.length > 0) {
+      const myRequestIdToUpdate = requestDocument.docs[0];
+      await myRequestIdToUpdate.ref.update({ ...request });
+    }
+  };
 }

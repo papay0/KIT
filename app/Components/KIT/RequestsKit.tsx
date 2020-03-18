@@ -53,7 +53,9 @@ class RequestsKit extends React.Component<
             receiverUuid: data.receiverUuid,
             availableUntil: data.availableUntil,
             isAvailable: data.isAvailable,
-            duration: data.duration
+            duration: data.duration,
+            inCallWith: data.inCallWith,
+            inCallVia: data.inCallVia
           };
           requests.push(request);
         }
@@ -72,7 +74,15 @@ class RequestsKit extends React.Component<
       });
   };
 
-  callBackSelectMessaging = (index: number) => {
+  acceptCall = async (messagingPlatform: string, kitSent: IRequestUser) => {
+    const request = kitSent.request;
+    request.inCallWith = kitSent.userProfile.user.userUuid;
+    request.inCallVia = messagingPlatform;
+    request.isAvailable = false;
+    await NetworkManager.updateRequest(request);
+  }
+
+  callBackSelectMessaging = (index: number, kitSent: IRequestUser) => {
     if (index === 0) {
       const url = "fb-messenger://";
       AppLink.maybeOpenURL("fb-messenger://", { appName: "messenger", appStoreId: 454638411, appStoreLocale: "us", playStoreId: "com.facebook.orca" }).then(() => {
@@ -82,6 +92,7 @@ class RequestsKit extends React.Component<
         // log
         console.log("error = " + err);
       });
+      this.acceptCall("Messenger", kitSent);
     } else if (index === 1) {
       AppLink.maybeOpenURL("whatsapp://", { appName: "whatsapp-messenger", appStoreId: 310633997, appStoreLocale: "us", playStoreId: "com.whatsapp" }).then(() => {
         // do something
@@ -90,12 +101,15 @@ class RequestsKit extends React.Component<
         // log
         console.log("error = " + err);
       });
+      this.acceptCall("WhatsApp", kitSent);
+    } else if (index === 2) {
+      this.acceptCall("Other solution", kitSent);
     }
   }
 
   openMessagingActionSheet = (onChooseAction: (buttonIndex: number) => void) => {
-    const options = ["Messenger", "WhatsApp", "Cancel"];
-    const cancelButtonIndex = 2;
+    const options = ["Messenger", "WhatsApp", "Other solution", "Cancel"];
+    const cancelButtonIndex = 3;
 
     this.props.showActionSheetWithOptions(
       {
@@ -109,7 +123,7 @@ class RequestsKit extends React.Component<
   };
 
   onCall = (kitSent: IRequestUser) => {
-    this.openMessagingActionSheet(this.callBackSelectMessaging);
+    this.openMessagingActionSheet((index) => {this.callBackSelectMessaging(index, kitSent)});
   }
 
   render() {

@@ -5,7 +5,7 @@ import moment from "moment";
 
 interface IRequestListItemProps {
   requestUser: IRequestUser;
-  onCall: () => void
+  onCall: () => void;
 }
 
 interface IRequestListItemState {}
@@ -43,6 +43,7 @@ export default class RequestListItem extends React.Component<
     const user = this.props.requestUser.userProfile.user;
     const profile = this.props.requestUser.userProfile.profile;
     const remainingTime = this.remainingTime(request.availableUntil);
+    const isAvailable = this.props.requestUser.request.isAvailable;
     return remainingTime ? (
       <View style={{ ...styles.container, backgroundColor: profile.color }}>
         <View style={styles.containerProfilePicture}>
@@ -50,15 +51,21 @@ export default class RequestListItem extends React.Component<
         </View>
         <View style={styles.containerInfoProfile}>
           <Text style={styles.names}>{user.displayName}</Text>
-          <Text style={styles.availability}>
-            Available for {remainingTime}{" "}
-            {remainingTime > 1 ? "minutes" : "minute"}
-          </Text>
-          <View style={styles.containerAcceptCall}>
-            <TouchableOpacity onPress={this.props.onCall}>
-              <Text style={styles.names}>Accept call ☎️</Text>
-            </TouchableOpacity>
-          </View>
+          {isAvailable ? (
+            <Text style={styles.availability}>
+              Available for {remainingTime}{" "}
+              {remainingTime > 1 ? "minutes" : "minute"}
+            </Text>
+          ) : (
+            <Text style={styles.availability}>Not available anymore</Text>
+          )}
+          {isAvailable && (
+            <View style={styles.containerAcceptCall}>
+              <TouchableOpacity onPress={this.props.onCall}>
+                <Text style={styles.names}>Accept call ☎️</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
     ) : (
