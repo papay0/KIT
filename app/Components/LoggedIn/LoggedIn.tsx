@@ -1,14 +1,13 @@
 import React from "react";
 import { StyleSheet, Text, View, Image, Button } from "react-native";
-import * as firebase from "firebase";
 import "firebase/firestore";
 
-import { User } from "../../Models/User";
 import Home from "../Home/Home";
 import { ParamListBase } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import NetworkManager from "../../Network/NetworkManager";
 import { UserProfile } from "../../Models/UserProfile";
+import * as Localization from "expo-localization";
 
 interface ILoggedInProps {
   userUuid: string;
@@ -30,6 +29,8 @@ export default class LoggedIn extends React.Component<
 
   componentDidMount = async () => {
     const user = await NetworkManager.getUserByUuid(this.props.userUuid);
+    user.timezone = Localization.timezone;
+    await NetworkManager.updateUser(user);
     let profile = await NetworkManager.getProfileByUuid(this.props.userUuid);
     if (profile === undefined) {
       await NetworkManager.createProfile(this.props.userUuid);
