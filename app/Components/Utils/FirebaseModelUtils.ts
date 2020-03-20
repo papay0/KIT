@@ -2,7 +2,6 @@ import { User } from "../../Models/User";
 import { Profile } from "../../Models/Profile";
 
 export default class FirebaseModelUtils {
-    constructor() {}
 
     static getUserFromFirebaseUser = (data: firebase.firestore.DocumentData): User => {
         const user = new User(

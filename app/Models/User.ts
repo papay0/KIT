@@ -22,7 +22,7 @@ export class User implements IUser {
     email: string,
     pushNotificationToken: string
   ) {
-    this.displayName = displayName; 
+    this.displayName = displayName;
     this.userUuid = userUuid;
     this.firstname = firtname;
     this.lastname = lastname;
