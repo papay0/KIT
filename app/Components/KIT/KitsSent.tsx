@@ -81,7 +81,7 @@ IKitsSentState
         <FlatList
           data={this.state.kitsSent}
           renderItem={({ item }) => (
-            <RequestListItem key={item.userProfile.user.userUuid} onCall={() => {}} requestUser={item}/>
+            <RequestListItem key={item.userProfile.user.userUuid} user={this.props.user} onCall={() => {}} requestUser={item}/>
           )}
           keyExtractor={request => request.userProfile.user.userUuid}
         />

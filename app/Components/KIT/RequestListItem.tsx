@@ -2,9 +2,11 @@ import React from "react";
 import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
 import IRequestUser from "../../Models/RequestUser";
 import moment from "moment";
+import { User } from "../../Models/User";
 
 interface IRequestListItemProps {
   requestUser: IRequestUser;
+  user: User;
   onCall: () => void;
 }
 
@@ -44,6 +46,9 @@ export default class RequestListItem extends React.Component<
     const profile = this.props.requestUser.userProfile.profile;
     const remainingTime = this.remainingTime(request.availableUntil);
     const isAvailable = this.props.requestUser.request.isAvailable;
+    const inCallWith = this.props.requestUser.request.inCallWith;
+    const inCallVia = this.props.requestUser.request.inCallVia;
+    const isOnCallWithMe = inCallWith == this.props.user.userUuid;
     return remainingTime ? (
       <View style={{ ...styles.container, backgroundColor: profile.color }}>
         <View style={styles.containerProfilePicture}>
@@ -56,9 +61,9 @@ export default class RequestListItem extends React.Component<
               Available for {remainingTime}{" "}
               {remainingTime > 1 ? "minutes" : "minute"}
             </Text>
-          ) : (
-            <Text style={styles.availability}>Not available anymore</Text>
-          )}
+          ) : isOnCallWithMe ? (
+          <Text style={styles.availability}>You should be calling {user.firstname} using {inCallVia}</Text>
+          ) : (<Text style={styles.availability}>Not available anymore</Text>)}
           {isAvailable && (
             <View style={styles.containerAcceptCall}>
               <TouchableOpacity onPress={this.props.onCall}>

@@ -76,7 +76,7 @@ class RequestsKit extends React.Component<
 
   acceptCall = async (messagingPlatform: string, kitSent: IRequestUser) => {
     const request = kitSent.request;
-    request.inCallWith = kitSent.userProfile.user.userUuid;
+    request.inCallWith = this.props.user.userUuid;
     request.inCallVia = messagingPlatform;
     request.isAvailable = false;
     await NetworkManager.updateRequest(request);
@@ -136,7 +136,7 @@ class RequestsKit extends React.Component<
         <FlatList
           data={this.state.requestUsers}
           renderItem={({ item }) => (
-            <RequestListItem key={item.userProfile.user.userUuid} onCall={() => {this.onCall(item)}} requestUser={item}/>
+            <RequestListItem key={item.userProfile.user.userUuid} user={this.props.user} onCall={() => {this.onCall(item)}} requestUser={item}/>
           )}
           keyExtractor={request => request.userProfile.user.userUuid}
         />
