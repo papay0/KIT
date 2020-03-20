@@ -93,6 +93,7 @@ export default class Friends extends React.Component<
           title="Friend requests"
           onPress={() =>
             this.props.navigation.navigate(Routes.FRIEND_REQUESTS, {
+              user: this.props.user
             })
           }
         />

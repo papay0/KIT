@@ -10,6 +10,7 @@ import Collections from "../Collections/Collections";
 import Routes from "../Routes/Routes";
 import NetworkManager from "../../Network/NetworkManager";
 import AddFriendsListItem from "./AddFriendsListItem";
+import IFriendRequest from "../../Models/FriendRequest";
 
 interface IAddFriendsProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -57,13 +58,16 @@ export default class AddFriends extends React.Component<
 
   addFriend = async (friendUuid: string) => {
     const db = firebase.firestore();
+    const user = this.props.route.params.user;
+    const friendRequest: IFriendRequest = {
+      senderUuid: user.userUuid,
+      receiverUuid: friendUuid,
+      accepted: false,
+      ack: false
+    }
     await db
-      .collection(Collections.FRIENDS)
-      .doc(this.props.route.params.user.userUuid)
-      .set(
-        { friendsUuid: firebase.firestore.FieldValue.arrayUnion(friendUuid) },
-        { merge: true }
-      );
+      .collection(Collections.FRIEND_REQUESTS)
+      .add(friendRequest);
   };
 
   render() {

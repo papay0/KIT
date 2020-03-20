@@ -5,7 +5,6 @@ export enum ProfileColor {
 }
 
 export default class ProfileColorManager {
-  constructor() {}
 
   static getAllColors = (): ProfileColor[] => {
     const orange = ProfileColor.ORANGE;

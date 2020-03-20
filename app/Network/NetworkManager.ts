@@ -5,6 +5,8 @@ import { Profile } from "../Models/Profile";
 import IRequestKit from "../Models/RequestKit";
 import FirebaseModelUtils from "../Components/Utils/FirebaseModelUtils";
 import { ProfileColor } from "../Models/ProfileColor";
+import { UserProfile } from "../Models/UserProfile";
+import IFriendRequest from "../Models/FriendRequest";
 
 export default class NetworkManager {
   constructor() {}
@@ -81,6 +83,14 @@ export default class NetworkManager {
     return users;
   };
 
+  // UserProfile
+
+  static getUserProfileByUuid = async (userUuid: string): Promise<UserProfile> => {
+    const user = await NetworkManager.getUserByUuid(userUuid);
+    const profile = await NetworkManager.getProfileByUuid(userUuid);
+    return new UserProfile(user, profile);
+  }
+
   // Requests
 
   static updateRequest = async (request: IRequestKit) => {
@@ -96,4 +106,19 @@ export default class NetworkManager {
       await myRequestIdToUpdate.ref.update({ ...request });
     }
   };
+
+  // FriendRequests
+
+  static updateFriendRequest = async (friendRequest: IFriendRequest) => {
+    const db = firebase.firestore();
+    const friendRequestDocument = await db
+      .collection(Collections.FRIEND_REQUESTS)
+      .where("senderUuid", "==", friendRequest.senderUuid)
+      .where("receiverUuid", "==", friendRequest.receiverUuid)
+      .get();
+      if (friendRequestDocument) {
+        const friendRequestIdToUpdate = friendRequestDocument.docs[0];
+        await friendRequestIdToUpdate.ref.update({...friendRequest});
+      } 
+  }
 }

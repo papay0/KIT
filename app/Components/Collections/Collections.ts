@@ -2,7 +2,8 @@ enum Collections {
     USERS = "users",
     PROFILES = "profiles",
     FRIENDS = "friends",
-    REQUESTS = "requests"
+    REQUESTS = "requests",
+    FRIEND_REQUESTS = "friendRequests"
 }
 
 export default Collections;
