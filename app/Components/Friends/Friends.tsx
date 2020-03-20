@@ -89,6 +89,13 @@ export default class Friends extends React.Component<
             })
           }
         />
+        <Button
+          title="Friend requests"
+          onPress={() =>
+            this.props.navigation.navigate(Routes.FRIEND_REQUESTS, {
+            })
+          }
+        />
         <FlatList
           data={this.state.friendUserProfiles}
           renderItem={({ item }) => (

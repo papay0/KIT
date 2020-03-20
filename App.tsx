@@ -14,6 +14,7 @@ import SendKit from "./App/Components/KIT/SendKit";
 import TimeKit from "./App/Components/KIT/TimeKit";
 import SummarySendKit from "./App/Components/KIT/SummarySendKit";
 import ProfileColorPicker from "./App/Components/Profile/ProfileColorPicker";
+import FriendRequests from "./App/Components/Friends/FriendRequests";
 
 const Stack = createStackNavigator();
 
@@ -51,6 +52,11 @@ export default class App extends React.Component {
               name={Routes.ADD_FRIEND}
               component={AddFriend}
               options={{ title: "Add a friend" }}
+            />
+             <Stack.Screen
+              name={Routes.FRIEND_REQUESTS}
+              component={FriendRequests}
+              options={{ title: "Friend requests" }}
             />
             <Stack.Screen
               name={Routes.SEND_KIT}
