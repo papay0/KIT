@@ -10,6 +10,7 @@ import Collections from "../Collections/Collections";
 import FriendsListItem from "./FriendsListItem";
 import { UserProfile } from "../../Models/UserProfile";
 import NetworkManager from "../../Network/NetworkManager";
+import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 
 interface IFriendsProps {
   user: User;
@@ -46,16 +47,7 @@ export default class Friends extends React.Component<
       .get();
     if (document.exists) {
       const data = document.data();
-      const user = new User(
-        data.displayName,
-        data.photoUrl,
-        data.userUuid,
-        data.firstname,
-        data.lastname,
-        data.timezone,
-        data.email,
-        data.pushNotificationToken
-      );
+      const user = FirebaseModelUtils.getUserFromFirebaseUser(data);
       return user;
     }
     return undefined;

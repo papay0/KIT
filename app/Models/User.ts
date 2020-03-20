@@ -1,39 +1,31 @@
 interface IUser {
   displayName: string;
-  photoUrl: string;
   userUuid: string;
   firstname: string;
   lastname: string;
-  timezone: string;
   email: string;
   pushNotificationToken: string;
 }
 
 export class User implements IUser {
   displayName: string;
-  photoUrl: string;
   userUuid: string;
   firstname: string;
   lastname: string;
-  timezone: string;
   email: string;
   pushNotificationToken: string;
   constructor(
     displayName: string,
-    photoUrl: string,
     userUuid: string,
     firtname: string,
     lastname: string,
-    timezone: string,
     email: string,
     pushNotificationToken: string
   ) {
-    this.displayName = displayName;
-    this.photoUrl = photoUrl;
+    this.displayName = displayName; 
     this.userUuid = userUuid;
     this.firstname = firtname;
     this.lastname = lastname;
-    this.timezone = timezone;
     this.email = email;
     this.pushNotificationToken = pushNotificationToken;
   }

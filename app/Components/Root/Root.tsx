@@ -2,44 +2,37 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { User } from "../../Models/User";
 import * as firebase from "firebase";
-import * as Google from "expo-google-app-auth";
-import * as Localization from "expo-localization";
-import ApiKeys from "../../Constants/ApiKeys";
 import LoggedIn from "../LoggedIn/LoggedIn";
 import Login from "../Login/Login";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
 import NetworkManager from "../../Network/NetworkManager";
-import { Notifications } from 'expo';
-import * as Permissions from 'expo-permissions';
-
-interface IConfigGoogleAuth {
-  androidClientId: string;
-  iosClientId: string;
-  scopes: string[];
-}
+import * as AppleAuthentication from "expo-apple-authentication";
+import { ILoginMetadata } from "../Login/LoginMetadata";
 
 interface IRootProps {
   navigation: StackNavigationProp<ParamListBase>;
 }
 
 interface IRootState {
-  currentFirebaseUser: firebase.User | undefined;
+  currentFirebaseUser?: firebase.User;
   currentFirebaseUserLoaded: boolean;
+  loginMetadata?: ILoginMetadata;
 }
 
 export default class Root extends React.Component<IRootProps, IRootState> {
   constructor(props) {
     super(props);
     this.state = {
-      currentFirebaseUser: undefined,
-      currentFirebaseUserLoaded: false
+      currentFirebaseUser: null,
+      currentFirebaseUserLoaded: false,
+      loginMetadata: null
     };
   }
 
   unsubscribe = () => {};
   componentDidMount = async () => {
-    this.unsubscribe = firebase.auth().onAuthStateChanged(user => {
+    this.unsubscribe = firebase.auth().onAuthStateChanged(async user => {
       this.setState({
         currentFirebaseUser: user,
         currentFirebaseUserLoaded: true
@@ -51,56 +44,17 @@ export default class Root extends React.Component<IRootProps, IRootState> {
     this.unsubscribe();
   }
 
-  signIn = async () => {
-    try {
-      const config = this.getConfig();
-      const result = await Google.logInAsync(config);
-      if (result.type === "success" && result.user) {
-        // Super hack lol, what a great way to start this project! =)
-        try {
-          await firebase
-            .auth()
-            .signInWithEmailAndPassword(result.user.email, result.user.id);
-        } catch (e) {
-          await firebase
-            .auth()
-            .createUserWithEmailAndPassword(result.user.email, result.user.id);
-        }
-        const userUuid = firebase.auth().currentUser.uid;
-        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-        const token = status === 'granted' ? await Notifications.getExpoPushTokenAsync() : "";
-        const user = new User(
-          result.user.name,
-          result.user.photoUrl,
-          userUuid,
-          result.user.givenName,
-          result.user.familyName,
-          Localization.timezone,
-          result.user.email,
-          token
-        );
-        await NetworkManager.updateUser(user);
-        this.forceUpdate();
-      } else {
-        console.log("cancelled");
-      }
-    } catch (e) {
-      console.log("error", e);
+  signedIn = async (user: User, loginMetadata: ILoginMetadata, shouldUpdateUser: boolean) => {
+    if (shouldUpdateUser) {
+      await NetworkManager.updateUser(user);
     }
+    this.setState({loginMetadata: loginMetadata});
   };
 
   signOut = async () => {
     await firebase.auth().signOut();
-    this.forceUpdate();
+    this.setState({currentFirebaseUserLoaded: false, currentFirebaseUser: null});
   };
-
-  getConfig(): IConfigGoogleAuth {
-    return {
-      androidClientId: ApiKeys.GoogleAuthConfig.androidClientId,
-      iosClientId: ApiKeys.GoogleAuthConfig.iosClientId,
-      scopes: ["profile", "email"]
-    };
-  }
 
   render() {
     const user = this.state.currentFirebaseUser;
@@ -113,10 +67,14 @@ export default class Root extends React.Component<IRootProps, IRootState> {
           <LoggedIn
             userUuid={user.uid}
             signOut={this.signOut}
+            loginMetadata={this.state.loginMetadata}
             navigation={this.props.navigation}
           />
         ) : (
-          <Login signIn={this.signIn} navigation={this.props.navigation} />
+          <Login
+            signedIn={this.signedIn}
+            navigation={this.props.navigation}
+          />
         )}
       </View>
     );

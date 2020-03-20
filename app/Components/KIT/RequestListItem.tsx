@@ -47,7 +47,7 @@ export default class RequestListItem extends React.Component<
     return remainingTime ? (
       <View style={{ ...styles.container, backgroundColor: profile.color }}>
         <View style={styles.containerProfilePicture}>
-          <Image style={styles.image} source={{ uri: user.photoUrl }} />
+          <Image style={styles.image} source={{ uri: profile.photoUrl }} />
         </View>
         <View style={styles.containerInfoProfile}>
           <Text style={styles.names}>{user.displayName}</Text>

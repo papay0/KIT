@@ -36,7 +36,8 @@ export default class ProfileColorPicker extends React.Component<
 
   onPress = async (color: ProfileColor) => {
     this.setState({currentColor: color});
-    const newProfile = new Profile(this.props.route.params.profile.userUuid, color);
+    const newProfile = this.props.route.params.profile;
+    newProfile.color = color;
     await NetworkManager.updateProfile(newProfile);
   };
 

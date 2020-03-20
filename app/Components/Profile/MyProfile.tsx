@@ -13,7 +13,7 @@ interface IMyProfileProps {
 }
 
 export default class MyProfile extends React.Component<IMyProfileProps> {
-  constructor(props) {
+  constructor(props: IMyProfileProps) {
     super(props);
   }
 
@@ -31,7 +31,7 @@ export default class MyProfile extends React.Component<IMyProfileProps> {
         <TouchableOpacity style={styles.containerProfilePicture} onPress={this.onPressPickProfileColor}>
             <Image
               style={{ ...styles.image, borderColor: profile.color }}
-              source={{ uri: user.photoUrl }}
+              source={{ uri: profile.photoUrl }}
             />
         </TouchableOpacity>
         <View style={styles.containerInfoProfile}>

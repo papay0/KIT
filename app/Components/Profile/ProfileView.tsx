@@ -9,6 +9,7 @@ import MyProfile from "./MyProfile";
 import { UserProfile } from "../../Models/UserProfile";
 import Collections from "../Collections/Collections";
 import { Profile } from "../../Models/Profile";
+import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 
 type ProfileNavigatorParams = {
   [Routes.PROFILE]: {
@@ -45,7 +46,7 @@ export default class ProfileView extends React.Component<
       .onSnapshot(async document => {
         if (document.exists) {
           const data = document.data();
-          const profile = new Profile(data.userUuid, data.color);
+          const profile = FirebaseModelUtils.getProfileFromFirebaseUser(data);
           this.setState({ profile });
         }
       });

@@ -13,7 +13,7 @@ import { ActionSheetOptions, connectActionSheet } from "@expo/react-native-actio
 
 interface IRequestsKitProps {
   user: User;
-  showActionSheetWithOptions: (options: ActionSheetOptions, callback: (i: number) => void) => void;
+  // showActionSheetWithOptions: (options: ActionSheetOptions, callback: (i: number) => void) => void;
 }
 
 interface IRequestsKitState {

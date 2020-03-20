@@ -3,6 +3,8 @@ import { User } from "../Models/User";
 import Collections from "../Components/Collections/Collections";
 import { Profile } from "../Models/Profile";
 import IRequestKit from "../Models/RequestKit";
+import FirebaseModelUtils from "../Components/Utils/FirebaseModelUtils";
+import { ProfileColor } from "../Models/ProfileColor";
 
 export default class NetworkManager {
   constructor() {}
@@ -19,7 +21,7 @@ export default class NetworkManager {
       .get();
     if (document.exists) {
       const data = document.data();
-      const profile = new Profile(userUuid, data.color);
+      const profile = FirebaseModelUtils.getProfileFromFirebaseUser(data);
       return profile;
     }
     return undefined;
@@ -33,10 +35,9 @@ export default class NetworkManager {
       .set(JSON.parse(JSON.stringify(profile)), { merge: true });
   };
 
-  static createProfile = async (userUuid: string) => {
+  static createProfile = async (userUuid: string, photoUrl: string, timezone: string) => {
     const db = firebase.firestore();
-    const profile = new Profile(userUuid);
-    console.log("I create a profile");
+    const profile = new Profile(userUuid, photoUrl, timezone, ProfileColor.NONE);
     await db
       .collection(Collections.PROFILES)
       .doc(userUuid)
@@ -63,17 +64,7 @@ export default class NetworkManager {
       .get();
     if (document.exists) {
       const data = document.data();
-      const user = new User(
-        data.displayName,
-        data.photoUrl,
-        data.userUuid,
-        data.firstname,
-        data.lastname,
-        data.timezone,
-        data.email,
-        data.pushNotificationToken
-      );
-      return user;
+      return FirebaseModelUtils.getUserFromFirebaseUser(data);
     }
     return undefined;
   };
@@ -83,17 +74,8 @@ export default class NetworkManager {
     const documents = await db.collection(Collections.USERS).get();
     const users = Array<User>();
     for (const doc of documents.docs) {
-      const userData = doc.data();
-      const user = new User(
-        userData.displayName,
-        userData.photoUrl,
-        userData.userUuid,
-        userData.firstname,
-        userData.lastname,
-        userData.timezone,
-        userData.email,
-        userData.pushNotificationToken
-      );
+      const data = doc.data();
+      const user = FirebaseModelUtils.getUserFromFirebaseUser(data);
       users.push(user);
     }
     return users;

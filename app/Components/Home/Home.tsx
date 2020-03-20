@@ -21,6 +21,7 @@ import Collections from "../Collections/Collections";
 import { Profile } from "../../Models/Profile";
 import NetworkManager from "../../Network/NetworkManager";
 import KitsSent from "../KIT/KitsSent";
+import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 
 interface IHomeProps {
   userProfile: UserProfile;
@@ -51,11 +52,11 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       .onSnapshot(async document => {
         if (document.exists) {
           const data = document.data();
-          const profile = new Profile(data.userUuid, data.color);
+          const profile = FirebaseModelUtils.getProfileFromFirebaseUser(data);
           this.setState({ profile });
+          this.setHeaderOptions();
         }
       });
-    this.setHeaderOptions();
     this.getFriends(this.props.userProfile.user.userUuid);
   }
 
@@ -80,14 +81,21 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   };
 
   setHeaderOptions = () => {
+    const user = this.props.userProfile.user;
     this.props.navigation.setOptions({
       headerShown: true,
       // headerTitleStyle: { textAlign: "left" },
       headerTitle: null,
       headerLeft: () => (
-        <View style={{ flexDirection: "row", alignItems: "baseline", marginLeft: 20 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "baseline",
+            marginLeft: 20
+          }}
+        >
           <Text style={styles.headerTitleCoucou}>Coucou, </Text>
-          <Text style={styles.headerTitleName}>Arthur</Text>
+          <Text style={styles.headerTitleName}>{user.firstname}</Text>
         </View>
       ),
       headerRight: () => (
@@ -107,7 +115,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
             paddingRight: 15
           }}
         >
-          {ProfileImage(this.props.userProfile)}
+          {ProfileImage(this.state.profile)}
         </TouchableOpacity>
       )
     });
@@ -143,11 +151,11 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   }
 }
 
-function ProfileImage(userProfile: UserProfile): JSX.Element {
+function ProfileImage(profile: Profile): JSX.Element {
   return (
     <Image
-      style={{ ...styles.profileImage, borderColor: userProfile.profile.color }}
-      source={{ uri: userProfile.user.photoUrl }}
+      style={{ ...styles.profileImage, borderColor: profile.color }}
+      source={{ uri: profile.photoUrl }}
     />
   );
 }
