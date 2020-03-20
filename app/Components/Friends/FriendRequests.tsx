@@ -8,7 +8,7 @@ import { UserProfile } from "../../Models/UserProfile";
 import * as firebase from "firebase";
 import Collections from "../Collections/Collections";
 import Routes from "../Routes/Routes";
-import AddFriendListItem from "./AddFriendListItem";
+import AddFriendListItem from "./AddFriendsListItem";
 import NetworkManager from "../../Network/NetworkManager";
 
 interface IFriendRequestsProps {

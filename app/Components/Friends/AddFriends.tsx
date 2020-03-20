@@ -8,30 +8,30 @@ import { UserProfile } from "../../Models/UserProfile";
 import * as firebase from "firebase";
 import Collections from "../Collections/Collections";
 import Routes from "../Routes/Routes";
-import AddFriendListItem from "./AddFriendListItem";
 import NetworkManager from "../../Network/NetworkManager";
+import AddFriendsListItem from "./AddFriendsListItem";
 
-interface IAddFriendProps {
+interface IAddFriendsProps {
   navigation: StackNavigationProp<ParamListBase>;
-  route: RouteProp<AddFriendNavigatorParams, Routes.ADD_FRIEND>;
+  route: RouteProp<AddFriendsNavigatorParams, Routes.ADD_FRIENDS>;
 }
 
-type AddFriendNavigatorParams = {
-  [Routes.ADD_FRIEND]: {
+type AddFriendsNavigatorParams = {
+  [Routes.ADD_FRIENDS]: {
     user: User;
     currentFriendsUuid: string[];
   };
 };
 
-interface IAddFriendState {
+interface IAddFriendsState {
   userProfiles: UserProfile[];
 }
 
-export default class AddFriend extends React.Component<
-  IAddFriendProps,
-  IAddFriendState
+export default class AddFriends extends React.Component<
+  IAddFriendsProps,
+  IAddFriendsState
 > {
-  constructor(props) {
+  constructor(props: IAddFriendsProps) {
     super(props);
   }
 
@@ -74,7 +74,7 @@ export default class AddFriend extends React.Component<
           data={this.state.userProfiles}
           renderItem={({ item }) =>
             item.user.userUuid !== user.userUuid && (
-              <AddFriendListItem
+              <AddFriendsListItem
                 user={item.user}
                 profile={item.profile}
                 onPress={() => {

@@ -81,7 +81,7 @@ export default class Friends extends React.Component<
         <Button
           title="Add friend"
           onPress={() =>
-            this.props.navigation.navigate(Routes.ADD_FRIEND, {
+            this.props.navigation.navigate(Routes.ADD_FRIENDS, {
               user: this.props.user,
               currentFriendsUuid: this.state.friendUserProfiles.map(
                 friendProfile => friendProfile.user.userUuid

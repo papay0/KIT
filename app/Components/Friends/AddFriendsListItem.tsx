@@ -5,23 +5,23 @@ import moment from "moment-timezone";
 import { User } from "../../Models/User";
 import { Profile } from "../../Models/Profile";
 
-interface IAddFriendListItemProps {
+interface IAddFriendsListItemProps {
   user: User;
   profile: Profile;
   currentFriendsUuid: string[];
   onPress: () => void;
 }
 
-interface IAddFriendListItemState {
+interface IAddFriendsListItemState {
   title: string;
   disabled: boolean;
 }
 
-export default class AddFriendListItem extends React.Component<
-IAddFriendListItemProps,
-IAddFriendListItemState
+export default class AddFriendsListItem extends React.Component<
+IAddFriendsListItemProps,
+IAddFriendsListItemState
 > {
-  constructor(props: IAddFriendListItemProps) {
+  constructor(props: IAddFriendsListItemProps) {
     super(props);
     const alreadyFriend = props.currentFriendsUuid.includes(
       props.user.userUuid

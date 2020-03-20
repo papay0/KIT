@@ -9,12 +9,12 @@ import * as firebase from "firebase";
 import Root from "./App/Components/Root/Root";
 import ProfileView from "./App/Components/Profile/ProfileView";
 import Routes from "./App/Components/Routes/Routes";
-import AddFriend from "./App/Components/Friends/AddFriend";
 import SendKit from "./App/Components/KIT/SendKit";
 import TimeKit from "./App/Components/KIT/TimeKit";
 import SummarySendKit from "./App/Components/KIT/SummarySendKit";
 import ProfileColorPicker from "./App/Components/Profile/ProfileColorPicker";
 import FriendRequests from "./App/Components/Friends/FriendRequests";
+import AddFriends from "./App/Components/Friends/AddFriends";
 
 const Stack = createStackNavigator();
 
@@ -49,8 +49,8 @@ export default class App extends React.Component {
               }}
             />
             <Stack.Screen
-              name={Routes.ADD_FRIEND}
-              component={AddFriend}
+              name={Routes.ADD_FRIENDS}
+              component={AddFriends}
               options={{ title: "Add a friend" }}
             />
              <Stack.Screen
