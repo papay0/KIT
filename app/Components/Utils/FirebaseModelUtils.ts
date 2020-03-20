@@ -10,7 +10,7 @@ export default class FirebaseModelUtils {
             data.firstname,
             data.lastname,
             data.email,
-            data.pushNtificationToken
+            data.pushNotificationToken
           );
           return user;
       };
