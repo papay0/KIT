@@ -10,6 +10,7 @@ import IRequestUser from "../../Models/RequestUser";
 import { UserProfile } from "../../Models/UserProfile";
 import AppLink from "react-native-app-link";
 import { ActionSheetOptions, connectActionSheet } from "@expo/react-native-action-sheet";
+import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 
 interface IRequestsKitProps {
   user: User;
@@ -41,22 +42,14 @@ class RequestsKit extends React.Component<
 
   getRequests = async () => {
     const db = firebase.firestore();
-    this.unsubscribe = await db
+    this.unsubscribe = db
       .collection(Collections.REQUESTS)
       .where("receiverUuid", "==", this.props.user.userUuid)
       .onSnapshot(async documents => {
         const requests = Array<IRequestKit>();
         for (const doc of documents.docs) {
           const data = doc.data();
-          const request: IRequestKit = {
-            senderUuid: data.senderUuid,
-            receiverUuid: data.receiverUuid,
-            availableUntil: data.availableUntil,
-            isAvailable: data.isAvailable,
-            duration: data.duration,
-            inCallWith: data.inCallWith,
-            inCallVia: data.inCallVia
-          };
+          const request = FirebaseModelUtils.getRequestFromFirebaseRequest(data);
           requests.push(request);
         }
         const requestUsers = Array<IRequestUser>();

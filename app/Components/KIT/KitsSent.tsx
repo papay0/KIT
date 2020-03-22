@@ -8,6 +8,7 @@ import NetworkManager from "../../Network/NetworkManager";
 import RequestListItem from "./RequestListItem";
 import IRequestUser from "../../Models/RequestUser";
 import { UserProfile } from "../../Models/UserProfile";
+import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 
 interface IKitsSentProps {
     user: User;
@@ -45,15 +46,7 @@ IKitsSentState
         const requests = Array<IRequestKit>();
         for (const doc of documents.docs) {
           const data = doc.data();
-          const request: IRequestKit = {
-            senderUuid: data.senderUuid,
-            receiverUuid: data.receiverUuid,
-            availableUntil: data.availableUntil,
-            isAvailable: data.isAvailable,
-            duration: data.duration,
-            inCallWith: data.inCallWith,
-            inCallVia: data.inCallVia
-          };
+          const request = FirebaseModelUtils.getRequestFromFirebaseRequest(data);
           requests.push(request);
         }
         const kitsSent = Array<IRequestUser>();

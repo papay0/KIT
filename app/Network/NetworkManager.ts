@@ -100,6 +100,7 @@ export default class NetworkManager {
       .where("senderUuid", "==", request.senderUuid)
       .where("receiverUuid", "==", request.receiverUuid)
       .where("availableUntil", "==", request.availableUntil)
+      .where("requestUuid", "==", request.requestUuid)
       .get();
     if (requestDocument.docs.length > 0) {
       const myRequestIdToUpdate = requestDocument.docs[0];

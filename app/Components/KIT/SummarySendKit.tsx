@@ -9,7 +9,7 @@ import FloatingButton from "../FloatingButton/FloatingButton";
 import FriendListItem from "../Friends/FriendsListItem";
 import Collections from "../Collections/Collections";
 import IRequestKit from "../../Models/RequestKit";
-import { Profile } from "../../Models/Profile";
+import uuid from 'react-native-uuid';
 import { UserProfile } from "../../Models/UserProfile";
 
 interface ISummarySendKitProps {
@@ -55,7 +55,8 @@ export default class SummarySendKit extends React.Component<
         isAvailable: true,
         duration: time,
         inCallWith: null,
-        inCallVia: null
+        inCallVia: null,
+        requestUuid: uuid.v1()
       };
       requests.push(requestObject);
     }

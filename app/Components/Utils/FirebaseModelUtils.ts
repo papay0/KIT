@@ -1,6 +1,7 @@
 import { User } from "../../Models/User";
 import { Profile } from "../../Models/Profile";
 import IFriendRequest from "../../Models/FriendRequest";
+import IRequestKit from "../../Models/RequestKit";
 
 export default class FirebaseModelUtils {
   static getUserFromFirebaseUser = (
@@ -21,6 +22,21 @@ export default class FirebaseModelUtils {
     data: firebase.firestore.DocumentData
   ): Profile => {
     return new Profile(data.userUuid, data.photoUrl, data.timezone, data.color);
+  };
+
+  static getRequestFromFirebaseRequest = (
+    data: firebase.firestore.DocumentData
+  ): IRequestKit => {
+    return {
+      senderUuid: data.senderUuid,
+      receiverUuid: data.receiverUuid,
+      availableUntil: data.availableUntil,
+      isAvailable: data.isAvailable,
+      duration: data.duration,
+      inCallWith: data.inCallWith,
+      inCallVia: data.inCallVia,
+      requestUuid: data.receiverUuid
+    };
   };
 
   static getFriendRequestFromFirebaseFriendRequest = (

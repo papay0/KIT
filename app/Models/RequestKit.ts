@@ -6,4 +6,5 @@ export default interface IRequestKit {
   duration: number;
   inCallWith?: string;
   inCallVia?: string;
+  requestUuid: string;
 }
