@@ -106,19 +106,18 @@ export default class NetworkManager {
 
   // Requests
 
+  static createRequest = async (request: IRequestKit) => {
+    console.log("createRequest 1");
+    await CallableManager.createRequest(request);
+  }
+
   static updateRequest = async (request: IRequestKit) => {
-    const db = firebase.firestore();
-    const requestDocuments = await db
-      .collection(Collections.REQUESTS)
-      .where("senderUuid", "==", request.senderUuid)
-      .where("receiverUuid", "==", request.receiverUuid)
-      .where("requestUuid", "==", request.requestUuid)
-      .get();
-    if (requestDocuments.docs.length > 0) {
-      const myRequestIdToUpdate = requestDocuments.docs[0];
-      await myRequestIdToUpdate.ref.update({ ...request });
-    }
+    await CallableManager.updateRequest(request);
   };
+
+  static acceptRequest = async (request: IRequestKit, inCallVia: string, inCallWith: string) => {
+    await CallableManager.acceptRequest(request, inCallVia, inCallWith);
+  }
 
   // FriendRequests
 

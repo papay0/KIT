@@ -9,7 +9,10 @@ import RequestListItem from "./RequestListItem";
 import IRequestUser from "../../Models/RequestUser";
 import { UserProfile } from "../../Models/UserProfile";
 import AppLink from "react-native-app-link";
-import { ActionSheetOptions, connectActionSheet } from "@expo/react-native-action-sheet";
+import {
+  ActionSheetOptions,
+  connectActionSheet
+} from "@expo/react-native-action-sheet";
 import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 
 interface IRequestsKitProps {
@@ -49,13 +52,17 @@ class RequestsKit extends React.Component<
         const requests = Array<IRequestKit>();
         for (const doc of documents.docs) {
           const data = doc.data();
-          const request = FirebaseModelUtils.getRequestFromFirebaseRequest(data);
+          const request = FirebaseModelUtils.getRequestFromFirebaseRequest(
+            data
+          );
           requests.push(request);
         }
         const requestUsers = Array<IRequestUser>();
         for (const request of requests) {
           const user = await NetworkManager.getUserByUuid(request.senderUuid);
-          const profile = await NetworkManager.getProfileByUuid(request.senderUuid);
+          const profile = await NetworkManager.getProfileByUuid(
+            request.senderUuid
+          );
           const userProfile = new UserProfile(user, profile);
           const requestUser: IRequestUser = {
             userProfile: userProfile,
@@ -69,38 +76,53 @@ class RequestsKit extends React.Component<
 
   acceptCall = async (messagingPlatform: string, kitSent: IRequestUser) => {
     const request = kitSent.request;
-    request.inCallWith = this.props.user.userUuid;
-    request.inCallVia = messagingPlatform;
-    request.isAvailable = false;
-    await NetworkManager.updateRequest(request);
-  }
+    await NetworkManager.acceptRequest(
+      request,
+      messagingPlatform,
+      this.props.user.userUuid
+    );
+  };
 
   callBackSelectMessaging = (index: number, kitSent: IRequestUser) => {
     if (index === 0) {
       const url = "fb-messenger://";
-      AppLink.maybeOpenURL("fb-messenger://", { appName: "messenger", appStoreId: 454638411, appStoreLocale: "us", playStoreId: "com.facebook.orca" }).then(() => {
-        // do something
+      AppLink.maybeOpenURL("fb-messenger://", {
+        appName: "messenger",
+        appStoreId: 454638411,
+        appStoreLocale: "us",
+        playStoreId: "com.facebook.orca"
       })
-      .catch((err) => {
-        // log
-        console.log("error = " + err);
-      });
+        .then(() => {
+          // do something
+        })
+        .catch(err => {
+          // log
+          console.log("error = " + err);
+        });
       this.acceptCall("Messenger", kitSent);
     } else if (index === 1) {
-      AppLink.maybeOpenURL("whatsapp://", { appName: "whatsapp-messenger", appStoreId: 310633997, appStoreLocale: "us", playStoreId: "com.whatsapp" }).then(() => {
-        // do something
+      AppLink.maybeOpenURL("whatsapp://", {
+        appName: "whatsapp-messenger",
+        appStoreId: 310633997,
+        appStoreLocale: "us",
+        playStoreId: "com.whatsapp"
       })
-      .catch((err) => {
-        // log
-        console.log("error = " + err);
-      });
+        .then(() => {
+          // do something
+        })
+        .catch(err => {
+          // log
+          console.log("error = " + err);
+        });
       this.acceptCall("WhatsApp", kitSent);
     } else if (index === 2) {
       this.acceptCall("Other solution", kitSent);
     }
-  }
+  };
 
-  openMessagingActionSheet = (onChooseAction: (buttonIndex: number) => void) => {
+  openMessagingActionSheet = (
+    onChooseAction: (buttonIndex: number) => void
+  ) => {
     const options = ["Messenger", "WhatsApp", "Other solution", "Cancel"];
     const cancelButtonIndex = 3;
 
@@ -116,30 +138,38 @@ class RequestsKit extends React.Component<
   };
 
   onCall = (kitSent: IRequestUser) => {
-    this.openMessagingActionSheet((index) => {this.callBackSelectMessaging(index, kitSent)});
-  }
+    this.openMessagingActionSheet(index => {
+      this.callBackSelectMessaging(index, kitSent);
+    });
+  };
 
   render() {
-    return (
-      this.state.requestUsers.length > 0 ? (
+    return this.state.requestUsers.length > 0 ? (
       <View style={styles.container}>
-        <Text style={styles.availability}>
-          Friends available
-        </Text>
+        <Text style={styles.availability}>Friends available</Text>
         <FlatList
           data={this.state.requestUsers}
           renderItem={({ item }) => (
-            <RequestListItem key={item.userProfile.user.userUuid} user={this.props.user} onCall={() => {this.onCall(item)}} requestUser={item}/>
+            <RequestListItem
+              key={item.userProfile.user.userUuid}
+              user={this.props.user}
+              onCall={() => {
+                this.onCall(item);
+              }}
+              requestUser={item}
+            />
           )}
           keyExtractor={request => request.userProfile.user.userUuid}
         />
-      </View>) : <View/>
+      </View>
+    ) : (
+      <View />
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: { },
+  container: {},
   availability: {
     fontSize: 17,
     paddingTop: 20,

@@ -7,4 +7,6 @@ export default interface IRequestKit {
   inCallWith?: string;
   inCallVia?: string;
   requestUuid: string;
+  createdAt: string;
+  updatedAt: string;
 }

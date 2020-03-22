@@ -3,9 +3,9 @@ import { User } from "../Models/User";
 import Callables from "../Models/Callables";
 import _ from "lodash";
 import { Profile } from "../Models/Profile";
+import IRequestKit from "../Models/RequestKit";
 
 export default class CallableManager {
-
   // User
 
   static createUser = async (user: User) => {
@@ -38,5 +38,38 @@ export default class CallableManager {
       .functions()
       .httpsCallable(Callables.UPDATE_PROFILE);
     await updateUser({ profile: _.toPlainObject(profile) });
+  };
+
+  // Request
+
+  static createRequest = async (request: IRequestKit) => {
+    console.log("createRequest 2");
+    const createRequest = firebase
+      .functions()
+      .httpsCallable(Callables.CREATE_REQUEST);
+    console.log(_.toPlainObject(request));
+    await createRequest({ request: _.toPlainObject(request) });
+  };
+
+  static updateRequest = async (request: IRequestKit) => {
+    const updateRequest = firebase
+      .functions()
+      .httpsCallable(Callables.UPDATE_REQUEST);
+    await updateRequest({ request: _.toPlainObject(request) });
+  };
+
+  static acceptRequest = async (
+    request: IRequestKit,
+    inCallVia: string,
+    inCallWith: string
+  ) => {
+    const acceptRequest = firebase
+      .functions()
+      .httpsCallable(Callables.ACCEPT_REQUEST);
+    await acceptRequest({
+      request: _.toPlainObject(request),
+      inCallVia: inCallVia,
+      inCallWith: inCallWith
+    });
   };
 }

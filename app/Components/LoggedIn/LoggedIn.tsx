@@ -26,6 +26,7 @@ interface ILoggedInProps {
 interface ILoggedInState {
   userProfile: UserProfile | undefined;
   userUpdated: boolean;
+  profileUpdated: boolean;
 }
 
 export default class LoggedIn extends React.Component<
@@ -34,7 +35,7 @@ export default class LoggedIn extends React.Component<
 > {
   constructor(props) {
     super(props);
-    this.state = { userUpdated: false, userProfile: undefined };
+    this.state = { userUpdated: false, userProfile: undefined, profileUpdated: false };
   }
 
   unsubscribeUser = () => {};
@@ -67,7 +68,10 @@ export default class LoggedIn extends React.Component<
     let profile = await NetworkManager.getProfileByUuid(this.props.userUuid);
     if (profile !== undefined) {
       profile.timezone = Localization.timezone;
-      await NetworkManager.updateProfile(profile);
+      if (!this.state.profileUpdated) {
+        await NetworkManager.updateProfile(profile);
+        this.setState({profileUpdated: true});
+      }
     } else {
       profile = new Profile(
         this.props.userUuid,

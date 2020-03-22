@@ -11,6 +11,8 @@ import Collections from "../Collections/Collections";
 import IRequestKit from "../../Models/RequestKit";
 import uuid from 'react-native-uuid';
 import { UserProfile } from "../../Models/UserProfile";
+import { getDateNow } from "../Utils/Utils";
+import NetworkManager from "../../Network/NetworkManager";
 
 interface ISummarySendKitProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -42,7 +44,6 @@ export default class SummarySendKit extends React.Component<
     const friendUserProfiles = this.props.route.params.friendUserProfiles;
     const time = this.props.route.params.time;
     const user = this.props.route.params.user;
-    const requestsFromMe = this.props.route.params.requestsFromMe;
     const requests = Array<IRequestKit>();
     const now = new Date();
     const requestUuid = uuid.v1();
@@ -57,27 +58,18 @@ export default class SummarySendKit extends React.Component<
         duration: time,
         inCallWith: null,
         inCallVia: null,
-        requestUuid: requestUuid
+        requestUuid: requestUuid,
+        createdAt: getDateNow(),
+        updatedAt: getDateNow()
       };
       requests.push(requestObject);
     }
+    // TODO: Here is a possible UX bug if I send a request to the same person again, it will send a new one.
     for (const request of requests) {
-      const requestAlreadyMade =
-        requestsFromMe.filter(requestFromMe => {
-          return requestFromMe.senderUuid === request.senderUuid;
-        }).length > 0;
-      if (requestAlreadyMade) {
-        const requestFromMe = await db
-          .collection(Collections.REQUESTS)
-          .where("senderUuid", "==", request.senderUuid)
-          .where("receiverUuid", "==", request.receiverUuid)
-          .get();
-        if (requestFromMe.docs.length > 0) {
-          const myRequestIdToUpdate = requestFromMe.docs[0];
-          myRequestIdToUpdate.ref.update({ ...request });
-        }
-      } else {
-        await db.collection(Collections.REQUESTS).add(request);
+      try {
+        await NetworkManager.createRequest(request);
+      } catch (error) {
+        console.log("create request error = " + error);
       }
     }
   };
