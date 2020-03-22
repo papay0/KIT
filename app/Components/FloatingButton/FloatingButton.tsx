@@ -1,6 +1,5 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import "firebase/firestore";
 
 interface IFloatingButtonProps {
   onPress: () => void;

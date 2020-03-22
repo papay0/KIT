@@ -45,9 +45,13 @@ export default class Root extends React.Component<IRootProps, IRootState> {
   }
 
   signedIn = async (user: User, loginMetadata: ILoginMetadata, shouldUpdateUser: boolean) => {
+    console.log("in signedIn");
     if (shouldUpdateUser) {
-      await NetworkManager.updateUser(user);
+      console.log("in signedIn . 1")
+      await NetworkManager.createOrUpdateUser(user);
+      console.log("in signedIn . 2")
     }
+    console.log("in signedIn . 3")
     this.setState({loginMetadata: loginMetadata});
   };
 

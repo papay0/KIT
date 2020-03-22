@@ -9,7 +9,6 @@ import {
   SafeAreaView
 } from "react-native";
 import * as firebase from "firebase";
-import "firebase/firestore";
 import { ParamListBase } from "@react-navigation/native";
 
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -45,6 +44,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   unsubscribeProfile = () => {};
   unsubscribeFriends = () => {};
   componentDidMount() {
+    console.log("home");
     const db = firebase.firestore();
     this.unsubscribeProfile = db
       .collection(Collections.PROFILES)

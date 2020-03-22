@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View, Image, Button } from "react-native";
 import * as firebase from "firebase";
-import "firebase/firestore";
 
 import Home from "../Home/Home";
 import { ParamListBase } from "@react-navigation/native";
@@ -23,7 +22,6 @@ interface ILoggedInProps {
 
 interface ILoggedInState {
   userProfile: UserProfile | undefined;
-  userUpdated: boolean;
 }
 
 export default class LoggedIn extends React.Component<
@@ -32,17 +30,19 @@ export default class LoggedIn extends React.Component<
 > {
   constructor(props) {
     super(props);
-    this.state = {userUpdated: false, userProfile: undefined};
   }
 
-  unsubscribeUser = () => {}
+  unsubscribeUser = () => {};
   componentDidMount = async () => {
+    console.log("in loggedIn");
     const db = firebase.firestore();
     this.unsubscribeUser = db
       .collection(Collections.USERS)
       .doc(this.props.userUuid)
       .onSnapshot(async document => {
+        console.log("2222.")
         if (document.exists) {
+          console.log("2222.1")
           const data = document.data();
           const user = FirebaseModelUtils.getUserFromFirebaseUser(data);
           if (user) {
@@ -53,17 +53,19 @@ export default class LoggedIn extends React.Component<
   };
   componentWillUnmount = () => {
     this.unsubscribeUser();
-  }
+  };
 
   handleUserLoggedIn = async (user: User) => {
-    if (!this.state.userUpdated) {
-      await NetworkManager.updateUser(user);
-      this.setState({userUpdated: true});
-    }
+    console.log("1. handleUserLoggedIn");
+    await NetworkManager.updateUser(user);
     let profile = await NetworkManager.getProfileByUuid(this.props.userUuid);
     const loginMetadata = this.props.loginMetadata;
     if (profile === undefined && loginMetadata !== null) {
-      await NetworkManager.createProfile(this.props.userUuid, loginMetadata.photoUrl, Localization.timezone);
+      await NetworkManager.createProfile(
+        this.props.userUuid,
+        loginMetadata.photoUrl,
+        Localization.timezone
+      );
       profile = await NetworkManager.getProfileByUuid(this.props.userUuid);
     } else {
       profile.timezone = Localization.timezone;
@@ -71,13 +73,15 @@ export default class LoggedIn extends React.Component<
     }
     const userProfile = new UserProfile(user, profile);
     this.setState({ userProfile });
-  }
+  };
 
   render() {
     const userProfile = this.state && this.state.userProfile;
     return (
       <View style={{ flex: 1 }}>
-        {userProfile && <Home userProfile={userProfile} navigation={this.props.navigation} />}
+        {userProfile && (
+          <Home userProfile={userProfile} navigation={this.props.navigation} />
+        )}
       </View>
     );
   }

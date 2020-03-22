@@ -23,6 +23,7 @@
     "expo-google-app-auth": "^8.0.1",
     "expo-localization": "~8.0.0",
     "firebase": "7.9.0",
+    "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.28",
     "react": "~16.9.0",
