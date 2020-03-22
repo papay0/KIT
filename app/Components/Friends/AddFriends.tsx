@@ -11,6 +11,7 @@ import Routes from "../Routes/Routes";
 import NetworkManager from "../../Network/NetworkManager";
 import AddFriendsListItem from "./AddFriendsListItem";
 import IFriendRequest from "../../Models/FriendRequest";
+import { getDateNow } from "../Utils/Utils";
 
 interface IAddFriendsProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -63,11 +64,11 @@ export default class AddFriends extends React.Component<
       senderUuid: user.userUuid,
       receiverUuid: friendUuid,
       accepted: false,
-      ack: false
-    }
-    await db
-      .collection(Collections.FRIEND_REQUESTS)
-      .add(friendRequest);
+      ack: false,
+      createdAt: getDateNow(),
+      updatedAt: getDateNow()
+    };
+    await NetworkManager.createFriendRequest(friendRequest);
   };
 
   render() {

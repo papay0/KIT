@@ -90,6 +90,7 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
           photoUrl: result.user.photoUrl,
           timezone: Localization.timezone
         }
+        console.log("Google user = " + JSON.stringify(user));
         this.props.signedIn(user, loginMetaData, true);
       } else {
         console.log("cancelled");

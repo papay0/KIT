@@ -59,7 +59,9 @@ export default class FirebaseModelUtils {
       senderUuid: data.senderUuid,
       receiverUuid: data.receiverUuid,
       accepted: data.accepted,
-      ack: data.ack
+      ack: data.ack,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt
     };
   };
 }

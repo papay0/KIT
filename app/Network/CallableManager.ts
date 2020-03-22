@@ -4,6 +4,7 @@ import Callables from "../Models/Callables";
 import _ from "lodash";
 import { Profile } from "../Models/Profile";
 import IRequestKit from "../Models/RequestKit";
+import IFriendRequest from "../Models/FriendRequest";
 
 export default class CallableManager {
   // User
@@ -70,6 +71,35 @@ export default class CallableManager {
       request: _.toPlainObject(request),
       inCallVia: inCallVia,
       inCallWith: inCallWith
+    });
+  };
+
+  // FriendRequest
+
+  static createFriendRequest = async (friendRequest: IFriendRequest) => {
+    const createFriendRequest = firebase
+      .functions()
+      .httpsCallable(Callables.CREATE_FRIEND_REQUEST);
+    await createFriendRequest({
+      friendRequest: _.toPlainObject(friendRequest)
+    });
+  };
+
+  static acceptFriendRequest = async (friendRequest: IFriendRequest) => {
+    const createFriendRequest = firebase
+      .functions()
+      .httpsCallable(Callables.ACCEPT_FRIEND_REQUEST);
+    await createFriendRequest({
+      friendRequest: _.toPlainObject(friendRequest)
+    });
+  };
+
+  static declineFriendRequest = async (friendRequest: IFriendRequest) => {
+    const createFriendRequest = firebase
+      .functions()
+      .httpsCallable(Callables.DECLINE_FRIEND_REQUEST);
+    await createFriendRequest({
+      friendRequest: _.toPlainObject(friendRequest)
     });
   };
 }

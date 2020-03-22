@@ -9,6 +9,7 @@ import { UserProfile } from "../Models/UserProfile";
 import IFriendRequest from "../Models/FriendRequest";
 import { getDateNow } from "../Components/Utils/Utils";
 import CallableManager from "./CallableManager";
+import FriendRequests from "../Components/Friends/FriendRequests";
 
 export default class NetworkManager {
   constructor() {}
@@ -48,13 +49,16 @@ export default class NetworkManager {
 
   static createOrUpdateUser = async (user: User) => {
     if (await NetworkManager.userExists(user)) {
+      console.log("user exists");
       await NetworkManager.updateUser(user);
     } else {
+      console.log("user doesnt exist");
       await NetworkManager.createUser(user);
     }
   }
 
   static updateUser = async (user: User) => {
+    console.log("I update my user = " + JSON.stringify(user));
     await CallableManager.updateUser(user);
   };
 
@@ -107,7 +111,6 @@ export default class NetworkManager {
   // Requests
 
   static createRequest = async (request: IRequestKit) => {
-    console.log("createRequest 1");
     await CallableManager.createRequest(request);
   }
 
@@ -121,16 +124,15 @@ export default class NetworkManager {
 
   // FriendRequests
 
-  static updateFriendRequest = async (friendRequest: IFriendRequest) => {
-    const db = firebase.firestore();
-    const friendRequestDocument = await db
-      .collection(Collections.FRIEND_REQUESTS)
-      .where("senderUuid", "==", friendRequest.senderUuid)
-      .where("receiverUuid", "==", friendRequest.receiverUuid)
-      .get();
-    if (friendRequestDocument) {
-      const friendRequestIdToUpdate = friendRequestDocument.docs[0];
-      await friendRequestIdToUpdate.ref.update({ ...friendRequest });
-    }
-  };
+  static createFriendRequest = async (friendRequest: IFriendRequest) => {
+    await CallableManager.createFriendRequest(friendRequest);
+  }
+
+  static acceptFriendRequest = async (friendRequest: IFriendRequest) => {
+    await CallableManager.acceptFriendRequest(friendRequest);
+  }
+
+  static declineFriendRequest = async (friendRequest: IFriendRequest) => {
+    await CallableManager.declineFriendRequest(friendRequest);
+  }
 }

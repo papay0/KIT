@@ -11,7 +11,9 @@ import Routes from "../Routes/Routes";
 import AddFriendListItem from "./AddFriendsListItem";
 import NetworkManager from "../../Network/NetworkManager";
 import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
-import IFriendRequest, { IFriendRequestUserProfile } from "../../Models/FriendRequest";
+import IFriendRequest, {
+  IFriendRequestUserProfile
+} from "../../Models/FriendRequest";
 import FriendRequestsListItem from "./FriendRequestsListItem";
 
 interface IFriendRequestsProps {
@@ -57,7 +59,7 @@ export default class FriendRequests extends React.Component<
             const friendRequestUserProfile: IFriendRequestUserProfile = {
               friendRequest: friendRequest,
               userProfile: userProfile
-            }
+            };
             friendRequestUserProfiles.push(friendRequestUserProfile);
           }
         }
@@ -68,11 +70,19 @@ export default class FriendRequests extends React.Component<
     this.unsubscribe();
   };
 
-  onAck = async (accepted: boolean, friendRequestUserProfile: IFriendRequestUserProfile) => {
-    const updatedFriendRequest = friendRequestUserProfile.friendRequest;
-    updatedFriendRequest.ack = true;
-    updatedFriendRequest.accepted = accepted;
-    await NetworkManager.updateFriendRequest(updatedFriendRequest);
+  onAck = async (
+    accepted: boolean,
+    friendRequestUserProfile: IFriendRequestUserProfile
+  ) => {
+    if (accepted) {
+      await NetworkManager.acceptFriendRequest(
+        friendRequestUserProfile.friendRequest
+      );
+    } else {
+      await NetworkManager.declineFriendRequest(
+        friendRequestUserProfile.friendRequest
+      );
+    }
   };
 
   render() {
