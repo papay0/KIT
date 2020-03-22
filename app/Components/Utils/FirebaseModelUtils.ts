@@ -15,8 +15,8 @@ export default class FirebaseModelUtils {
       data.lastname,
       data.email,
       data.pushNotificationToken,
-      "",
-      ""//TODO: getDateNow()
+      data.createdAt,
+      data.updatedAt
     );
     return user;
   };
@@ -24,7 +24,14 @@ export default class FirebaseModelUtils {
   static getProfileFromFirebaseUser = (
     data: firebase.firestore.DocumentData
   ): Profile => {
-    return new Profile(data.userUuid, data.photoUrl, data.timezone, data.color);
+    return new Profile(
+      data.userUuid,
+      data.photoUrl,
+      data.timezone,
+      data.color,
+      data.createdAt,
+      data.updatedAt
+    );
   };
 
   static getRequestFromFirebaseRequest = (

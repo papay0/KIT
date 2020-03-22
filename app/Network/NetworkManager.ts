@@ -7,6 +7,7 @@ import FirebaseModelUtils from "../Components/Utils/FirebaseModelUtils";
 import { ProfileColor } from "../Models/ProfileColor";
 import { UserProfile } from "../Models/UserProfile";
 import IFriendRequest from "../Models/FriendRequest";
+import { getDateNow } from "../Components/Utils/Utils";
 
 export default class NetworkManager {
   constructor() {}
@@ -37,9 +38,20 @@ export default class NetworkManager {
       .set(JSON.parse(JSON.stringify(profile)), { merge: true });
   };
 
-  static createProfile = async (userUuid: string, photoUrl: string, timezone: string) => {
+  static createProfile = async (
+    userUuid: string,
+    photoUrl: string,
+    timezone: string
+  ) => {
     const db = firebase.firestore();
-    const profile = new Profile(userUuid, photoUrl, timezone, ProfileColor.NONE);
+    const profile = new Profile(
+      userUuid,
+      photoUrl,
+      timezone,
+      ProfileColor.NONE,
+      getDateNow(),
+      getDateNow()
+    );
     await db
       .collection(Collections.PROFILES)
       .doc(userUuid)
@@ -85,11 +97,13 @@ export default class NetworkManager {
 
   // UserProfile
 
-  static getUserProfileByUuid = async (userUuid: string): Promise<UserProfile> => {
+  static getUserProfileByUuid = async (
+    userUuid: string
+  ): Promise<UserProfile> => {
     const user = await NetworkManager.getUserByUuid(userUuid);
     const profile = await NetworkManager.getProfileByUuid(userUuid);
     return new UserProfile(user, profile);
-  }
+  };
 
   // Requests
 
@@ -116,9 +130,9 @@ export default class NetworkManager {
       .where("senderUuid", "==", friendRequest.senderUuid)
       .where("receiverUuid", "==", friendRequest.receiverUuid)
       .get();
-      if (friendRequestDocument) {
-        const friendRequestIdToUpdate = friendRequestDocument.docs[0];
-        await friendRequestIdToUpdate.ref.update({...friendRequest});
-      } 
-  }
+    if (friendRequestDocument) {
+      const friendRequestIdToUpdate = friendRequestDocument.docs[0];
+      await friendRequestIdToUpdate.ref.update({ ...friendRequest });
+    }
+  };
 }
