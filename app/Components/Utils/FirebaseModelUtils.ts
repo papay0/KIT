@@ -16,7 +16,8 @@ export default class FirebaseModelUtils {
       data.email,
       data.pushNotificationToken,
       data.createdAt,
-      data.updatedAt
+      data.updatedAt,
+      data.locale
     );
     return user;
   };

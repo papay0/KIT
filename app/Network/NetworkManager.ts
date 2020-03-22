@@ -62,35 +62,23 @@ export default class NetworkManager {
   // User
 
   static createOrUpdateUser = async (user: User) => {
-    console.log("createOrUpdateUser");
     if (await NetworkManager.userExists(user)) {
-      console.log("createOrUpdateUser . 1");
       await NetworkManager.updateUser(user);
     } else {
-      console.log("createOrUpdateUser . 2");
       await NetworkManager.createUser(user);
     }
   }
 
   static updateUser = async (user: User) => {
-    console.log("[updateUser]");
-    const db = firebase.firestore();
-    await db
-      .collection(Collections.USERS)
-      .doc(user.userUuid)
-      .set(JSON.parse(JSON.stringify(user)), { merge: true });
+    await CallableManager.updateUser(user);
   };
 
   static createUser = async (user: User) => {
-    console.log("[createUser]");
     await CallableManager.createUser(user);
   }
 
   static userExists = async (user: User): Promise<boolean> => {
     const userFromBackend = await NetworkManager.getUserByUuid(user.userUuid);
-    console.log("[userExists] = ");
-    console.log(userFromBackend !== undefined);
-    console.log(userFromBackend);
     return userFromBackend !== undefined;
   }
 

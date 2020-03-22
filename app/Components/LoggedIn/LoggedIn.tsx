@@ -22,6 +22,7 @@ interface ILoggedInProps {
 
 interface ILoggedInState {
   userProfile: UserProfile | undefined;
+  userUpdated: boolean;
 }
 
 export default class LoggedIn extends React.Component<
@@ -30,19 +31,18 @@ export default class LoggedIn extends React.Component<
 > {
   constructor(props) {
     super(props);
+    this.state = {userUpdated: false, userProfile: undefined};
   }
 
   unsubscribeUser = () => {};
-  componentDidMount = async () => {
-    console.log("in loggedIn");
+  componentDidMount = async () => {    
     const db = firebase.firestore();
     this.unsubscribeUser = db
       .collection(Collections.USERS)
       .doc(this.props.userUuid)
       .onSnapshot(async document => {
-        console.log("2222.")
+        console.log("INSIDE LISTENER USER.")
         if (document.exists) {
-          console.log("2222.1")
           const data = document.data();
           const user = FirebaseModelUtils.getUserFromFirebaseUser(data);
           if (user) {
@@ -56,8 +56,10 @@ export default class LoggedIn extends React.Component<
   };
 
   handleUserLoggedIn = async (user: User) => {
-    console.log("1. handleUserLoggedIn");
-    await NetworkManager.updateUser(user);
+    if (!this.state.userUpdated) {
+      await NetworkManager.updateUser(user);
+      this.setState({userUpdated: true});
+    }
     let profile = await NetworkManager.getProfileByUuid(this.props.userUuid);
     const loginMetadata = this.props.loginMetadata;
     if (profile === undefined && loginMetadata !== null) {

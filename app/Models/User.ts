@@ -7,6 +7,7 @@ interface IUser {
   pushNotificationToken: string;
   createdAt: string;
   updatedAt: string;
+  locale: string;
 }
 
 export class User implements IUser {
@@ -18,6 +19,7 @@ export class User implements IUser {
   pushNotificationToken: string;
   createdAt: string;
   updatedAt: string;
+  locale: string;
   constructor(
     displayName: string,
     userUuid: string,
@@ -26,7 +28,8 @@ export class User implements IUser {
     email: string,
     pushNotificationToken: string,
     createdAt: string,
-    updatedAt: string
+    updatedAt: string,
+    locale: string
   ) {
     this.displayName = displayName;
     this.userUuid = userUuid;
@@ -36,5 +39,6 @@ export class User implements IUser {
     this.pushNotificationToken = pushNotificationToken;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
+    this.locale = locale;
   }
 }

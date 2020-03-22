@@ -83,7 +83,8 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
           result.user.email,
           token,
           getDateNow(),
-          getDateNow()
+          getDateNow(),
+          Localization.locale
         );
         const loginMetaData: ILoginMetadata = {
           photoUrl: result.user.photoUrl,
@@ -146,7 +147,8 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
         email,
         token,
         getDateNow(),
-        getDateNow()
+        getDateNow(),
+        Localization.locale
       );
       this.props.signedIn(user, loginMetaData, user.firstname !== null);
     }
