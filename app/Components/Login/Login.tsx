@@ -14,6 +14,7 @@ import NetworkManager from "../../Network/NetworkManager";
 import { isAvailableSignInWithApple, signInApple } from "./AppleLogin";
 import * as Crypto from "expo-crypto";
 import { ILoginMetadata } from "./LoginMetadata";
+import { getDateNow } from "../Utils/Utils";
 
 interface ILoginProps {
   signedIn: (user: User, loginMetadata: ILoginMetadata, shouldUpdateUser: boolean) => Promise<void>;
@@ -80,7 +81,9 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
           result.user.givenName,
           result.user.familyName,
           result.user.email,
-          token
+          token,
+          "",
+          ""
         );
         const loginMetaData: ILoginMetadata = {
           photoUrl: result.user.photoUrl,
@@ -141,7 +144,9 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
         fullName.givenName,
         fullName.familyName,        
         email,
-        token
+        token,
+        "",
+        ""
       );
       this.props.signedIn(user, loginMetaData, user.firstname !== null);
     }

@@ -5,6 +5,8 @@ interface IUser {
   lastname: string;
   email: string;
   pushNotificationToken: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export class User implements IUser {
@@ -14,13 +16,17 @@ export class User implements IUser {
   lastname: string;
   email: string;
   pushNotificationToken: string;
+  createdAt: string;
+  updatedAt: string;
   constructor(
     displayName: string,
     userUuid: string,
     firtname: string,
     lastname: string,
     email: string,
-    pushNotificationToken: string
+    pushNotificationToken: string,
+    createdAt: string,
+    updatedAt: string
   ) {
     this.displayName = displayName;
     this.userUuid = userUuid;
@@ -28,5 +34,7 @@ export class User implements IUser {
     this.lastname = lastname;
     this.email = email;
     this.pushNotificationToken = pushNotificationToken;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
   }
 }

@@ -2,6 +2,7 @@ import { User } from "../../Models/User";
 import { Profile } from "../../Models/Profile";
 import IFriendRequest from "../../Models/FriendRequest";
 import IRequestKit from "../../Models/RequestKit";
+import { getDateNow } from "./Utils";
 
 export default class FirebaseModelUtils {
   static getUserFromFirebaseUser = (
@@ -13,7 +14,9 @@ export default class FirebaseModelUtils {
       data.firstname,
       data.lastname,
       data.email,
-      data.pushNotificationToken
+      data.pushNotificationToken,
+      "",
+      ""//TODO: getDateNow()
     );
     return user;
   };

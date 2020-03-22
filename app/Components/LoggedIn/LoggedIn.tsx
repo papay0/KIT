@@ -23,6 +23,7 @@ interface ILoggedInProps {
 
 interface ILoggedInState {
   userProfile: UserProfile | undefined;
+  userUpdated: boolean;
 }
 
 export default class LoggedIn extends React.Component<
@@ -31,6 +32,7 @@ export default class LoggedIn extends React.Component<
 > {
   constructor(props) {
     super(props);
+    this.state = {userUpdated: false, userProfile: undefined};
   }
 
   unsubscribeUser = () => {}
@@ -54,7 +56,10 @@ export default class LoggedIn extends React.Component<
   }
 
   handleUserLoggedIn = async (user: User) => {
-    await NetworkManager.updateUser(user);
+    if (!this.state.userUpdated) {
+      await NetworkManager.updateUser(user);
+      this.setState({userUpdated: true});
+    }
     let profile = await NetworkManager.getProfileByUuid(this.props.userUuid);
     const loginMetadata = this.props.loginMetadata;
     if (profile === undefined && loginMetadata !== null) {
