@@ -45,6 +45,7 @@ export default class SummarySendKit extends React.Component<
     const requestsFromMe = this.props.route.params.requestsFromMe;
     const requests = Array<IRequestKit>();
     const now = new Date();
+    const requestUuid = uuid.v1();
     for (const friendUserProfile of friendUserProfiles) {
       const availableUntil = new Date(now);
       availableUntil.setMinutes(now.getMinutes() + time);
@@ -56,7 +57,7 @@ export default class SummarySendKit extends React.Component<
         duration: time,
         inCallWith: null,
         inCallVia: null,
-        requestUuid: uuid.v1()
+        requestUuid: requestUuid
       };
       requests.push(requestObject);
     }

@@ -35,7 +35,7 @@ export default class FirebaseModelUtils {
       duration: data.duration,
       inCallWith: data.inCallWith,
       inCallVia: data.inCallVia,
-      requestUuid: data.receiverUuid
+      requestUuid: data.requestUuid
     };
   };
 

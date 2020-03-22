@@ -95,15 +95,14 @@ export default class NetworkManager {
 
   static updateRequest = async (request: IRequestKit) => {
     const db = firebase.firestore();
-    const requestDocument = await db
+    const requestDocuments = await db
       .collection(Collections.REQUESTS)
       .where("senderUuid", "==", request.senderUuid)
       .where("receiverUuid", "==", request.receiverUuid)
-      .where("availableUntil", "==", request.availableUntil)
       .where("requestUuid", "==", request.requestUuid)
       .get();
-    if (requestDocument.docs.length > 0) {
-      const myRequestIdToUpdate = requestDocument.docs[0];
+    if (requestDocuments.docs.length > 0) {
+      const myRequestIdToUpdate = requestDocuments.docs[0];
       await myRequestIdToUpdate.ref.update({ ...request });
     }
   };
