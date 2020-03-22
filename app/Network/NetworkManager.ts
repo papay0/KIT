@@ -32,32 +32,17 @@ export default class NetworkManager {
   };
 
   static updateProfile = async (profile: Profile) => {
-    const db = firebase.firestore();
-    await db
-      .collection(Collections.PROFILES)
-      .doc(profile.userUuid)
-      .set(JSON.parse(JSON.stringify(profile)), { merge: true });
+    await CallableManager.updateProfile(profile);
   };
 
-  static createProfile = async (
-    userUuid: string,
-    photoUrl: string,
-    timezone: string
-  ) => {
-    const db = firebase.firestore();
-    const profile = new Profile(
-      userUuid,
-      photoUrl,
-      timezone,
-      ProfileColor.NONE,
-      getDateNow(),
-      getDateNow()
-    );
-    await db
-      .collection(Collections.PROFILES)
-      .doc(userUuid)
-      .set(JSON.parse(JSON.stringify(profile)));
-  };
+  static createProfile = async (profile: Profile) => {
+    await CallableManager.createProfile(profile);
+  }
+
+  static profileExists = async (profile: Profile): Promise<boolean> => {
+    const profileFromBackend = await NetworkManager.getProfileByUuid(profile.userUuid);
+    return profileFromBackend !== undefined;
+  }
 
   // User
 

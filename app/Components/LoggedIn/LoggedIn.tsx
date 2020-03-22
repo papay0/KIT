@@ -12,6 +12,9 @@ import Collections from "../Collections/Collections";
 import { User } from "../../Models/User";
 import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 import { ILoginMetadata } from "../Login/LoginMetadata";
+import { Profile } from "../../Models/Profile";
+import { getDateNow } from "../Utils/Utils";
+import ProfileColorManager, { ProfileColor } from "../../Models/ProfileColor";
 
 interface ILoggedInProps {
   userUuid: string;
@@ -31,17 +34,17 @@ export default class LoggedIn extends React.Component<
 > {
   constructor(props) {
     super(props);
-    this.state = {userUpdated: false, userProfile: undefined};
+    this.state = { userUpdated: false, userProfile: undefined };
   }
 
   unsubscribeUser = () => {};
-  componentDidMount = async () => {    
+  componentDidMount = async () => {
     const db = firebase.firestore();
     this.unsubscribeUser = db
       .collection(Collections.USERS)
       .doc(this.props.userUuid)
       .onSnapshot(async document => {
-        console.log("INSIDE LISTENER USER.")
+        console.log("INSIDE LISTENER USER.");
         if (document.exists) {
           const data = document.data();
           const user = FirebaseModelUtils.getUserFromFirebaseUser(data);
@@ -58,20 +61,23 @@ export default class LoggedIn extends React.Component<
   handleUserLoggedIn = async (user: User) => {
     if (!this.state.userUpdated) {
       await NetworkManager.updateUser(user);
-      this.setState({userUpdated: true});
+      this.setState({ userUpdated: true });
     }
-    let profile = await NetworkManager.getProfileByUuid(this.props.userUuid);
     const loginMetadata = this.props.loginMetadata;
-    if (profile === undefined && loginMetadata !== null) {
-      await NetworkManager.createProfile(
-        this.props.userUuid,
-        loginMetadata.photoUrl,
-        Localization.timezone
-      );
-      profile = await NetworkManager.getProfileByUuid(this.props.userUuid);
-    } else {
+    let profile = await NetworkManager.getProfileByUuid(this.props.userUuid);
+    if (profile !== undefined) {
       profile.timezone = Localization.timezone;
       await NetworkManager.updateProfile(profile);
+    } else {
+      profile = new Profile(
+        this.props.userUuid,
+        loginMetadata.photoUrl,
+        Localization.timezone,
+        ProfileColor.NONE,
+        getDateNow(),
+        getDateNow()
+      );
+      await NetworkManager.createProfile(profile);
     }
     const userProfile = new UserProfile(user, profile);
     this.setState({ userProfile });
