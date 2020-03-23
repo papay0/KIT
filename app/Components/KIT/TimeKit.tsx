@@ -57,14 +57,12 @@ export default class TimeKit extends React.Component<
           showsHorizontalScrollIndicator={false}
         >
           {this.state.times.map(time => {
-            const selectedEmoji = "✅";
-            const unselectedEmoji = "☑️";
             const isSelected = this.state.selectedTime == time;
-            const emoji = isSelected ? selectedEmoji : unselectedEmoji;
-            const title = time + " min " + emoji;
+            const title = time + " min ";
             return (
               <PillButton
                 key={time}
+                selected={isSelected}
                 title={title}
                 onPress={() => {
                   this.onPress(time, !isSelected);

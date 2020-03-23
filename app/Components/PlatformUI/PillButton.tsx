@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 interface IPillButtonProps {
   title: string;
+  selected: boolean;
   onPress: () => void;
 }
 interface IPillButtonState {}
@@ -17,28 +18,19 @@ export default class PillButton extends React.Component<
   }
 
   render() {
+    const additionalButtonstyle = this.props.selected
+      ? styles.selectedButtonStyle
+      : styles.unselectedButtonStyle;
+    const additionalTextStyle = this.props.selected
+      ? styles.selectedTextStyle
+      : styles.unselectedTextStyle;
     return (
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => this.props.onPress()}
-          style={{
-            backgroundColor: "#007AFF",
-            borderRadius: 24,
-            height: 30,
-            justifyContent: "center",
-            margin: 10
-          }}
+          style={{ ...styles.buttonStyle, ...additionalButtonstyle }}
         >
-          <Text
-            style={{
-              color: "white",
-              textAlign: "center",
-              paddingLeft: 20,
-              paddingRight: 20
-            }}
-          >
-            {this.props.title}
-          </Text>
+          <Text style={{...styles.textStyle, ...additionalTextStyle}}>{this.props.title}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -49,7 +41,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column"
-    // justifyContent: 'space-between',
+  },
+  buttonStyle: {
+    borderRadius: 16,
+    height: 60,
+    justifyContent: "center",
+    margin: 10
+  },
+  selectedButtonStyle: { backgroundColor: "#5458FF" },
+  unselectedButtonStyle: { backgroundColor: "white" },
+  textStyle: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 15,
+    paddingLeft: 20,
+    paddingRight: 20
+  },
+  selectedTextStyle: {color: "white"},
+  unselectedTextStyle: {
+    color: "#5458FF"
   },
   header: {
     fontSize: 25
