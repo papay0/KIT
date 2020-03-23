@@ -24,9 +24,7 @@ export default class FloatingButton extends React.Component<
               onPress={() => this.props.onPress()}
               style={{
                 backgroundColor: "#5468FF",
-                // backgroundColor: "yellow",
                 borderRadius: 16,
-                // height: 40,
                 flex: 1,
                 justifyContent: "center",
                 flexDirection: "row"
@@ -34,9 +32,7 @@ export default class FloatingButton extends React.Component<
             >
               <View
                 style={{
-                  // flexDirection: "row",
                   justifyContent: "center",
-                  // backgroundColor: "green",
                   flex: 1
                 }}
               >
@@ -44,15 +40,12 @@ export default class FloatingButton extends React.Component<
               </View>
               <View
                 style={{
-                  // flexDirection: "row",
                   justifyContent: "center",
                   alignItems: "flex-end",
-                  // marginRight: 10,
                   margin: 12,
                   position: "absolute",
                   right: 0,
                   alignContent: "center",
-                  // backgroundColor: "red"
                 }}
               >
                 <Text style={{ fontSize: 30 }}>{this.props.trailingIcon}</Text>

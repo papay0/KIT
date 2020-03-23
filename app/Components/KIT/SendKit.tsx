@@ -21,6 +21,10 @@ import IRequestKit from "../../Models/RequestKit";
 import { UserProfile } from "../../Models/UserProfile";
 import NetworkManager from "../../Network/NetworkManager";
 import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
+import UserListItem from "../PlatformUI/UserListItem";
+import { Profile } from "../../Models/Profile";
+import moment from "moment-timezone";
+import { addOpcacityToRGB } from "../Utils/Utils";
 
 interface ISendKitProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -94,7 +98,8 @@ export default class SendKit extends React.Component<
       selectedFriendUserProfiles.push(userProfile);
     } else {
       selectedFriendUserProfiles = selectedFriendUserProfiles.filter(
-        friendUserProfile => friendUserProfile.user.userUuid !== userProfile.user.userUuid
+        friendUserProfile =>
+          friendUserProfile.user.userUuid !== userProfile.user.userUuid
       );
     }
     this.setState({ selectedFriendUserProfiles });
@@ -104,6 +109,37 @@ export default class SendKit extends React.Component<
     this.setState({ time });
   };
 
+  getLocalTime = (profile: Profile): string => {
+    return moment.tz(new Date(), profile.timezone).format("HH:mm");
+  };
+
+  onPressUserProfile = (userProfile: UserProfile) => {
+    const shouldAdd = !this.state.selectedFriendUserProfiles.includes(
+      userProfile
+    );
+    let updatedSelectedFriendUserProfiles = this.state
+      .selectedFriendUserProfiles;
+    if (shouldAdd) {
+      updatedSelectedFriendUserProfiles.push(userProfile);
+    } else {
+      updatedSelectedFriendUserProfiles = this.state.selectedFriendUserProfiles.filter(
+        selectedUserProfile =>
+          selectedUserProfile.user.userUuid !== userProfile.user.userUuid
+      );
+    }
+    this.setState({ selectedFriendUserProfiles: updatedSelectedFriendUserProfiles });
+  };
+
+  getTrailingIconBackgroungColor = (userProfile: UserProfile): string => {
+    const isSelected = this.state.selectedFriendUserProfiles.includes(userProfile);
+    return isSelected ? "#5468FF" : "white";
+  }
+
+  getTrailingIcon = (userProfile: UserProfile): string => {
+    const isSelected = this.state.selectedFriendUserProfiles.includes(userProfile);
+    return isSelected ? "✔" : "➕";
+  }
+
   render() {
     const friendsNumber = this.state.selectedFriendUserProfiles.length;
     const friendsString = friendsNumber > 1 ? " friends " : " friend ";
@@ -111,7 +147,8 @@ export default class SendKit extends React.Component<
     const title =
       "Continue - " + friendsNumber + friendsString + " - " + timeString;
     const isContinueButtonHidden =
-      this.state.selectedFriendUserProfiles.length === 0 || this.state.time === undefined;
+      this.state.selectedFriendUserProfiles.length === 0 ||
+      this.state.time === undefined;
     const friendUserProfiles = this.props.route.params.friendUserProfiles;
     return (
       <SafeAreaView style={styles.container}>
@@ -121,11 +158,25 @@ export default class SendKit extends React.Component<
         <FlatList
           data={friendUserProfiles}
           renderItem={({ item }) => (
-            <SelectFriendsListItem
-              user={item.user}
-              profile={item.profile}
-              onSelect={this.onSelectFriend}
+            <UserListItem
+              title={item.user.firstname}
+              subtitle={this.getLocalTime(item.profile)}
+              backgroundColorBorderPhoto={addOpcacityToRGB(
+                item.profile.color,
+                0.8
+              )}
+              photoUrl={item.profile.photoUrl}
+              trailingIcon={this.getTrailingIcon(item)}
+              backgroundTrailingIcon={this.getTrailingIconBackgroungColor(item)}
+              onPress={() => {
+                this.onPressUserProfile(item);
+              }}
             />
+            // <SelectFriendsListItem
+            //   user={item.user}
+            //   profile={item.profile}
+            //   onSelect={this.onSelectFriend}
+            // />
           )}
           keyExtractor={item => item.user.userUuid}
         />
