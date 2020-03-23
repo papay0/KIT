@@ -133,6 +133,7 @@ export default class SendKit extends React.Component<
           title={title}
           onPress={this.routeToSummarySendKit}
           isHidden={isContinueButtonHidden}
+          trailingIcon="➡️"
         />
       </SafeAreaView>
     );

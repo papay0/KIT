@@ -160,6 +160,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
           title="SAY COUCOU"
           onPress={this.routeToSendKIT}
           isHidden={false}
+          trailingIcon="➡️"
         />
       </SafeAreaView>
     );

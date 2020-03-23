@@ -5,6 +5,7 @@ interface IFloatingButtonProps {
   onPress: () => void;
   title: string;
   isHidden: boolean;
+  trailingIcon: string;
 }
 
 interface IFloatingButtonState {}
@@ -19,40 +20,44 @@ export default class FloatingButton extends React.Component<
         {this.props.isHidden ? (
           <View />
         ) : (
-          <TouchableOpacity
-            onPress={() => this.props.onPress()}
-            style={{
-              backgroundColor: "#5468FF",
-              // backgroundColor: "yellow",
-              borderRadius: 16,
-              // height: 40,
-              flex: 1,
-              justifyContent: "center",
-              flexDirection: "row"
-            }}
-          >
-            <View
+            <TouchableOpacity
+              onPress={() => this.props.onPress()}
               style={{
-                // flexDirection: "row",
+                backgroundColor: "#5468FF",
+                // backgroundColor: "yellow",
+                borderRadius: 16,
+                // height: 40,
+                flex: 1,
                 justifyContent: "center",
-                // backgroundColor: "green",
-                flex: 1
+                flexDirection: "row"
               }}
             >
-              <Text style={styles.title}>{this.props.title}</Text>
-            </View>
-            <View
-              style={{
-                // flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "flex-end",
-                marginRight: 20
-                // backgroundColor: "red"
-              }}
-            >
-              <Text style={{fontSize: 30}}>➡️</Text>
-            </View>
-          </TouchableOpacity>
+              <View
+                style={{
+                  // flexDirection: "row",
+                  justifyContent: "center",
+                  // backgroundColor: "green",
+                  flex: 1
+                }}
+              >
+                <Text style={styles.title}>{this.props.title}</Text>
+              </View>
+              <View
+                style={{
+                  // flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "flex-end",
+                  // marginRight: 10,
+                  margin: 12,
+                  position: "absolute",
+                  right: 0,
+                  alignContent: "center",
+                  // backgroundColor: "red"
+                }}
+              >
+                <Text style={{ fontSize: 30 }}>{this.props.trailingIcon}</Text>
+              </View>
+            </TouchableOpacity>
         )}
       </View>
     );

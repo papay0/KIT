@@ -86,13 +86,15 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     margin: 10,
-    borderRadius: 24
+    borderRadius: 24,
+    // backgroundColor: "red"
   },
   containerProfilePicture: {
     marginTop: 22,
-    marginBottom: 32,
+    marginBottom: 22,
     marginLeft: 22,
-    marginRight: 16
+    marginRight: 16,
+    // backgroundColor: "red"
   },
   containerAcceptCall: {
     backgroundColor: "rgba(255, 255, 255, 0.2)",

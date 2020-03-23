@@ -9,7 +9,7 @@ import FloatingButton from "../FloatingButton/FloatingButton";
 import FriendListItem from "../Friends/FriendsListItem";
 import Collections from "../Collections/Collections";
 import IRequestKit from "../../Models/RequestKit";
-import uuid from 'react-native-uuid';
+import uuid from "react-native-uuid";
 import { UserProfile } from "../../Models/UserProfile";
 import { getDateNow } from "../Utils/Utils";
 import NetworkManager from "../../Network/NetworkManager";
@@ -89,10 +89,17 @@ export default class SummarySendKit extends React.Component<
         </Text>
         <FlatList
           data={friendUserProfiles}
-          renderItem={({ item }) => <FriendListItem user={item.user} profile={item.profile} />}
+          renderItem={({ item }) => (
+            <FriendListItem user={item.user} profile={item.profile} />
+          )}
           keyExtractor={item => item.user.userUuid}
         />
-        <FloatingButton title="Send" onPress={this.onPress} isHidden={false} />
+        <FloatingButton
+          title="Send"
+          onPress={this.onPress}
+          isHidden={false}
+          trailingIcon=""
+        />
       </SafeAreaView>
     );
   }
