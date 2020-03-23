@@ -180,7 +180,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   contentView: {
-    flex: 1
+    flex: 1,
+    flexDirection: "column" 
   },
   profileImage: {
     width: 40,

@@ -62,7 +62,7 @@ export default class RequestListItem extends React.Component<
             </Text>
           ) : isOnCallWithMe ? (
             <Text style={styles.availability}>
-              You should be calling {user.firstname} using {inCallVia}
+              Calling {user.firstname} using {inCallVia}
             </Text>
           ) : (
             <Text style={styles.availability}>Not available anymore</Text>

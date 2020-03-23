@@ -83,44 +83,29 @@ class RequestsKit extends React.Component<
     );
   };
 
-  callBackSelectMessaging = (index: number, kitSent: IRequestUser) => {
+  callBackSelectMessaging = async (index: number, kitSent: IRequestUser) => {
     if (index === 0) {
-      const url = "fb-messenger://";
+      await this.acceptCall("Messenger", kitSent);
       AppLink.maybeOpenURL("fb-messenger://", {
         appName: "messenger",
         appStoreId: 454638411,
         appStoreLocale: "us",
         playStoreId: "com.facebook.orca"
       })
-        .then(() => {
-          // do something
-        })
-        .catch(err => {
-          // log
-          console.log("error = " + err);
-        });
-      this.acceptCall("Messenger", kitSent);
     } else if (index === 1) {
+      await this.acceptCall("WhatsApp", kitSent);
       AppLink.maybeOpenURL("whatsapp://", {
         appName: "whatsapp-messenger",
         appStoreId: 310633997,
         appStoreLocale: "us",
         playStoreId: "com.whatsapp"
       })
-        .then(() => {
-          // do something
-        })
-        .catch(err => {
-          // log
-          console.log("error = " + err);
-        });
-      this.acceptCall("WhatsApp", kitSent);
     } else if (index === 2) {
-      this.acceptCall("Other solution", kitSent);
+      await this.acceptCall("Other solution", kitSent);
     }
   };
 
-  openMessagingActionSheet = (
+  openMessagingActionSheet = async (
     onChooseAction: (buttonIndex: number) => void
   ) => {
     const options = ["Messenger", "WhatsApp", "Other solution", "Cancel"];
@@ -138,8 +123,8 @@ class RequestsKit extends React.Component<
   };
 
   onCall = (kitSent: IRequestUser) => {
-    this.openMessagingActionSheet(index => {
-      this.callBackSelectMessaging(index, kitSent);
+    this.openMessagingActionSheet(async index => {
+      await this.callBackSelectMessaging(index, kitSent);
     });
   };
 
@@ -168,7 +153,7 @@ class RequestsKit extends React.Component<
 }
 
 const styles = StyleSheet.create({
-  container: {marginTop: 30},
+  container: {marginTop: 30, flex: 1},
   availability: {
     fontSize: 17,
     paddingTop: 20,
