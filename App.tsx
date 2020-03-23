@@ -76,11 +76,6 @@ export default class App extends React.Component {
               component={SummarySendKit}
               options={{ title: "Double check..." }}
             />
-            <Stack.Screen
-              name={Routes.PROFILE_COLOR_PICKER}
-              component={ProfileColorPicker}
-              options={{ title: "Choose your profile color" }}
-            />
           </Stack.Navigator>
         </NavigationContainer>
       </ActionSheetProvider>

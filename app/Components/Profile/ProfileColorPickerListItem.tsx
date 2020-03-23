@@ -16,11 +16,10 @@ import { ProfileColor } from "../../Models/ProfileColor";
 interface IProfileColorPickerListItemProps {
   color: ProfileColor;
   isSelected: boolean;
-  onPress: () => void
+  onPress: () => void;
 }
 
-interface IProfileColorPiclerListItemState {
-}
+interface IProfileColorPiclerListItemState {}
 
 export default class ProfileColorPickerListItem extends React.Component<
   IProfileColorPickerListItemProps,
@@ -32,19 +31,27 @@ export default class ProfileColorPickerListItem extends React.Component<
   }
 
   onPress = async () => {
-      await this.props.onPress();
+    this.props.onPress();
   };
 
   render() {
     const color = this.props.color;
     return (
-      <TouchableOpacity style={styles.container} onPress={this.onPress}>
-        <View>
-          <View style={{ ...styles.colorComponent, backgroundColor: color }} />
-        </View>
-        <View style={styles.containerColorInfo}>
-          <Text>{this.props.isSelected ? "✅" : "☑️"}</Text>
-        </View>
+      <TouchableOpacity key={color} style={{}} onPress={this.onPress}>
+        <View style={{ ...styles.colorComponent, backgroundColor: color }} />
+        {this.props.isSelected && (
+          <View
+            style={{
+              position: "absolute",
+              top: 35,
+              left: 35,
+              bottom: 35,
+              right: 35
+            }}
+          >
+            <Text>✔️</Text>
+          </View>
+        )}
       </TouchableOpacity>
     );
   }
@@ -58,12 +65,10 @@ const styles = StyleSheet.create({
     borderRadius: 20
   },
   colorComponent: {
-    flex: 1,
-    height: 80,
-    width: 80,
-    margin: 20,
-    borderRadius: 20,
-    alignItems: "flex-start"
+    height: 70,
+    width: 70,
+    borderRadius: 16,
+    margin: 10
   },
   containerColorInfo: {
     flexDirection: "column",

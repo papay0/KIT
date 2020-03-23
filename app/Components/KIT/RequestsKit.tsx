@@ -135,7 +135,7 @@ class RequestsKit extends React.Component<
           data={this.state.requestUsers}
           renderItem={({ item }) => (
             <RequestListItem
-              key={item.userProfile.user.userUuid}
+              key={item.userProfile.user.userUuid + "-" + item.request.requestUuid}
               user={this.props.user}
               onCall={() => {
                 this.onCall(item);
@@ -143,7 +143,7 @@ class RequestsKit extends React.Component<
               requestUser={item}
             />
           )}
-          keyExtractor={request => request.userProfile.user.userUuid}
+          keyExtractor={request => request.userProfile.user.userUuid + "-" + request.request.requestUuid}
         />
       </View>
     ) : (
