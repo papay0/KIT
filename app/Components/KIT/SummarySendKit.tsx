@@ -79,7 +79,7 @@ export default class SummarySendKit extends React.Component<
   };
 
   onPress = async () => {
-    await this.sendRequest();
+    this.sendRequest();
     this.props.navigation.navigate(Routes.ROOT, {});
   };
 

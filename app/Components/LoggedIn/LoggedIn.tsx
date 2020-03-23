@@ -71,6 +71,7 @@ export default class LoggedIn extends React.Component<
     );
     if (profile !== undefined) {
       profile.timezone = Localization.timezone;
+      profile.photoUrl = loginMetadata.photoUrl;
       await NetworkManager.updateProfile(profile);
     } else {
       profile = new Profile(

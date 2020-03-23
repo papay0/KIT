@@ -156,6 +156,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
           <RequestsKit user={user} />
           {/* <KitsSent user={user} /> */}
         </View>
+        {/* // TODO: Show only when I received the userProfile? */}
         <FloatingButton
           title="SAY COUCOU"
           onPress={this.routeToSendKIT}
