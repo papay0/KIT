@@ -5,6 +5,7 @@ interface IPillButtonProps {
   title: string;
   selected: boolean;
   onPress: () => void;
+  disabled: boolean;
 }
 interface IPillButtonState {}
 
@@ -28,6 +29,7 @@ export default class PillButton extends React.Component<
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => this.props.onPress()}
+          disabled={this.props.disabled}
           style={{ ...styles.buttonStyle, ...additionalButtonstyle }}
         >
           <Text style={{...styles.textStyle, ...additionalTextStyle}}>{this.props.title}</Text>

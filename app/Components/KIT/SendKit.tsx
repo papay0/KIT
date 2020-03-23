@@ -142,19 +142,18 @@ export default class SendKit extends React.Component<
 
   render() {
     const friendsNumber = this.state.selectedFriendUserProfiles.length;
-    const friendsString = friendsNumber > 1 ? " friends " : " friend ";
-    const timeString = this.state.time + " min";
-    const title =
-      "Continue - " + friendsNumber + friendsString + " - " + timeString;
+    const friendsString = friendsNumber > 1 ? " FRIENDS " : " FRIEND ";
+    const timeString = this.state.time + " MIN";
+    const title = friendsNumber + friendsString + " - " + timeString;
     const isContinueButtonHidden =
       this.state.selectedFriendUserProfiles.length === 0 ||
       this.state.time === undefined;
     const friendUserProfiles = this.props.route.params.friendUserProfiles;
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.timeKit}>
+        {/* <View style={styles.timeKit}> */}
           <TimeKit onSelectTime={this.onSelectTime} />
-        </View>
+        {/* </View> */}
         <FlatList
           data={friendUserProfiles}
           renderItem={({ item }) => (
@@ -165,18 +164,15 @@ export default class SendKit extends React.Component<
                 item.profile.color,
                 0.8
               )}
+              containsTrailingIcon={true}
               photoUrl={item.profile.photoUrl}
               trailingIcon={this.getTrailingIcon(item)}
               backgroundTrailingIcon={this.getTrailingIconBackgroungColor(item)}
               onPress={() => {
                 this.onPressUserProfile(item);
               }}
+              disabled={false}
             />
-            // <SelectFriendsListItem
-            //   user={item.user}
-            //   profile={item.profile}
-            //   onSelect={this.onSelectFriend}
-            // />
           )}
           keyExtractor={item => item.user.userUuid}
         />

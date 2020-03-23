@@ -18,10 +18,12 @@ interface IUserListItemProps {
   title: string;
   subtitle: string | undefined;
   photoUrl: string | undefined;
-  backgroundColorBorderPhoto: string;
-  backgroundTrailingIcon: string;
+  backgroundColorBorderPhoto: string | undefined;
+  containsTrailingIcon: boolean;
+  backgroundTrailingIcon: string | undefined;
   trailingIcon: string | undefined;
   onPress: () => void;
+  disabled: boolean;
 }
 
 interface IUserListItemState {}
@@ -41,8 +43,13 @@ export default class UserListItem extends React.Component<
     const photoUrl = this.props.photoUrl;
     const backgroundColorBorderPhoto = this.props.backgroundColorBorderPhoto;
     const backgroundTrailingIcon = this.props.backgroundTrailingIcon;
+    const disabled = this.props.disabled;
     return (
-      <TouchableOpacity style={styles.container} onPress={this.props.onPress}>
+      <TouchableOpacity
+        style={styles.container}
+        onPress={this.props.onPress}
+        disabled={disabled}
+      >
         {photoUrl && (
           <View>
             <Image
@@ -58,20 +65,25 @@ export default class UserListItem extends React.Component<
           <Text style={styles.title}>{title}</Text>
           {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
         </View>
-        <View
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: 70
-          }}
-        >
+        {this.props.containsTrailingIcon && (
           <View
-            style={{...styles.trailingIconStyle, backgroundColor: backgroundTrailingIcon}}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 70
+            }}
           >
-            <Text style={{ fontSize: 30 }}>{this.props.trailingIcon}</Text>
+            <View
+              style={{
+                ...styles.trailingIconStyle,
+                backgroundColor: backgroundTrailingIcon
+              }}
+            >
+              <Text style={{ fontSize: 30 }}>{this.props.trailingIcon}</Text>
+            </View>
           </View>
-        </View>
+        )}
       </TouchableOpacity>
     );
   }

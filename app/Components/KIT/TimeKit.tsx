@@ -58,11 +58,12 @@ export default class TimeKit extends React.Component<
         >
           {this.state.times.map(time => {
             const isSelected = this.state.selectedTime == time;
-            const title = time + " min ";
+            const title = time + " MIN";
             return (
               <PillButton
                 key={time}
                 selected={isSelected}
+                disabled={false}
                 title={title}
                 onPress={() => {
                   this.onPress(time, !isSelected);

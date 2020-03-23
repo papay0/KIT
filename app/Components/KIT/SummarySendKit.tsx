@@ -11,8 +11,12 @@ import Collections from "../Collections/Collections";
 import IRequestKit from "../../Models/RequestKit";
 import uuid from "react-native-uuid";
 import { UserProfile } from "../../Models/UserProfile";
-import { getDateNow } from "../Utils/Utils";
+import { getDateNow, addOpcacityToRGB } from "../Utils/Utils";
 import NetworkManager from "../../Network/NetworkManager";
+import PillButton from "../PlatformUI/PillButton";
+import UserListItem from "../PlatformUI/UserListItem";
+import { Profile } from "../../Models/Profile";
+import moment from "moment-timezone";
 
 interface ISummarySendKitProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -79,23 +83,58 @@ export default class SummarySendKit extends React.Component<
     this.props.navigation.navigate(Routes.ROOT, {});
   };
 
+  getLocalTime = (profile: Profile): string => {
+    return moment.tz(new Date(), profile.timezone).format("HH:mm");
+  };
+
   render() {
     const friendUserProfiles = this.props.route.params.friendUserProfiles;
     const time = this.props.route.params.time;
+    const titleButton = time + " MIN";
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={styles.availability}>
-          I am available for {time} minutes.
-        </Text>
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              width: 120,
+            }}
+          >
+            <PillButton
+              title={titleButton}
+              selected={true}
+              disabled={true}
+              onPress={() => {}}
+            />
+          </View>
+        </View>
         <FlatList
           data={friendUserProfiles}
           renderItem={({ item }) => (
-            <FriendListItem user={item.user} profile={item.profile} />
+            <UserListItem
+              title={item.user.displayName}
+              subtitle={this.getLocalTime(item.profile)}
+              photoUrl={item.profile.photoUrl}
+              disabled={true}
+              trailingIcon={undefined}
+              onPress={() => {}}
+              backgroundTrailingIcon={undefined}
+              containsTrailingIcon={false}
+              backgroundColorBorderPhoto={addOpcacityToRGB(
+                item.profile.color,
+                0.8
+              )}
+            />
           )}
           keyExtractor={item => item.user.userUuid}
         />
         <FloatingButton
-          title="Send"
+          title="SEND COUCOU"
           onPress={this.onPress}
           isHidden={false}
           trailingIcon=""
@@ -106,7 +145,7 @@ export default class SummarySendKit extends React.Component<
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { flex: 1, flexDirection: "column" },
   availability: {
     fontSize: 25,
     padding: 10
