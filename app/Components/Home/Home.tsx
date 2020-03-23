@@ -157,7 +157,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
           {/* <KitsSent user={user} /> */}
         </View>
         <FloatingButton
-          title="Send a Coucou"
+          title="SAY COUCOU"
           onPress={this.routeToSendKIT}
           isHidden={false}
         />

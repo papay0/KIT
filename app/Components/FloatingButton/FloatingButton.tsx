@@ -22,22 +22,36 @@ export default class FloatingButton extends React.Component<
           <TouchableOpacity
             onPress={() => this.props.onPress()}
             style={{
-              backgroundColor: "#007AFF",
-              borderRadius: 24,
-              height: 40,
-              justifyContent: "center"
+              backgroundColor: "#5468FF",
+              // backgroundColor: "yellow",
+              borderRadius: 16,
+              // height: 40,
+              flex: 1,
+              justifyContent: "center",
+              flexDirection: "row"
             }}
           >
-            <Text
+            <View
               style={{
-                color: "white",
-                textAlign: "center",
-                paddingLeft: 20,
-                paddingRight: 20
+                // flexDirection: "row",
+                justifyContent: "center",
+                // backgroundColor: "green",
+                flex: 1
               }}
             >
-              {this.props.title}
-            </Text>
+              <Text style={styles.title}>{this.props.title}</Text>
+            </View>
+            <View
+              style={{
+                // flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "flex-end",
+                marginRight: 20
+                // backgroundColor: "red"
+              }}
+            >
+              <Text style={{fontSize: 30}}>➡️</Text>
+            </View>
           </TouchableOpacity>
         )}
       </View>
@@ -56,8 +70,19 @@ const styles = StyleSheet.create({
   },
   floatingButton: {
     justifyContent: "center",
-    alignItems: "center",
+    // alignItems: "center",
+    // backgroundColor: "red",
+    height: 60,
     margin: 10
+    // flexDirection: "row"
+  },
+  title: {
+    fontWeight: "600",
+    color: "white",
+    fontSize: 17,
+    textAlign: "center",
+    paddingLeft: 20,
+    paddingRight: 20
   },
   image: {
     marginTop: 15,
