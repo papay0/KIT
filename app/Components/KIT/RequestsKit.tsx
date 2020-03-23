@@ -85,7 +85,7 @@ class RequestsKit extends React.Component<
 
   callBackSelectMessaging = async (index: number, kitSent: IRequestUser) => {
     if (index === 0) {
-      await this.acceptCall("Messenger", kitSent);
+      this.acceptCall("Messenger", kitSent);
       AppLink.maybeOpenURL("fb-messenger://", {
         appName: "messenger",
         appStoreId: 454638411,
@@ -93,7 +93,7 @@ class RequestsKit extends React.Component<
         playStoreId: "com.facebook.orca"
       })
     } else if (index === 1) {
-      await this.acceptCall("WhatsApp", kitSent);
+      this.acceptCall("WhatsApp", kitSent);
       AppLink.maybeOpenURL("whatsapp://", {
         appName: "whatsapp-messenger",
         appStoreId: 310633997,
@@ -101,7 +101,7 @@ class RequestsKit extends React.Component<
         playStoreId: "com.whatsapp"
       })
     } else if (index === 2) {
-      await this.acceptCall("Other solution", kitSent);
+      this.acceptCall("Other solution", kitSent);
     }
   };
 
