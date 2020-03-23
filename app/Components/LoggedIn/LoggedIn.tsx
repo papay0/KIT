@@ -17,7 +17,7 @@ import { getDateNow } from "../Utils/Utils";
 import ProfileColorManager, { ProfileColor } from "../../Models/ProfileColor";
 
 interface ILoggedInProps {
-  userUuid: string;
+  user: User;
   signOut: () => Promise<void>;
   loginMetadata?: ILoginMetadata;
   navigation: StackNavigationProp<ParamListBase>;
@@ -25,8 +25,6 @@ interface ILoggedInProps {
 
 interface ILoggedInState {
   userProfile: UserProfile | undefined;
-  userUpdated: boolean;
-  profileUpdated: boolean;
 }
 
 export default class LoggedIn extends React.Component<
@@ -35,46 +33,48 @@ export default class LoggedIn extends React.Component<
 > {
   constructor(props) {
     super(props);
-    this.state = { userUpdated: false, userProfile: undefined, profileUpdated: false };
+    this.state = {
+      userProfile: undefined
+    };
   }
 
   unsubscribeUser = () => {};
   componentDidMount = async () => {
-    const db = firebase.firestore();
-    this.unsubscribeUser = db
-      .collection(Collections.USERS)
-      .doc(this.props.userUuid)
-      .onSnapshot(async document => {
-        console.log("INSIDE LISTENER USER.");
-        if (document.exists) {
-          const data = document.data();
-          const user = FirebaseModelUtils.getUserFromFirebaseUser(data);
-          if (user) {
-            await this.handleUserLoggedIn(user);
-          }
-        }
-      });
+    const user = this.props.user;
+    user.locale = Localization.locale;
+    console.log("user.createdAt in componentDidMount = " + user.createdAt);
+    await NetworkManager.updateUser(this.props.user);
+    await this.handleUserLoggedIn(user);
+    // const db = firebase.firestore();
+    // this.unsubscribeUser = db
+    //   .collection(Collections.USERS)
+    //   .doc(this.props.userUuid)
+    //   .onSnapshot(async document => {
+    //     console.log("INSIDE LISTENER USER.");
+    //     if (document.exists) {
+    //       const data = document.data();
+    //       const user = FirebaseModelUtils.getUserFromFirebaseUser(data);
+    //       if (user) {
+    //         await this.handleUserLoggedIn(user);
+    //       }
+    //     }
+    //   });
   };
   componentWillUnmount = () => {
     this.unsubscribeUser();
   };
 
   handleUserLoggedIn = async (user: User) => {
-    if (!this.state.userUpdated) {
-      await NetworkManager.updateUser(user);
-      this.setState({ userUpdated: true });
-    }
     const loginMetadata = this.props.loginMetadata;
-    let profile = await NetworkManager.getProfileByUuid(this.props.userUuid);
+    let profile = await NetworkManager.getProfileByUuid(
+      this.props.user.userUuid
+    );
     if (profile !== undefined) {
       profile.timezone = Localization.timezone;
-      if (!this.state.profileUpdated) {
-        await NetworkManager.updateProfile(profile);
-        this.setState({profileUpdated: true});
-      }
+      await NetworkManager.updateProfile(profile);
     } else {
       profile = new Profile(
-        this.props.userUuid,
+        this.props.user.userUuid,
         loginMetadata.photoUrl,
         Localization.timezone,
         ProfileColor.NONE,
@@ -91,8 +91,15 @@ export default class LoggedIn extends React.Component<
     const userProfile = this.state && this.state.userProfile;
     return (
       <View style={{ flex: 1 }}>
-        {userProfile && (
+        {userProfile ? (
           <Home userProfile={userProfile} navigation={this.props.navigation} />
+        ) : (
+          <View>
+            <Text>
+              Here I need a loading screen because I have not received my user
+              yet.
+            </Text>
+          </View>
         )}
       </View>
     );

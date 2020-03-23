@@ -21,6 +21,7 @@ import { Profile } from "../../Models/Profile";
 import NetworkManager from "../../Network/NetworkManager";
 import KitsSent from "../KIT/KitsSent";
 import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
+import { User } from "../../Models/User";
 
 interface IHomeProps {
   userProfile: UserProfile;
@@ -29,6 +30,7 @@ interface IHomeProps {
 
 interface IHomeState {
   profile: Profile;
+  user: User;
   friendUserProfiles: UserProfile[];
 }
 
@@ -37,24 +39,37 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     super(props);
     this.state = {
       profile: this.props.userProfile.profile,
-      friendUserProfiles: []
+      friendUserProfiles: [],
+      user: this.props.userProfile.user
     };
   }
 
   unsubscribeProfile = () => {};
   unsubscribeFriends = () => {};
+  unsubscribeUser = () => {};
   componentDidMount() {
-    console.log("home");
     const db = firebase.firestore();
+    const userUuid = this.props.userProfile.user.userUuid;
     this.unsubscribeProfile = db
       .collection(Collections.PROFILES)
-      .doc(this.props.userProfile.user.userUuid)
+      .doc(userUuid)
       .onSnapshot(async document => {
         if (document.exists) {
           const data = document.data();
           const profile = FirebaseModelUtils.getProfileFromFirebaseUser(data);
           this.setState({ profile });
           this.setHeaderOptions();
+        }
+      });
+    this.unsubscribeUser = db
+      .collection(Collections.USERS)
+      .doc(userUuid)
+      .onSnapshot(async document => {
+        console.log("INSIDE LISTENER USER.");
+        if (document.exists) {
+          const data = document.data();
+          const user = FirebaseModelUtils.getUserFromFirebaseUser(data);
+          this.setState({user: user});
         }
       });
     this.getFriends(this.props.userProfile.user.userUuid);
@@ -81,10 +96,9 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   };
 
   setHeaderOptions = () => {
-    const user = this.props.userProfile.user;
+    const user = this.state.user;
     this.props.navigation.setOptions({
       headerShown: true,
-      // headerTitleStyle: { textAlign: "left" },
       headerTitle: null,
       headerLeft: () => (
         <View
@@ -102,7 +116,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         <TouchableOpacity
           onPress={() => {
             const userProfile = new UserProfile(
-              this.props.userProfile.user,
+              this.state.user,
               this.state.profile
             );
             this.props.navigation.navigate(Routes.PROFILE, {
@@ -124,6 +138,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   componentWillUnmount() {
     this.unsubscribeProfile();
     this.unsubscribeFriends();
+    this.unsubscribeUser();
   }
 
   routeToSendKIT = () => {

@@ -18,6 +18,7 @@ interface IRootState {
   currentFirebaseUser?: firebase.User;
   currentFirebaseUserLoaded: boolean;
   loginMetadata?: ILoginMetadata;
+  user: User | undefined;
 }
 
 export default class Root extends React.Component<IRootProps, IRootState> {
@@ -26,16 +27,22 @@ export default class Root extends React.Component<IRootProps, IRootState> {
     this.state = {
       currentFirebaseUser: null,
       currentFirebaseUserLoaded: false,
-      loginMetadata: null
+      loginMetadata: null,
+      user: undefined
     };
   }
 
   unsubscribe = () => {};
   componentDidMount = async () => {
-    this.unsubscribe = firebase.auth().onAuthStateChanged(async user => {
+    this.unsubscribe = firebase.auth().onAuthStateChanged(async firebaseUser => {
+      let user: User = undefined;
+      if (firebaseUser) {
+        user = await NetworkManager.getUserByUuid(firebaseUser.uid);
+      }
       this.setState({
-        currentFirebaseUser: user,
-        currentFirebaseUserLoaded: true
+        currentFirebaseUser: firebaseUser,
+        currentFirebaseUserLoaded: true,
+        user: user
       });
     });
   };
@@ -46,9 +53,13 @@ export default class Root extends React.Component<IRootProps, IRootState> {
 
   signedIn = async (user: User, loginMetadata: ILoginMetadata, shouldUpdateUser: boolean) => {
     if (shouldUpdateUser) {
+      // This is simply to keep the previous "updatedAt"
+      const currentUser = await NetworkManager.getUserByUuid(user.userUuid);
+      user.createdAt = currentUser.createdAt;
       await NetworkManager.createOrUpdateUser(user);
     }
-    this.setState({loginMetadata: loginMetadata});
+    const updatedUser = await NetworkManager.getUserByUuid(user.userUuid);
+    this.setState({loginMetadata: loginMetadata, user: updatedUser});
   };
 
   signOut = async () => {
@@ -57,15 +68,16 @@ export default class Root extends React.Component<IRootProps, IRootState> {
   };
 
   render() {
-    const user = this.state.currentFirebaseUser;
+    const firebaseUser = this.state.currentFirebaseUser;
     const currentFirebaseUserLoaded = this.state.currentFirebaseUserLoaded;
+    const user = this.state.user;
     return (
       <View style={styles.container}>
         {!currentFirebaseUserLoaded ? (
           <Text>Loading...</Text>
         ) : user ? (
           <LoggedIn
-            userUuid={user.uid}
+            user={user}
             signOut={this.signOut}
             loginMetadata={this.state.loginMetadata}
             navigation={this.props.navigation}
