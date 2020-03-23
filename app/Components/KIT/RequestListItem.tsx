@@ -55,19 +55,22 @@ export default class RequestListItem extends React.Component<
           <Image style={styles.image} source={{ uri: profile.photoUrl }} />
         </View>
         <View style={styles.containerInfoProfile}>
-          <Text style={styles.names}>{user.displayName}</Text>
+          <Text style={styles.firstname}>{user.firstname}</Text>
           {isAvailable ? (
             <Text style={styles.availability}>
-              Available for {remainingTime}{" "}
-              {remainingTime > 1 ? "minutes" : "minute"}
+              can to talk for {remainingTime} min
             </Text>
           ) : isOnCallWithMe ? (
-          <Text style={styles.availability}>You should be calling {user.firstname} using {inCallVia}</Text>
-          ) : (<Text style={styles.availability}>Not available anymore</Text>)}
+            <Text style={styles.availability}>
+              You should be calling {user.firstname} using {inCallVia}
+            </Text>
+          ) : (
+            <Text style={styles.availability}>Not available anymore</Text>
+          )}
           {isAvailable && (
             <View style={styles.containerAcceptCall}>
-              <TouchableOpacity onPress={this.props.onCall}>
-                <Text style={styles.names}>Accept call ☎️</Text>
+              <TouchableOpacity onPress={this.props.onCall} style={{ flex: 1 }}>
+                <Text style={styles.answerCallText}>Answer</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -83,41 +86,47 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     margin: 10,
-    borderRadius: 10
+    borderRadius: 24
   },
   containerProfilePicture: {
-    marginTop: 20,
-    marginBottom: 20,
-    marginLeft: 20
+    marginTop: 22,
+    marginBottom: 32,
+    marginLeft: 22,
+    marginRight: 16
   },
   containerAcceptCall: {
     backgroundColor: "rgba(255, 255, 255, 0.2)",
-    // backgroundColor: "red",
-    borderRadius: 10,
-    padding: 6
-    // backgroundColor: "green",
-    // position: "absolute"
+    borderRadius: 16,
+    marginTop: 10,
+    padding: 12,
+    flexDirection: "row"
+  },
+  answerCallText: {
+    textAlign: "center",
+    fontSize: 17,
+    color: "white",
+    fontWeight: "600"
   },
   containerInfoProfile: {
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-start",
     flex: 1,
-    margin: 10
-    // backgroundColor: "yellow"
+    marginRight: 20
   },
-  names: {
+  firstname: {
     fontSize: 20,
-    color: "white"
+    color: "rgba(255,255,255,1)",
+    fontWeight: "bold"
   },
   availability: {
-    fontSize: 15,
-    color: "white"
+    fontSize: 17,
+    color: "rgba(255,255,255,0.92)",
   },
   image: {
     width: 100,
     height: 100,
-    borderColor: "rgba(0,0,0,0.2)",
+    borderColor: "rgba(255,255,255,0.2)",
     borderWidth: 3,
     borderRadius: 150
   }

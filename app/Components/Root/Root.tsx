@@ -55,7 +55,9 @@ export default class Root extends React.Component<IRootProps, IRootState> {
     if (shouldUpdateUser) {
       // This is simply to keep the previous "updatedAt"
       const currentUser = await NetworkManager.getUserByUuid(user.userUuid);
-      user.createdAt = currentUser.createdAt;
+      if (currentUser) {
+        user.createdAt = currentUser.createdAt;
+      }
       await NetworkManager.createOrUpdateUser(user);
     }
     const updatedUser = await NetworkManager.getUserByUuid(user.userUuid);

@@ -154,7 +154,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       <SafeAreaView style={styles.container}>
         <View style={styles.contentView}>
           <RequestsKit user={user} />
-          <KitsSent user={user} />
+          {/* <KitsSent user={user} /> */}
         </View>
         <FloatingButton
           title="Send a Coucou"

@@ -146,7 +146,6 @@ class RequestsKit extends React.Component<
   render() {
     return this.state.requestUsers.length > 0 ? (
       <View style={styles.container}>
-        <Text style={styles.availability}>Friends available</Text>
         <FlatList
           data={this.state.requestUsers}
           renderItem={({ item }) => (
@@ -169,7 +168,7 @@ class RequestsKit extends React.Component<
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {marginTop: 30},
   availability: {
     fontSize: 17,
     paddingTop: 20,
