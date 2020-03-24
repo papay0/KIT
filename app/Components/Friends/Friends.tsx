@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, FlatList } from "react-native";
+import { StyleSheet, View, FlatList, Platform, Share } from "react-native";
 
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
@@ -14,6 +14,7 @@ import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 import Button, { ButtonStyle } from "../Button/Button";
 import UserListItem from "../PlatformUI/UserListItem";
 import { getLocalTime, addOpcacityToRGB } from "../Utils/Utils";
+import * as Sharing from 'expo-sharing';
 
 interface IFriendsProps {
   user: User;
@@ -119,9 +120,32 @@ export default class Friends extends React.Component<
     }
   };
 
+  onPressInviteFriends = async () => {
+    if (Platform.OS === 'ios') {
+      await Share.share({
+        url: "http://www.google.com",
+        title: "Invite a friend to use Coucou 🥳",
+        message: "Invite a friend to use Coucou 🥳"
+      });
+    } else {
+      await Share.share({
+        url: "http://www.google.com",
+        title: "Invite a friend to use Coucou 🥳",
+        message: "Invite a friend to use Coucou 🥳"
+      });
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
+        <Button
+          title="INVITE FRIENDS TO USE COUCOU"
+          trailingIcon=""
+          onPress={this.onPressInviteFriends}
+          isHidden={false}
+          buttonStyle={ButtonStyle.PRIMARY}
+        />
         <Button
           title="ADD FRIENDS"
           trailingIcon="➕"
