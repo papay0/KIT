@@ -112,7 +112,6 @@ export default class Friends extends React.Component<
         />
         <FlatList
           data={this.state.friendUserProfiles}
-          // scrollEnabled={false}
           renderItem={({ item }) => (
             <FriendsListItem user={item.user} profile={item.profile} />
           )}

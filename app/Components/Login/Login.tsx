@@ -17,6 +17,7 @@ import { ILoginMetadata } from "./LoginMetadata";
 import { getDateNow } from "../Utils/Utils";
 import { Profile } from "../../Models/Profile";
 import { ProfileColor } from "../../Models/ProfileColor";
+import Button from "../Button/Button";
 
 interface ILoginProps {
   signedIn: (userUuid: string) => Promise<void>;
@@ -210,19 +211,18 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
     const signInWithAppleAvailable = this.state.signInWithAppleAvailable;
     return (
       <View style={styles.container}>
-        <Text style={styles.header}>Sign In With Google</Text>
-        <Button title="Sign in with Google" onPress={this.onPressGoogleLogin} />
+        <Button
+          title="Sign in with Google"
+          onPress={this.onPressGoogleLogin}
+          isHidden={false}
+          trailingIcon=""
+        />
         {signInWithAppleAvailable && (
-          <AppleAuthentication.AppleAuthenticationButton
-            buttonType={
-              AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN
-            }
-            buttonStyle={
-              AppleAuthentication.AppleAuthenticationButtonStyle.BLACK
-            }
-            cornerRadius={5}
-            style={{ width: 200, height: 44 }}
+          <Button
+            title="Sign in with Apple"
             onPress={this.loginWithApple}
+            isHidden={false}
+            trailingIcon=""
           />
         )}
       </View>
@@ -233,10 +233,7 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    // alignItems: "center",
     justifyContent: "center"
-  },
-  header: {
-    fontSize: 25
   }
 });
