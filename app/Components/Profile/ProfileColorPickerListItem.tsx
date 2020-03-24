@@ -3,8 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
-  Button,
   TouchableOpacity
 } from "react-native";
 import moment from "moment-timezone";
@@ -43,10 +41,10 @@ export default class ProfileColorPickerListItem extends React.Component<
           <View
             style={{
               position: "absolute",
-              top: 35,
-              left: 35,
-              bottom: 35,
-              right: 35
+              top: 25,
+              left: 25,
+              bottom: 25,
+              right: 25
             }}
           >
             <Text>✔️</Text>
@@ -65,8 +63,8 @@ const styles = StyleSheet.create({
     borderRadius: 20
   },
   colorComponent: {
-    height: 70,
-    width: 70,
+    height: 50,
+    width: 50,
     borderRadius: 16,
     margin: 10
   },

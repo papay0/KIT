@@ -4,7 +4,6 @@ import {
   Text,
   View,
   Image,
-  Button,
   TouchableOpacity
 } from "react-native";
 import { User } from "../../Models/User";

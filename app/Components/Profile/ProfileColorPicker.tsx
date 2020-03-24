@@ -1,13 +1,8 @@
 import React from "react";
 import {
   StyleSheet,
-  Text,
   View,
-  Image,
-  Button,
-  FlatList,
   ScrollView,
-  TouchableOpacity
 } from "react-native";
 import ProfileColorManager, { ProfileColor } from "../../Models/ProfileColor";
 import ProfileColorPickerListItem from "./ProfileColorPickerListItem";

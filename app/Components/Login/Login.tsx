@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
 import * as firebase from "firebase";
@@ -88,7 +88,6 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
           getDateNow(),
           Localization.locale
         );
-        console.log("Google user = " + JSON.stringify(user));
         let currentUser = await NetworkManager.getUserByUuid(user.userUuid);
         if (currentUser) {
           // update
@@ -120,10 +119,10 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
         }
         this.props.signedIn(userUuid);
       } else {
-        console.log("cancelled");
+        console.error("cancelled");
       }
     } catch (e) {
-      console.log("error", e);
+      console.error("error", e);
     }
   };
 

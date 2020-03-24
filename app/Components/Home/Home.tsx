@@ -4,7 +4,6 @@ import {
   Text,
   View,
   Image,
-  Button,
   TouchableOpacity,
   SafeAreaView
 } from "react-native";
@@ -13,7 +12,7 @@ import { ParamListBase } from "@react-navigation/native";
 
 import { StackNavigationProp } from "@react-navigation/stack";
 import Routes from "../Routes/Routes";
-import FloatingButton from "../FloatingButton/FloatingButton";
+import Button from "../Button/Button";
 import RequestsKit from "../KIT/RequestsKit";
 import { UserProfile } from "../../Models/UserProfile";
 import Collections from "../Collections/Collections";
@@ -155,7 +154,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         <View style={styles.contentView}>
           <RequestsKit user={user} />
         </View>
-        <FloatingButton
+        <Button
           title="SAY COUCOU"
           onPress={this.routeToSendKIT}
           isHidden={false}

@@ -48,7 +48,6 @@ export default class NetworkManager {
   // User
 
   static updateUser = async (user: User) => {
-    console.log("I update my user = " + JSON.stringify(user));
     await CallableManager.updateUser(user);
   };
 

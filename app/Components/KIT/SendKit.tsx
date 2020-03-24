@@ -1,12 +1,8 @@
 import React from "react";
 import {
   StyleSheet,
-  Text,
-  View,
-  Button,
   FlatList,
   SafeAreaView,
-  TouchableOpacityBase
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase, RouteProp } from "@react-navigation/native";
@@ -15,7 +11,7 @@ import { User } from "../../Models/User";
 import Routes from "../Routes/Routes";
 import Collections from "../Collections/Collections";
 import SelectFriendsListItem from "../Friends/SelectFriendsListItem";
-import FloatingButton from "../FloatingButton/FloatingButton";
+import Button from "../Button/Button";
 import TimeKit from "./TimeKit";
 import IRequestKit from "../../Models/RequestKit";
 import { UserProfile } from "../../Models/UserProfile";
@@ -176,7 +172,7 @@ export default class SendKit extends React.Component<
           )}
           keyExtractor={item => item.user.userUuid}
         />
-        <FloatingButton
+        <Button
           title={title}
           onPress={this.routeToSummarySendKit}
           isHidden={isContinueButtonHidden}

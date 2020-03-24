@@ -26,7 +26,6 @@ export default class CallableManager {
   // Profile
 
   static createProfile = async (profile: Profile) => {
-    console.log("CREATE_PROFILE");
     const createUser = firebase
       .functions()
       .httpsCallable(Callables.CREATE_PROFILE);
@@ -34,7 +33,6 @@ export default class CallableManager {
   };
 
   static updateProfile = async (profile: Profile) => {
-    console.log("UPDATE_PROFILE");
     const updateUser = firebase
       .functions()
       .httpsCallable(Callables.UPDATE_PROFILE);
@@ -44,11 +42,9 @@ export default class CallableManager {
   // Request
 
   static createRequest = async (request: IRequestKit) => {
-    console.log("createRequest 2");
     const createRequest = firebase
       .functions()
       .httpsCallable(Callables.CREATE_REQUEST);
-    console.log(_.toPlainObject(request));
     await createRequest({ request: _.toPlainObject(request) });
   };
 

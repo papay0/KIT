@@ -5,7 +5,7 @@ import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { User } from "../../Models/User";
 import Routes from "../Routes/Routes";
 import * as firebase from "firebase";
-import FloatingButton from "../FloatingButton/FloatingButton";
+import Button from "../Button/Button";
 import FriendListItem from "../Friends/FriendsListItem";
 import Collections from "../Collections/Collections";
 import IRequestKit from "../../Models/RequestKit";
@@ -73,7 +73,7 @@ export default class SummarySendKit extends React.Component<
       try {
         await NetworkManager.createRequest(request);
       } catch (error) {
-        console.log("create request error = " + error);
+        console.error("create request error = " + error);
       }
     }
   };
@@ -133,7 +133,7 @@ export default class SummarySendKit extends React.Component<
           )}
           keyExtractor={item => item.user.userUuid}
         />
-        <FloatingButton
+        <Button
           title="SEND COUCOU"
           onPress={this.onPress}
           isHidden={false}

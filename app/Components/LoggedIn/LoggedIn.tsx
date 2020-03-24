@@ -41,7 +41,6 @@ export default class LoggedIn extends React.Component<
   componentDidMount = async () => {
     const user = this.props.user;
     user.locale = Localization.locale;
-    console.log("user.createdAt in componentDidMount = " + user.createdAt);
     NetworkManager.updateUser(user);
     const profile = await NetworkManager.getProfileByUuid(user.userUuid);
     profile.timezone = Localization.timezone;

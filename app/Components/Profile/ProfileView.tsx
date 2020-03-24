@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, Button, SafeAreaView, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, SafeAreaView, TouchableOpacity } from "react-native";
 import Friends from "../Friends/Friends";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase, RouteProp } from "@react-navigation/native";
@@ -50,7 +50,7 @@ export default class ProfileView extends React.Component<
           this.setState({ profile });
         }
       });
-      this.setHeaderOptions();
+    this.setHeaderOptions();
   };
 
   setHeaderOptions = () => {
@@ -61,7 +61,7 @@ export default class ProfileView extends React.Component<
       headerRight: () => (
         <TouchableOpacity
           onPress={() => {
-            this.signOut()
+            this.signOut();
           }}
           style={{
             backgroundColor: "transparent",
@@ -101,7 +101,11 @@ export default class ProfileView extends React.Component<
           profile={profile}
           navigation={this.props.navigation}
         />
-        <Friends user={user} navigation={this.props.navigation} friendUserProfiles={friendUserProfiles} />
+        <Friends
+          user={user}
+          navigation={this.props.navigation}
+          friendUserProfiles={friendUserProfiles}
+        />
       </SafeAreaView>
     );
   }
@@ -110,11 +114,11 @@ export default class ProfileView extends React.Component<
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "white"
   },
   logOutHeader: {
     fontSize: 17,
     fontWeight: "600",
-    color: "#5468FF"   
+    color: "#5468FF"
   }
 });

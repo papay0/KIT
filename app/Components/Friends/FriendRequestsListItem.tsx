@@ -8,10 +8,6 @@ import {
   TouchableOpacity
 } from "react-native";
 import moment from "moment-timezone";
-
-import { User } from "../../Models/User";
-import { Profile } from "../../Models/Profile";
-import IFriendRequest from "../../Models/FriendRequest";
 import { UserProfile } from "../../Models/UserProfile";
 
 interface IFriendRequestListItemProps {

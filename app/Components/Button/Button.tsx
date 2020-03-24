@@ -1,22 +1,22 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
-interface IFloatingButtonProps {
+interface IButtonProps {
   onPress: () => void;
   title: string;
   isHidden: boolean;
   trailingIcon: string;
 }
 
-interface IFloatingButtonState {}
+interface IButtonState {}
 
-export default class FloatingButton extends React.Component<
-  IFloatingButtonProps,
-  IFloatingButtonState
+export default class Button extends React.Component<
+  IButtonProps,
+  IButtonState
 > {
   render() {
     return (
-      <View style={styles.floatingButton}>
+      <View style={styles.container}>
         {this.props.isHidden ? (
           <View />
         ) : (
@@ -59,20 +59,14 @@ export default class FloatingButton extends React.Component<
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    justifyContent: "center",
+    height: 60,
+    margin: 10
   },
   contentView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
-  },
-  floatingButton: {
-    justifyContent: "center",
-    // alignItems: "center",
-    // backgroundColor: "red",
-    height: 60,
-    margin: 10
-    // flexDirection: "row"
   },
   title: {
     fontWeight: "600",
