@@ -12,6 +12,8 @@ import { UserProfile } from "../../Models/UserProfile";
 import NetworkManager from "../../Network/NetworkManager";
 import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 import Button, { ButtonStyle } from "../Button/Button";
+import UserListItem from "../PlatformUI/UserListItem";
+import { getLocalTime, addOpcacityToRGB } from "../Utils/Utils";
 
 interface IFriendsProps {
   user: User;
@@ -139,7 +141,20 @@ export default class Friends extends React.Component<
         <FlatList
           data={this.state.friendUserProfiles}
           renderItem={({ item }) => (
-            <FriendsListItem user={item.user} profile={item.profile} />
+            <UserListItem
+              title={item.user.displayName}
+              subtitle={getLocalTime(item.profile)}
+              backgroundColorBorderPhoto={addOpcacityToRGB(
+                item.profile.color,
+                0.8
+              )}
+              containsTrailingIcon={false}
+              photoUrl={item.profile.photoUrl}
+              trailingIcon={undefined}
+              backgroundTrailingIcon={undefined}
+              onPress={() => {}}
+              disabled={true}
+            />
           )}
           keyExtractor={item => item.user.userUuid}
         />

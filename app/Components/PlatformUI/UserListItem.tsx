@@ -134,8 +134,8 @@ const styles = StyleSheet.create({
   container_content: {
     flex: 1,
     flexDirection: "column",
-    marginLeft: 12,
-    justifyContent: "center"
+    // marginLeft: 12,
+    justifyContent: "center",
   },
   description: {
     fontSize: 11,

@@ -1,3 +1,6 @@
+import { Profile } from "../../Models/Profile";
+import moment from "moment-timezone";
+
 export const getDateNow = (): string => {
   return new Date().toISOString();
 };
@@ -16,4 +19,8 @@ export const addOpcacityToRGB = (rgb: string, opacity: number): string => {
   {
     return "rgba(255, 255, 255, 0.2)";
   }
+};
+
+export const getLocalTime = (profile: Profile): string => {
+  return moment.tz(new Date(), profile.timezone).format("HH:mm");
 };

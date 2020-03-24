@@ -20,7 +20,7 @@ import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 import UserListItem from "../PlatformUI/UserListItem";
 import { Profile } from "../../Models/Profile";
 import moment from "moment-timezone";
-import { addOpcacityToRGB } from "../Utils/Utils";
+import { addOpcacityToRGB, getLocalTime } from "../Utils/Utils";
 
 interface ISendKitProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -105,10 +105,6 @@ export default class SendKit extends React.Component<
     this.setState({ time });
   };
 
-  getLocalTime = (profile: Profile): string => {
-    return moment.tz(new Date(), profile.timezone).format("HH:mm");
-  };
-
   onPressUserProfile = (userProfile: UserProfile) => {
     const shouldAdd = !this.state.selectedFriendUserProfiles.includes(
       userProfile
@@ -155,7 +151,7 @@ export default class SendKit extends React.Component<
           renderItem={({ item }) => (
             <UserListItem
               title={item.user.firstname}
-              subtitle={this.getLocalTime(item.profile)}
+              subtitle={getLocalTime(item.profile)}
               backgroundColorBorderPhoto={addOpcacityToRGB(
                 item.profile.color,
                 0.8
