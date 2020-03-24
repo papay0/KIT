@@ -11,7 +11,7 @@ interface IButtonProps {
   title: string;
   isHidden: boolean;
   trailingIcon: string;
-  // buttonStyle: ButtonStyle;
+  buttonStyle: ButtonStyle;
 }
 
 interface IButtonState {}
@@ -20,6 +20,17 @@ export default class Button extends React.Component<
   IButtonProps,
   IButtonState
 > {
+
+  getStyleButton = () => {
+    const additionalStyle = this.props.buttonStyle == ButtonStyle.PRIMARY ? styles.primaryStyleTouchableOpacity : styles.secondaryStyleTouchableOpacity;
+    return {...styles.baseStyleTouchableOpacity, ...additionalStyle};
+  }
+
+  getStyleTitleText = () => {
+    const additionalStyle = this.props.buttonStyle == ButtonStyle.PRIMARY ? styles.primaryStyleTitleText : styles.secondarStyleTitleText;
+    return {...styles.baseStyleTitleText, ...additionalStyle};
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -28,10 +39,10 @@ export default class Button extends React.Component<
         ) : (
           <TouchableOpacity
             onPress={() => this.props.onPress()}
-            style={styles.styleTouchableOpacity}
+            style={this.getStyleButton()}
           >
-            <View style={styles.titleView}>
-              <Text style={styles.titleText}>{this.props.title}</Text>
+            <View style={styles.baseStyleTitleView}>
+              <Text style={this.getStyleTitleText()}>{this.props.title}</Text>
             </View>
             <View style={styles.styleTrailingIcon}>
               <Text style={{ fontSize: 30 }}>{this.props.trailingIcon}</Text>
@@ -49,20 +60,32 @@ const styles = StyleSheet.create({
     height: 60,
     margin: 10
   },
-  styleTouchableOpacity: {
-    backgroundColor: "#5468FF",
+  primaryStyleTouchableOpacity: {
+    backgroundColor: "#5468FF"
+  },
+  secondaryStyleTouchableOpacity: {
+    backgroundColor: "white",
+    borderColor: "#5468FF",
+    borderWidth: 2
+  },
+  baseStyleTouchableOpacity: {
     borderRadius: 16,
     flex: 1,
     justifyContent: "center",
     flexDirection: "row"
   },
-  titleView: {
+  baseStyleTitleView: {
     justifyContent: "center",
     flex: 1
   },
-  titleText: {
-    fontWeight: "600",
+  primaryStyleTitleText: {
     color: "white",
+  },
+  secondarStyleTitleText: {
+    color: "#5468FF",
+  },
+  baseStyleTitleText: {
+    fontWeight: "600",
     fontSize: 17,
     textAlign: "center",
     paddingLeft: 20,

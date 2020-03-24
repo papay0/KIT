@@ -12,7 +12,7 @@ import { ParamListBase } from "@react-navigation/native";
 
 import { StackNavigationProp } from "@react-navigation/stack";
 import Routes from "../Routes/Routes";
-import Button from "../Button/Button";
+import Button, { ButtonStyle } from "../Button/Button";
 import RequestsKit from "../KIT/RequestsKit";
 import { UserProfile } from "../../Models/UserProfile";
 import Collections from "../Collections/Collections";
@@ -158,6 +158,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
           onPress={this.routeToSendKIT}
           isHidden={false}
           trailingIcon="➡️"
+          buttonStyle={ButtonStyle.PRIMARY}
         />
       </SafeAreaView>
     );

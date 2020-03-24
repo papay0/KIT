@@ -17,7 +17,7 @@ import { ILoginMetadata } from "./LoginMetadata";
 import { getDateNow } from "../Utils/Utils";
 import { Profile } from "../../Models/Profile";
 import { ProfileColor } from "../../Models/ProfileColor";
-import Button from "../Button/Button";
+import Button, { ButtonStyle } from "../Button/Button";
 
 interface ILoginProps {
   signedIn: (userUuid: string) => Promise<void>;
@@ -216,6 +216,7 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
           onPress={this.onPressGoogleLogin}
           isHidden={false}
           trailingIcon=""
+          buttonStyle={ButtonStyle.PRIMARY}
         />
         {signInWithAppleAvailable && (
           <Button
@@ -223,6 +224,7 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
             onPress={this.loginWithApple}
             isHidden={false}
             trailingIcon=""
+            buttonStyle={ButtonStyle.PRIMARY}
           />
         )}
       </View>

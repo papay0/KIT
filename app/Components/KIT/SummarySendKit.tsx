@@ -5,7 +5,7 @@ import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { User } from "../../Models/User";
 import Routes from "../Routes/Routes";
 import * as firebase from "firebase";
-import Button from "../Button/Button";
+import Button, { ButtonStyle } from "../Button/Button";
 import FriendListItem from "../Friends/FriendsListItem";
 import Collections from "../Collections/Collections";
 import IRequestKit from "../../Models/RequestKit";
@@ -138,6 +138,7 @@ export default class SummarySendKit extends React.Component<
           onPress={this.onPress}
           isHidden={false}
           trailingIcon=""
+          buttonStyle={ButtonStyle.PRIMARY}
         />
       </SafeAreaView>
     );

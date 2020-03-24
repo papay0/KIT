@@ -11,7 +11,7 @@ import { User } from "../../Models/User";
 import Routes from "../Routes/Routes";
 import Collections from "../Collections/Collections";
 import SelectFriendsListItem from "../Friends/SelectFriendsListItem";
-import Button from "../Button/Button";
+import Button, { ButtonStyle } from "../Button/Button";
 import TimeKit from "./TimeKit";
 import IRequestKit from "../../Models/RequestKit";
 import { UserProfile } from "../../Models/UserProfile";
@@ -177,6 +177,7 @@ export default class SendKit extends React.Component<
           onPress={this.routeToSummarySendKit}
           isHidden={isContinueButtonHidden}
           trailingIcon="➡️"
+          buttonStyle={ButtonStyle.SECONDARY}
         />
       </SafeAreaView>
     );

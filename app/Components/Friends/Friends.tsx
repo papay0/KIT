@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  StyleSheet,
-  View,
-  FlatList
-} from "react-native";
+import { StyleSheet, View, FlatList } from "react-native";
 
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
@@ -15,7 +11,7 @@ import FriendsListItem from "./FriendsListItem";
 import { UserProfile } from "../../Models/UserProfile";
 import NetworkManager from "../../Network/NetworkManager";
 import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
-import Button from "../Button/Button";
+import Button, { ButtonStyle } from "../Button/Button";
 
 interface IFriendsProps {
   user: User;
@@ -25,6 +21,7 @@ interface IFriendsProps {
 
 interface IFriendsState {
   friendUserProfiles: UserProfile[];
+  friendRequestsNumber: number;
 }
 
 export default class Friends extends React.Component<
@@ -33,10 +30,14 @@ export default class Friends extends React.Component<
 > {
   constructor(props: IFriendsProps) {
     super(props);
-    this.state = { friendUserProfiles: props.friendUserProfiles };
+    this.state = {
+      friendUserProfiles: props.friendUserProfiles,
+      friendRequestsNumber: 0
+    };
   }
 
   componentDidMount = async () => {
+    this.listenerToFriendRequestsNumber();
     await this.getCurrentFriends(this.props.user.userUuid);
   };
 
@@ -59,6 +60,15 @@ export default class Friends extends React.Component<
   };
 
   unsubscribe = () => {};
+
+  listenerToFriendRequestsNumber = async () => {
+    const db = firebase.firestore();
+    db.collection(Collections.FRIEND_REQUESTS)
+      .where("receiverUuid", "==", this.props.user.userUuid)
+      .onSnapshot(async documents => {
+        this.setState({ friendRequestsNumber: documents.docs.length });
+      });
+  };
 
   getCurrentFriends = async (userUuid: string) => {
     const db = firebase.firestore();
@@ -92,7 +102,19 @@ export default class Friends extends React.Component<
   onPressFriendRequests = () => {
     this.props.navigation.navigate(Routes.FRIEND_REQUESTS, {
       user: this.props.user
-    })
+    });
+  };
+
+  getFriendRequestsTitle = (): string => {
+    const friendRequestsNumber = this.state.friendRequestsNumber;
+    const initialTitle = "FRIEND REQUEST";
+    if (friendRequestsNumber == 0) {
+      return initialTitle;
+    } else if (friendRequestsNumber == 1) {
+      return String(friendRequestsNumber) + " " + initialTitle;
+    } else {
+      return String(friendRequestsNumber) + " " + initialTitle + "S";
+    }
   };
 
   render() {
@@ -103,13 +125,17 @@ export default class Friends extends React.Component<
           trailingIcon="➕"
           onPress={this.onPressAddFriends}
           isHidden={false}
+          buttonStyle={ButtonStyle.PRIMARY}
         />
-        <Button
-          title="FRIEND REQUESTS"
-          trailingIcon="➡️"
-          onPress={this.onPressFriendRequests}
-          isHidden={false}
-        />
+        {this.state.friendRequestsNumber > 0 && (
+          <Button
+            title={this.getFriendRequestsTitle()}
+            trailingIcon="➡️"
+            onPress={this.onPressFriendRequests}
+            isHidden={false}
+            buttonStyle={ButtonStyle.SECONDARY}
+          />
+        )}
         <FlatList
           data={this.state.friendUserProfiles}
           renderItem={({ item }) => (
