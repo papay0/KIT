@@ -1,5 +1,20 @@
 import React from "react";
-import { StyleSheet, Text, SafeAreaView, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  ScrollView,
+  YellowBox
+} from "react-native";
+
+YellowBox.ignoreWarnings([
+  "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead."
+]);
+console.ignoredYellowBox = [
+  "VirtualizedLists should never be nested"
+];
+
 import Friends from "../Friends/Friends";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase, RouteProp } from "@react-navigation/native";
@@ -34,6 +49,13 @@ export default class ProfileView extends React.Component<
   constructor(props: IProfileProps) {
     super(props);
     this.state = { profile: props.route.params.userProfile.profile };
+    YellowBox.ignoreWarnings([
+      "VirtualizedLists should never be nested" // TODO: Remove when fixed
+    ]);
+    console.disableYellowBox = true;
+    console.ignoredYellowBox = [
+      "VirtualizedLists should never be nested"
+    ];
   }
 
   unsubscribe = () => {};
@@ -96,16 +118,18 @@ export default class ProfileView extends React.Component<
     const friendUserProfiles = this.props.route.params.friendUserProfiles;
     return (
       <SafeAreaView style={styles.container}>
-        <MyProfile
-          user={user}
-          profile={profile}
-          navigation={this.props.navigation}
-        />
-        <Friends
-          user={user}
-          navigation={this.props.navigation}
-          friendUserProfiles={friendUserProfiles}
-        />
+        <ScrollView showsHorizontalScrollIndicator={false}>
+          <MyProfile
+            user={user}
+            profile={profile}
+            navigation={this.props.navigation}
+          />
+          <Friends
+            user={user}
+            navigation={this.props.navigation}
+            friendUserProfiles={friendUserProfiles}
+          />
+        </ScrollView>
       </SafeAreaView>
     );
   }

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, YellowBox } from "react-native";
 import { User } from "../../Models/User";
 import * as firebase from "firebase";
 import LoggedIn from "../LoggedIn/LoggedIn";

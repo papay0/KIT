@@ -18,8 +18,14 @@ import SummarySendKit from "./App/Components/KIT/SummarySendKit";
 import ProfileColorPicker from "./App/Components/Profile/ProfileColorPicker";
 import FriendRequests from "./App/Components/Friends/FriendRequests";
 import AddFriends from "./App/Components/Friends/AddFriends";
+import { YellowBox } from "react-native";
 
 const Stack = createStackNavigator();
+
+console.disableYellowBox = true;
+YellowBox.ignoreWarnings([
+  "VirtualizedLists should never be nested" // TODO: Remove when fixed
+]);
 
 export default class App extends React.Component {
   constructor(props) {
