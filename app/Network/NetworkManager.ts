@@ -10,6 +10,7 @@ import IFriendRequest from "../Models/FriendRequest";
 import { getDateNow } from "../Components/Utils/Utils";
 import CallableManager from "./CallableManager";
 import FriendRequests from "../Components/Friends/FriendRequests";
+import IRequestUser from "../Models/RequestUser";
 
 export default class NetworkManager {
   constructor() {}
@@ -109,6 +110,60 @@ export default class NetworkManager {
 
   static acceptRequest = async (request: IRequestKit, inCallVia: string, inCallWith: string) => {
     await CallableManager.acceptRequest(request, inCallVia, inCallWith);
+  }
+
+  static getRequestsForUserUuid = async (userUuid: string): Promise<IRequestKit[]> => {
+    const db = firebase.firestore();
+    const documents = await db.collection(Collections.REQUESTS)
+      .where("receiverUuid", "==", userUuid)
+      .get();
+    const requests = Array<IRequestKit>();
+    for (const doc of documents.docs) {
+      const data = doc.data();
+      const request = FirebaseModelUtils.getRequestFromFirebaseRequest(data);
+      requests.push(request);
+    }
+    return requests;
+  }
+
+  static getRequestUsersFromRequests = async (requests: IRequestKit[]): Promise<IRequestUser[]> => {
+    const requestUsers = Array<IRequestUser>();
+    const hashmapUser = new Map<string, User>();
+    const hashmapProfile = new Map<string, Profile>();
+    for (const request of requests) {
+      let user: User
+      let profile: Profile
+      const senderUuid = request.senderUuid;
+      const cachedUser = hashmapUser.get(senderUuid);
+      if (cachedUser !== undefined) {
+        user = cachedUser
+      } else {
+        user = await NetworkManager.getUserByUuid(senderUuid);
+        hashmapUser.set(senderUuid, user);
+      }
+
+      const cachedprofile = hashmapProfile.get(senderUuid);
+      if (cachedprofile !== undefined) {
+        profile = cachedprofile
+      } else {
+        profile = await NetworkManager.getProfileByUuid(
+          request.senderUuid
+        );
+        hashmapProfile.set(senderUuid, profile);
+      }
+      const userProfile = new UserProfile(user, profile);
+      const requestUser: IRequestUser = {
+        userProfile: userProfile,
+        request: request
+      };
+      requestUsers.push(requestUser);
+    }
+    return requestUsers;
+  }
+
+  static getRequestUsersForUserUuid = async (userUuid: string): Promise<IRequestUser[]> => {
+    const requests = await NetworkManager.getRequestsForUserUuid(userUuid);
+    return await NetworkManager.getRequestUsersFromRequests(requests);
   }
 
   // FriendRequests

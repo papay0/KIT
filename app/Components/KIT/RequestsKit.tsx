@@ -35,6 +35,7 @@ class RequestsKit extends React.Component<
 
   componentDidMount() {
     this.getRequests();
+    this.listenToRequests();
   }
 
   componentWillUnmount() {
@@ -44,6 +45,11 @@ class RequestsKit extends React.Component<
   unsubscribe = () => {};
 
   getRequests = async () => {
+    const requestUsers = await NetworkManager.getRequestUsersForUserUuid(this.props.user.userUuid);
+    this.setState({ requestUsers: requestUsers });
+  }
+
+  listenToRequests = async () => {
     const db = firebase.firestore();
     this.unsubscribe = db
       .collection(Collections.REQUESTS)
@@ -57,19 +63,7 @@ class RequestsKit extends React.Component<
           );
           requests.push(request);
         }
-        const requestUsers = Array<IRequestUser>();
-        for (const request of requests) {
-          const user = await NetworkManager.getUserByUuid(request.senderUuid);
-          const profile = await NetworkManager.getProfileByUuid(
-            request.senderUuid
-          );
-          const userProfile = new UserProfile(user, profile);
-          const requestUser: IRequestUser = {
-            userProfile: userProfile,
-            request: request
-          };
-          requestUsers.push(requestUser);
-        }
+        const requestUsers = await NetworkManager.getRequestUsersFromRequests(requests);
         this.setState({ requestUsers: requestUsers });
       });
   };

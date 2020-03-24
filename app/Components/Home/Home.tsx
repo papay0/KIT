@@ -64,7 +64,6 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       .collection(Collections.USERS)
       .doc(userUuid)
       .onSnapshot(async document => {
-        console.log("INSIDE LISTENER USER.");
         if (document.exists) {
           const data = document.data();
           const user = FirebaseModelUtils.getUserFromFirebaseUser(data);
