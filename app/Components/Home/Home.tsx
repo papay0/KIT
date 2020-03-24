@@ -143,7 +143,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
 
   routeToSendKIT = () => {
     this.props.navigation.navigate(Routes.SEND_KIT, {
-      user: this.props.userProfile.user,
+      user: this.state.user,
       friendUserProfiles: this.state.friendUserProfiles
     });
   };
@@ -154,9 +154,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       <SafeAreaView style={styles.container}>
         <View style={styles.contentView}>
           <RequestsKit user={user} />
-          {/* <KitsSent user={user} /> */}
         </View>
-        {/* // TODO: Show only when I received the userProfile? */}
         <FloatingButton
           title="SAY COUCOU"
           onPress={this.routeToSendKIT}

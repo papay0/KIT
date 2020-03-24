@@ -56,6 +56,7 @@ export default class ProfileColorPicker extends React.Component<
                 onPress={() => {
                   this.onPress(color);
                 }}
+                key={color}
                 color={color}
                 isSelected={this.state.currentColor === color}
               />
