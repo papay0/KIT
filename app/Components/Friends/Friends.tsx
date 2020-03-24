@@ -1,5 +1,9 @@
 import React from "react";
-import { StyleSheet, Text, View, Button, FlatList } from "react-native";
+import {
+  StyleSheet,
+  View,
+  FlatList
+} from "react-native";
 
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
@@ -11,6 +15,7 @@ import FriendsListItem from "./FriendsListItem";
 import { UserProfile } from "../../Models/UserProfile";
 import NetworkManager from "../../Network/NetworkManager";
 import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
+import Button from "../Button/Button";
 
 interface IFriendsProps {
   user: User;
@@ -53,7 +58,7 @@ export default class Friends extends React.Component<
     return undefined;
   };
 
-  unsubscribe = () => {}
+  unsubscribe = () => {};
 
   getCurrentFriends = async (userUuid: string) => {
     const db = firebase.firestore();
@@ -75,35 +80,40 @@ export default class Friends extends React.Component<
       });
   };
 
+  onPressAddFriends = () => {
+    this.props.navigation.navigate(Routes.ADD_FRIENDS, {
+      user: this.props.user,
+      currentFriendsUuid: this.state.friendUserProfiles.map(
+        friendProfile => friendProfile.user.userUuid
+      )
+    });
+  };
+
+  onPressFriendRequests = () => {
+    this.props.navigation.navigate(Routes.FRIEND_REQUESTS, {
+      user: this.props.user
+    })
+  };
+
   render() {
     return (
       <View style={styles.container}>
         <Button
-          title="Add friend"
-          onPress={() =>
-            this.props.navigation.navigate(Routes.ADD_FRIENDS, {
-              user: this.props.user,
-              currentFriendsUuid: this.state.friendUserProfiles.map(
-                friendProfile => friendProfile.user.userUuid
-              )
-            })
-          }
+          title="ADD FRIENDS"
+          trailingIcon="➕"
+          onPress={this.onPressAddFriends}
+          isHidden={false}
         />
         <Button
-          title="Friend requests"
-          onPress={() =>
-            this.props.navigation.navigate(Routes.FRIEND_REQUESTS, {
-              user: this.props.user
-            })
-          }
+          title="FRIEND REQUESTS"
+          trailingIcon="➡️"
+          onPress={this.onPressFriendRequests}
+          isHidden={false}
         />
         <FlatList
           data={this.state.friendUserProfiles}
           renderItem={({ item }) => (
-            <FriendsListItem
-              user={item.user}
-              profile={item.profile}
-            />
+            <FriendsListItem user={item.user} profile={item.profile} />
           )}
           keyExtractor={item => item.user.userUuid}
         />

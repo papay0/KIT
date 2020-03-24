@@ -9,7 +9,6 @@ import {
 import { User } from "../../Models/User";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
-import Routes from "../Routes/Routes";
 import { Profile } from "../../Models/Profile";
 import ProfileColorPicker from "./ProfileColorPicker";
 
