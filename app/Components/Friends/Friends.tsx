@@ -14,7 +14,7 @@ import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 import Button, { ButtonStyle } from "../Button/Button";
 import UserListItem from "../PlatformUI/UserListItem";
 import { getLocalTime, addOpcacityToRGB } from "../Utils/Utils";
-import * as Sharing from 'expo-sharing';
+import * as Sharing from "expo-sharing";
 
 interface IFriendsProps {
   user: User;
@@ -121,20 +121,23 @@ export default class Friends extends React.Component<
   };
 
   onPressInviteFriends = async () => {
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
       await Share.share({
         url: "http://www.google.com",
-        title: "Invite a friend to use Coucou 🥳",
-        message: "Invite a friend to use Coucou 🥳"
+        message: "Hey 👋 download & join me on Coucou 🥳"
       });
     } else {
-      await Share.share({
-        url: "http://www.google.com",
-        title: "Invite a friend to use Coucou 🥳",
-        message: "Invite a friend to use Coucou 🥳"
-      });
+      await Share.share(
+        {
+          title: "Hey 👋 download & join me on Coucou 🥳",
+          message: "http://www.google.com"
+        },
+        {
+          dialogTitle: "Invite a friend to use Coucou 🥳"
+        }
+      );
     }
-  }
+  };
 
   render() {
     return (
