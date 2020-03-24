@@ -47,16 +47,6 @@ export default class NetworkManager {
 
   // User
 
-  static createOrUpdateUser = async (user: User) => {
-    if (await NetworkManager.userExists(user)) {
-      console.log("user exists");
-      await NetworkManager.updateUser(user);
-    } else {
-      console.log("user doesnt exist");
-      await NetworkManager.createUser(user);
-    }
-  }
-
   static updateUser = async (user: User) => {
     console.log("I update my user = " + JSON.stringify(user));
     await CallableManager.updateUser(user);

@@ -15,9 +15,11 @@ import { isAvailableSignInWithApple, signInApple } from "./AppleLogin";
 import * as Crypto from "expo-crypto";
 import { ILoginMetadata } from "./LoginMetadata";
 import { getDateNow } from "../Utils/Utils";
+import { Profile } from "../../Models/Profile";
+import { ProfileColor } from "../../Models/ProfileColor";
 
 interface ILoginProps {
-  signedIn: (user: User, loginMetadata: ILoginMetadata, shouldUpdateUser: boolean) => Promise<void>;
+  signedIn: (userUuid: string) => Promise<void>;
   navigation: StackNavigationProp<ParamListBase>;
 }
 
@@ -86,12 +88,37 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
           getDateNow(),
           Localization.locale
         );
-        const loginMetaData: ILoginMetadata = {
-          photoUrl: result.user.photoUrl,
-          timezone: Localization.timezone
-        }
         console.log("Google user = " + JSON.stringify(user));
-        this.props.signedIn(user, loginMetaData, true);
+        let currentUser = await NetworkManager.getUserByUuid(user.userUuid);
+        if (currentUser) {
+          // update
+          currentUser.locale = Localization.locale;
+          await NetworkManager.updateUser(currentUser);
+        } else {
+          // create
+          await NetworkManager.createUser(user);
+          currentUser = user;
+        }
+        const existingProfile = await NetworkManager.getProfileByUuid(
+          user.userUuid
+        );
+        if (existingProfile) {
+          // update
+          existingProfile.timezone = Localization.timezone;
+          await NetworkManager.updateProfile(existingProfile);
+        } else {
+          // create
+          const profile = new Profile(
+            user.userUuid,
+            result.user.photoUrl,
+            Localization.timezone,
+            ProfileColor.NONE,
+            getDateNow(),
+            getDateNow()
+          );
+          await NetworkManager.createProfile(profile);
+        }
+        this.props.signedIn(userUuid);
       } else {
         console.log("cancelled");
       }
@@ -136,22 +163,47 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
       const token =
         status === "granted" ? await Notifications.getExpoPushTokenAsync() : "";
       const userUuid = firebase.auth().currentUser.uid;
-      const loginMetaData: ILoginMetadata = {
-        photoUrl: "https://www.zooniverse.org/assets/simple-avatar.png",
-        timezone: Localization.timezone
-      }
       const user = new User(
         fullName.givenName + " " + fullName.familyName,
         userUuid,
         fullName.givenName,
-        fullName.familyName,        
+        fullName.familyName,
         email,
         token,
         "",
         getDateNow(),
         Localization.locale
       );
-      this.props.signedIn(user, loginMetaData, user.firstname !== null);
+      let currentUser = await NetworkManager.getUserByUuid(user.userUuid);
+      if (currentUser) {
+        // update
+        currentUser.locale = Localization.locale;
+        await NetworkManager.updateUser(currentUser);
+      } else {
+        // create
+        await NetworkManager.createUser(user);
+        currentUser = user;
+      }
+      const existingProfile = await NetworkManager.getProfileByUuid(
+        user.userUuid
+      );
+      if (existingProfile !== undefined) {
+        // update
+        existingProfile.timezone = Localization.timezone;
+        await NetworkManager.updateProfile(existingProfile);
+      } else {
+        // create
+        const profile = new Profile(
+          user.userUuid,
+          "https://www.zooniverse.org/assets/simple-avatar.png",
+          Localization.timezone,
+          ProfileColor.NONE,
+          getDateNow(),
+          getDateNow()
+        );
+        await NetworkManager.createProfile(profile);
+      }
+      this.props.signedIn(userUuid);
     }
   };
 

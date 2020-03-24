@@ -17,7 +17,6 @@ interface IRootProps {
 interface IRootState {
   currentFirebaseUser?: firebase.User;
   currentFirebaseUserLoaded: boolean;
-  loginMetadata?: ILoginMetadata;
   user: User | undefined;
 }
 
@@ -27,7 +26,6 @@ export default class Root extends React.Component<IRootProps, IRootState> {
     this.state = {
       currentFirebaseUser: null,
       currentFirebaseUserLoaded: false,
-      loginMetadata: null,
       user: undefined
     };
   }
@@ -51,17 +49,9 @@ export default class Root extends React.Component<IRootProps, IRootState> {
     this.unsubscribe();
   }
 
-  signedIn = async (user: User, loginMetadata: ILoginMetadata, shouldUpdateUser: boolean) => {
-    if (shouldUpdateUser) {
-      // This is simply to keep the previous "updatedAt"
-      const currentUser = await NetworkManager.getUserByUuid(user.userUuid);
-      if (currentUser) {
-        user.createdAt = currentUser.createdAt;
-      }
-      await NetworkManager.createOrUpdateUser(user);
-    }
-    const updatedUser = await NetworkManager.getUserByUuid(user.userUuid);
-    this.setState({loginMetadata: loginMetadata, user: updatedUser});
+  signedIn = async (userUuid: string) => {
+    const updatedUser = await NetworkManager.getUserByUuid(userUuid);
+    this.setState({user: updatedUser});
   };
 
   signOut = async () => {
@@ -81,7 +71,6 @@ export default class Root extends React.Component<IRootProps, IRootState> {
           <LoggedIn
             user={user}
             signOut={this.signOut}
-            loginMetadata={this.state.loginMetadata}
             navigation={this.props.navigation}
           />
         ) : (

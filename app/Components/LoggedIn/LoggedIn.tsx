@@ -19,7 +19,6 @@ import ProfileColorManager, { ProfileColor } from "../../Models/ProfileColor";
 interface ILoggedInProps {
   user: User;
   signOut: () => Promise<void>;
-  loginMetadata?: ILoginMetadata;
   navigation: StackNavigationProp<ParamListBase>;
 }
 
@@ -43,49 +42,15 @@ export default class LoggedIn extends React.Component<
     const user = this.props.user;
     user.locale = Localization.locale;
     console.log("user.createdAt in componentDidMount = " + user.createdAt);
-    await NetworkManager.updateUser(this.props.user);
-    await this.handleUserLoggedIn(user);
-    // const db = firebase.firestore();
-    // this.unsubscribeUser = db
-    //   .collection(Collections.USERS)
-    //   .doc(this.props.userUuid)
-    //   .onSnapshot(async document => {
-    //     console.log("INSIDE LISTENER USER.");
-    //     if (document.exists) {
-    //       const data = document.data();
-    //       const user = FirebaseModelUtils.getUserFromFirebaseUser(data);
-    //       if (user) {
-    //         await this.handleUserLoggedIn(user);
-    //       }
-    //     }
-    //   });
+    NetworkManager.updateUser(user);
+    const profile = await NetworkManager.getProfileByUuid(user.userUuid);
+    profile.timezone = Localization.timezone;
+    NetworkManager.updateProfile(profile);
+    const userProfile = new UserProfile(user, profile);
+    this.setState({ userProfile });
   };
   componentWillUnmount = () => {
     this.unsubscribeUser();
-  };
-
-  handleUserLoggedIn = async (user: User) => {
-    const loginMetadata = this.props.loginMetadata;
-    let profile = await NetworkManager.getProfileByUuid(
-      this.props.user.userUuid
-    );
-    if (profile !== undefined) {
-      profile.timezone = Localization.timezone;
-      profile.photoUrl = loginMetadata.photoUrl;
-      await NetworkManager.updateProfile(profile);
-    } else {
-      profile = new Profile(
-        this.props.user.userUuid,
-        loginMetadata.photoUrl,
-        Localization.timezone,
-        ProfileColor.NONE,
-        getDateNow(),
-        getDateNow()
-      );
-      await NetworkManager.createProfile(profile);
-    }
-    const userProfile = new UserProfile(user, profile);
-    this.setState({ userProfile });
   };
 
   render() {
