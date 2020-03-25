@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity, Image } from "react-native";
 import moment from "moment-timezone";
 
 import { User } from "../../Models/User";
@@ -41,13 +36,14 @@ export default class ProfileColorPickerListItem extends React.Component<
           <View
             style={{
               position: "absolute",
-              top: 25,
-              left: 25,
-              bottom: 25,
-              right: 25
+              top: 22,
+              left: 24
             }}
           >
-            <Text>✔️</Text>
+            <Image
+              source={require("../../../assets/check-white.png")}
+              style={styles.checkStyle}
+            />
           </View>
         )}
       </TouchableOpacity>
@@ -74,5 +70,9 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     flex: 1,
     margin: 20
+  },
+  checkStyle: {
+    height: 25,
+    width: 25,
   }
 });
