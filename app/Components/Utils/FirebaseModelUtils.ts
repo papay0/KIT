@@ -48,7 +48,8 @@ export default class FirebaseModelUtils {
       inCallVia: data.inCallVia,
       requestUuid: data.requestUuid,
       createdAt: data.createdAt,
-      updatedAt: data.updatedAt
+      updatedAt: data.updatedAt,
+      receiverDeclined: data.receiverDeclined
     };
   };
 

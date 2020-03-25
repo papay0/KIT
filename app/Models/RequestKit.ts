@@ -9,4 +9,5 @@ export default interface IRequestKit {
   requestUuid: string;
   createdAt: string;
   updatedAt: string;
+  receiverDeclined: boolean;
 }

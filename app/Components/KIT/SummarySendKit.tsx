@@ -64,7 +64,8 @@ export default class SummarySendKit extends React.Component<
         inCallVia: null,
         requestUuid: requestUuid,
         createdAt: getDateNow(),
-        updatedAt: getDateNow()
+        updatedAt: getDateNow(),
+        receiverDeclined: false
       };
       requests.push(requestObject);
     }

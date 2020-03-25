@@ -77,6 +77,15 @@ class RequestsKit extends React.Component<
     );
   };
 
+  declineCall = async (kitSent: IRequestUser) => {
+    console.log("10");
+    const request = kitSent.request;
+    await NetworkManager.declineRequest(
+      request
+    );
+    console.log("90");
+  };
+
   callBackSelectMessaging = async (index: number, kitSent: IRequestUser) => {
     if (index === 0) {
       this.acceptCall("Messenger", kitSent);
@@ -96,19 +105,24 @@ class RequestsKit extends React.Component<
       })
     } else if (index === 2) {
       this.acceptCall("Other solution", kitSent);
+    } else if (index === 3) {
+      console.log("0");
+      this.declineCall(kitSent);
     }
   };
 
   openMessagingActionSheet = async (
     onChooseAction: (buttonIndex: number) => void
   ) => {
-    const options = ["Messenger", "WhatsApp", "Other solution", "Cancel"];
-    const cancelButtonIndex = 3;
+    const options = ["Messenger", "WhatsApp", "Other solution", "Decline", "Cancel"];
+    const destructiveButtonIndex = 3;
+    const cancelButtonIndex = 4;
 
     this.props.showActionSheetWithOptions(
       {
         options,
-        cancelButtonIndex
+        cancelButtonIndex,
+        destructiveButtonIndex
       },
       buttonIndex => {
         onChooseAction(buttonIndex);

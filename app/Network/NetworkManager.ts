@@ -112,6 +112,10 @@ export default class NetworkManager {
     await CallableManager.acceptRequest(request, inCallVia, inCallWith);
   }
 
+  static declineRequest = async (request: IRequestKit) => {
+    await CallableManager.declineRequest(request);
+  }
+
   static getRequestsForUserUuid = async (userUuid: string): Promise<IRequestKit[]> => {
     const db = firebase.firestore();
     const documents = await db.collection(Collections.REQUESTS)

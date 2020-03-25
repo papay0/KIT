@@ -8,6 +8,7 @@ enum Callables {
   CREATE_REQUEST = "createRequestCallable",
   UPDATE_REQUEST = "updateRequestCallable",
   ACCEPT_REQUEST = "acceptRequestCallable",
+  DECLINE_REQUEST = "declineRequestCallable",
 
   CREATE_FRIEND_REQUEST = "createFriendRequestCallable",
   ACCEPT_FRIEND_REQUEST = "acceptFriendRequestCallable",

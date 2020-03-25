@@ -45,9 +45,10 @@ export default class RequestListItem extends React.Component<
     const user = this.props.requestUser.userProfile.user;
     const profile = this.props.requestUser.userProfile.profile;
     const remainingTime = this.remainingTime(request.availableUntil);
-    const isAvailable = this.props.requestUser.request.isAvailable;
+    const senderIsAvailable = this.props.requestUser.request.isAvailable;
     const inCallWith = this.props.requestUser.request.inCallWith;
     const inCallVia = this.props.requestUser.request.inCallVia;
+    const receiverDeclined = this.props.requestUser.request.receiverDeclined;
     const isOnCallWithMe = inCallWith == this.props.user.userUuid;
     return remainingTime ? (
       <View style={{ ...styles.container, backgroundColor: profile.color }}>
@@ -56,7 +57,7 @@ export default class RequestListItem extends React.Component<
         </View>
         <View style={styles.containerInfoProfile}>
           <Text style={styles.firstname}>{user.firstname}</Text>
-          {isAvailable ? (
+          {senderIsAvailable ? (
             <Text style={styles.availability}>
               can to talk for {remainingTime} min
             </Text>
@@ -67,12 +68,15 @@ export default class RequestListItem extends React.Component<
           ) : (
             <Text style={styles.availability}>Not available anymore</Text>
           )}
-          {isAvailable && (
+          {senderIsAvailable && !receiverDeclined && (
             <View style={styles.containerAcceptCall}>
               <TouchableOpacity onPress={this.props.onCall} style={{ flex: 1 }}>
                 <Text style={styles.answerCallText}>Accept | Decline</Text>
               </TouchableOpacity>
             </View>
+          )}
+          {receiverDeclined && (
+            <Text style={styles.availability}>You declined the call</Text>
           )}
         </View>
       </View>
@@ -86,14 +90,14 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     margin: 10,
-    borderRadius: 24,
+    borderRadius: 24
     // backgroundColor: "red"
   },
   containerProfilePicture: {
     marginTop: 22,
     marginBottom: 22,
     marginLeft: 22,
-    marginRight: 16,
+    marginRight: 16
     // backgroundColor: "red"
   },
   containerAcceptCall: {
@@ -123,7 +127,7 @@ const styles = StyleSheet.create({
   },
   availability: {
     fontSize: 17,
-    color: "rgba(255,255,255,0.92)",
+    color: "rgba(255,255,255,0.92)"
   },
   image: {
     width: 100,
