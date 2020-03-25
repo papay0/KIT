@@ -79,7 +79,7 @@ export default class Friends extends React.Component<
       .collection(Collections.FRIENDS)
       .doc(userUuid)
       .onSnapshot(async document => {
-        const friendUserProfiles = Array<UserProfile>();
+        let friendUserProfiles = Array<UserProfile>();
         if (document.exists) {
           const data = document.data();
           for (const userUuid of data.friendsUuid) {
@@ -89,8 +89,17 @@ export default class Friends extends React.Component<
             friendUserProfiles.push(userProfile);
           }
         }
+        friendUserProfiles = this.sortAlphabetically(friendUserProfiles);
         this.setState({ friendUserProfiles });
       });
+  };
+
+  sortAlphabetically = (userProfiles: UserProfile[]): UserProfile[] => {
+    return userProfiles.sort((userProfileA, userProfileB) => {
+      const nameA = userProfileA.user.displayName.toUpperCase();
+      const nameB = userProfileB.user.displayName.toUpperCase();
+      return nameA < nameB ? -1 : 0;
+    });
   };
 
   onPressAddFriends = () => {

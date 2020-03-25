@@ -49,22 +49,32 @@ export default class AddFriends extends React.Component<
 
   getUsers = async () => {
     const users = await NetworkManager.getUsers();
-    const userProfiles = Array<UserProfile>();
+    let userProfiles = Array<UserProfile>();
     for (const user of users) {
       const profile = await NetworkManager.getProfileByUuid(user.userUuid);
       const userProfile = new UserProfile(user, profile);
       userProfiles.push(userProfile);
     }
-    this.setState({ userProfiles: this.sortAlphabetically(userProfiles) });
+    userProfiles = this.removeMyCurrentFriends(userProfiles);
+    userProfiles = this.sortAlphabetically(userProfiles);
+    this.setState({ userProfiles: userProfiles });
+  };
+
+  removeMyCurrentFriends = (userProfiles: UserProfile[]): UserProfile[] => {
+    return userProfiles.filter(userProfile => {
+      return !this.props.route.params.currentFriendsUuid.includes(
+        userProfile.user.userUuid
+      ) && this.props.route.params.user.userUuid !== userProfile.user.userUuid;
+    });
   };
 
   sortAlphabetically = (userProfiles: UserProfile[]): UserProfile[] => {
     return userProfiles.sort((userProfileA, userProfileB) => {
-      const nameA =  userProfileA.user.displayName.toUpperCase()
+      const nameA = userProfileA.user.displayName.toUpperCase();
       const nameB = userProfileB.user.displayName.toUpperCase();
       return nameA < nameB ? -1 : 0;
-    })
-  }
+    });
+  };
 
   addFriend = async (friendUuid: string) => {
     const db = firebase.firestore();
