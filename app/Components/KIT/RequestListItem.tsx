@@ -70,7 +70,7 @@ export default class RequestListItem extends React.Component<
           {isAvailable && (
             <View style={styles.containerAcceptCall}>
               <TouchableOpacity onPress={this.props.onCall} style={{ flex: 1 }}>
-                <Text style={styles.answerCallText}>Answer</Text>
+                <Text style={styles.answerCallText}>Accept | Decline</Text>
               </TouchableOpacity>
             </View>
           )}
