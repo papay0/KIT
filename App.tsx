@@ -60,7 +60,7 @@ export default class App extends React.Component {
             <Stack.Screen
               name={Routes.ADD_FRIENDS}
               component={AddFriends}
-              options={{ title: "Add a friend" }}
+              options={{ title: "Add friends" }}
             />
              <Stack.Screen
               name={Routes.FRIEND_REQUESTS}

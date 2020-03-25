@@ -11,7 +11,8 @@ import Routes from "../Routes/Routes";
 import NetworkManager from "../../Network/NetworkManager";
 import AddFriendsListItem from "./AddFriendsListItem";
 import IFriendRequest from "../../Models/FriendRequest";
-import { getDateNow } from "../Utils/Utils";
+import { getDateNow, addOpcacityToRGB } from "../Utils/Utils";
+import UserListItem from "../PlatformUI/UserListItem";
 
 interface IAddFriendsProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -43,7 +44,7 @@ export default class AddFriends extends React.Component<
   };
 
   componentDidMount = async () => {
-    await this.getUsers();
+    this.getUsers();
   };
 
   getUsers = async () => {
@@ -54,8 +55,16 @@ export default class AddFriends extends React.Component<
       const userProfile = new UserProfile(user, profile);
       userProfiles.push(userProfile);
     }
-    this.setState({ userProfiles });
+    this.setState({ userProfiles: this.sortAlphabetically(userProfiles) });
   };
+
+  sortAlphabetically = (userProfiles: UserProfile[]): UserProfile[] => {
+    return userProfiles.sort((userProfileA, userProfileB) => {
+      const nameA =  userProfileA.user.displayName.toUpperCase()
+      const nameB = userProfileB.user.displayName.toUpperCase();
+      return nameA < nameB ? -1 : 0;
+    })
+  }
 
   addFriend = async (friendUuid: string) => {
     const db = firebase.firestore();
@@ -77,6 +86,28 @@ export default class AddFriends extends React.Component<
       <View style={styles.container}>
         <FlatList
           data={this.state.userProfiles}
+          renderItem={({ item }) => (
+            <UserListItem
+              title={item.user.displayName}
+              subtitle={undefined}
+              backgroundColorBorderPhoto={addOpcacityToRGB(
+                item.profile.color,
+                0.8
+              )}
+              containsTrailingIcon={true}
+              photoUrl={item.profile.photoUrl}
+              trailingIcon="➕"
+              backgroundTrailingIcon="white"
+              onPress={() => {
+                this.addFriend(item.user.userUuid);
+              }}
+              disabled={false}
+            />
+          )}
+          keyExtractor={item => item.user.userUuid}
+        />
+        {/* <FlatList
+          data={this.state.userProfiles}
           renderItem={({ item }) =>
             item.user.userUuid !== user.userUuid && (
               <AddFriendsListItem
@@ -90,7 +121,7 @@ export default class AddFriends extends React.Component<
             )
           }
           keyExtractor={item => item.user.userUuid}
-        />
+        /> */}
       </View>
     );
   }
