@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Image, View, Text } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
 import * as firebase from "firebase";
@@ -11,9 +11,8 @@ import ApiKeys from "../../Constants/ApiKeys";
 import * as Localization from "expo-localization";
 import { User } from "../../Models/User";
 import NetworkManager from "../../Network/NetworkManager";
-import { isAvailableSignInWithApple, signInApple } from "./AppleLogin";
+import { isAvailableSignInWithApple } from "./AppleLogin";
 import * as Crypto from "expo-crypto";
-import { ILoginMetadata } from "./LoginMetadata";
 import { getDateNow } from "../Utils/Utils";
 import { Profile } from "../../Models/Profile";
 import { ProfileColor } from "../../Models/ProfileColor";
@@ -119,8 +118,6 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
           await NetworkManager.createProfile(profile);
         }
         this.props.signedIn(userUuid);
-      } else {
-        console.error("cancelled");
       }
     } catch (e) {
       console.error("error", e);
@@ -208,34 +205,74 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
   };
 
   render() {
+    const GoogleLogo = require("../../../assets/logo-google.png");
+    const AppleLogo = require("../../../assets/logo-apple.png");
     const signInWithAppleAvailable = this.state.signInWithAppleAvailable;
     return (
       <View style={styles.container}>
-        <Button
-          title="Sign in with Google"
-          onPress={this.onPressGoogleLogin}
-          isHidden={false}
-          trailingIcon=""
-          buttonStyle={ButtonStyle.PRIMARY}
+        <Image
+          source={require("../../../assets/login_gif.gif")}
+          style={{ flex: 1 }}
         />
-        {signInWithAppleAvailable && (
+        <LoginDescription />
+        <View style={styles.containerButton}>
           <Button
-            title="Sign in with Apple"
-            onPress={this.loginWithApple}
+            title="Sign in with Google"
+            onPress={this.onPressGoogleLogin}
             isHidden={false}
             trailingIcon=""
-            buttonStyle={ButtonStyle.PRIMARY}
+            leadingIcon={GoogleLogo}
+            buttonStyle={ButtonStyle.SECONDARY}
           />
-        )}
+          {signInWithAppleAvailable && (
+            <Button
+              title="Sign in with Apple"
+              onPress={this.loginWithApple}
+              isHidden={false}
+              trailingIcon=""
+              leadingIcon={AppleLogo}
+              buttonStyle={ButtonStyle.SECONDARY}
+            />
+          )}
+        </View>
       </View>
     );
   }
 }
 
+const LoginDescription = (): JSX.Element => {
+  return (
+    <View style={styles.containerDescription}>
+      <Text style={styles.title}>Coucou</Text>
+      <Text style={styles.subtitle}>Just say hi 👋</Text>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: "center",
     justifyContent: "center"
+  },
+  containerButton: {
+    position: "absolute",
+    bottom: "5%",
+    width: "100%"
+  },
+  containerDescription: {
+    position: "absolute",
+    bottom: "40%",
+    width: "100%",
+    margin: 20
+  },
+  title: {
+    fontSize: 40,
+    color: "white",
+    fontWeight: "bold"
+  },
+  subtitle: {
+    fontSize: 20,
+    color: "white",
+    fontWeight: "bold"
   }
 });

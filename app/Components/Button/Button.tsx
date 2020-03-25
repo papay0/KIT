@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 
 export enum ButtonStyle {
   PRIMARY,
@@ -11,6 +11,7 @@ interface IButtonProps {
   title: string;
   isHidden: boolean;
   trailingIcon: string;
+  leadingIcon?: any;
   buttonStyle: ButtonStyle;
 }
 
@@ -20,16 +21,21 @@ export default class Button extends React.Component<
   IButtonProps,
   IButtonState
 > {
-
   getStyleButton = () => {
-    const additionalStyle = this.props.buttonStyle == ButtonStyle.PRIMARY ? styles.primaryStyleTouchableOpacity : styles.secondaryStyleTouchableOpacity;
-    return {...styles.baseStyleTouchableOpacity, ...additionalStyle};
-  }
+    const additionalStyle =
+      this.props.buttonStyle == ButtonStyle.PRIMARY
+        ? styles.primaryStyleTouchableOpacity
+        : styles.secondaryStyleTouchableOpacity;
+    return { ...styles.baseStyleTouchableOpacity, ...additionalStyle };
+  };
 
   getStyleTitleText = () => {
-    const additionalStyle = this.props.buttonStyle == ButtonStyle.PRIMARY ? styles.primaryStyleTitleText : styles.secondarStyleTitleText;
-    return {...styles.baseStyleTitleText, ...additionalStyle};
-  }
+    const additionalStyle =
+      this.props.buttonStyle == ButtonStyle.PRIMARY
+        ? styles.primaryStyleTitleText
+        : styles.secondarStyleTitleText;
+    return { ...styles.baseStyleTitleText, ...additionalStyle };
+  };
 
   render() {
     return (
@@ -41,6 +47,12 @@ export default class Button extends React.Component<
             onPress={() => this.props.onPress()}
             style={this.getStyleButton()}
           >
+            <View style={styles.styleLeadingIconContainer}>
+              <Image
+                source={this.props.leadingIcon}
+                style={styles.styleLeadingIcon}
+              />
+            </View>
             <View style={styles.baseStyleTitleView}>
               <Text style={this.getStyleTitleText()}>{this.props.title}</Text>
             </View>
@@ -79,10 +91,10 @@ const styles = StyleSheet.create({
     flex: 1
   },
   primaryStyleTitleText: {
-    color: "white",
+    color: "white"
   },
   secondarStyleTitleText: {
-    color: "#5468FF",
+    color: "#5468FF"
   },
   baseStyleTitleText: {
     fontWeight: "600",
@@ -90,6 +102,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingLeft: 20,
     paddingRight: 20
+  },
+  styleLeadingIcon: {
+    height: 30,
+    width: 30
+  },
+  styleLeadingIconContainer: {
+    justifyContent: "center",
+    top: 0,
+    bottom: 0,
+    position: "absolute",
+    left: 40
   },
   styleTrailingIcon: {
     justifyContent: "center",
