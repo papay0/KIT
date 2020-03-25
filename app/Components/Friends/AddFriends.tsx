@@ -11,7 +11,7 @@ import Routes from "../Routes/Routes";
 import NetworkManager from "../../Network/NetworkManager";
 import AddFriendsListItem from "./AddFriendsListItem";
 import IFriendRequest from "../../Models/FriendRequest";
-import { getDateNow, addOpcacityToRGB } from "../Utils/Utils";
+import { getDateNow, addOpcacityToRGB, sortUserProfilesAlphabetically } from "../Utils/Utils";
 import UserListItem from "../PlatformUI/UserListItem";
 
 interface IAddFriendsProps {
@@ -56,7 +56,7 @@ export default class AddFriends extends React.Component<
       userProfiles.push(userProfile);
     }
     userProfiles = this.removeMyCurrentFriends(userProfiles);
-    userProfiles = this.sortAlphabetically(userProfiles);
+    userProfiles = sortUserProfilesAlphabetically(userProfiles);
     this.setState({ userProfiles: userProfiles });
   };
 
@@ -65,14 +65,6 @@ export default class AddFriends extends React.Component<
       return !this.props.route.params.currentFriendsUuid.includes(
         userProfile.user.userUuid
       ) && this.props.route.params.user.userUuid !== userProfile.user.userUuid;
-    });
-  };
-
-  sortAlphabetically = (userProfiles: UserProfile[]): UserProfile[] => {
-    return userProfiles.sort((userProfileA, userProfileB) => {
-      const nameA = userProfileA.user.displayName.toUpperCase();
-      const nameB = userProfileB.user.displayName.toUpperCase();
-      return nameA < nameB ? -1 : 0;
     });
   };
 

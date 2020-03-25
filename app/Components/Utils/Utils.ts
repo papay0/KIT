@@ -1,5 +1,6 @@
 import { Profile } from "../../Models/Profile";
 import moment from "moment-timezone";
+import { UserProfile } from "../../Models/UserProfile";
 
 export const getDateNow = (): string => {
   return new Date().toISOString();
@@ -23,4 +24,12 @@ export const addOpcacityToRGB = (rgb: string, opacity: number): string => {
 
 export const getLocalTime = (profile: Profile): string => {
   return moment.tz(new Date(), profile.timezone).format("HH:mm");
+};
+
+export const sortUserProfilesAlphabetically = (userProfiles: UserProfile[]): UserProfile[] => {
+  return userProfiles.sort((userProfileA, userProfileB) => {
+    const nameA = userProfileA.user.displayName.toUpperCase();
+    const nameB = userProfileB.user.displayName.toUpperCase();
+    return nameA < nameB ? -1 : 0;
+  });
 };

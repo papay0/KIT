@@ -13,7 +13,7 @@ import NetworkManager from "../../Network/NetworkManager";
 import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 import Button, { ButtonStyle } from "../Button/Button";
 import UserListItem from "../PlatformUI/UserListItem";
-import { getLocalTime, addOpcacityToRGB } from "../Utils/Utils";
+import { getLocalTime, addOpcacityToRGB, sortAlphabetically, sortUserProfilesAlphabetically } from "../Utils/Utils";
 import * as Sharing from "expo-sharing";
 
 interface IFriendsProps {
@@ -89,17 +89,9 @@ export default class Friends extends React.Component<
             friendUserProfiles.push(userProfile);
           }
         }
-        friendUserProfiles = this.sortAlphabetically(friendUserProfiles);
+        friendUserProfiles = sortUserProfilesAlphabetically(friendUserProfiles);
         this.setState({ friendUserProfiles });
       });
-  };
-
-  sortAlphabetically = (userProfiles: UserProfile[]): UserProfile[] => {
-    return userProfiles.sort((userProfileA, userProfileB) => {
-      const nameA = userProfileA.user.displayName.toUpperCase();
-      const nameB = userProfileB.user.displayName.toUpperCase();
-      return nameA < nameB ? -1 : 0;
-    });
   };
 
   onPressAddFriends = () => {

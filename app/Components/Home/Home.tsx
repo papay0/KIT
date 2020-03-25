@@ -21,6 +21,7 @@ import NetworkManager from "../../Network/NetworkManager";
 import KitsSent from "../KIT/KitsSent";
 import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 import { User } from "../../Models/User";
+import { sortUserProfilesAlphabetically } from "../Utils/Utils";
 
 interface IHomeProps {
   userProfile: UserProfile;
@@ -79,7 +80,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       .collection(Collections.FRIENDS)
       .doc(userUuid)
       .onSnapshot(async document => {
-        const friendUserProfiles = Array<UserProfile>();
+        let friendUserProfiles = Array<UserProfile>();
         if (document.exists) {
           const data = document.data();
           for (const userUuid of data.friendsUuid) {
@@ -89,6 +90,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
             friendUserProfiles.push(userProfile);
           }
         }
+        friendUserProfiles = sortUserProfilesAlphabetically(friendUserProfiles);
         this.setState({ friendUserProfiles });
       });
   };
