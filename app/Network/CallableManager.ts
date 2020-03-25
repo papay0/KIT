@@ -76,11 +76,9 @@ export default class CallableManager {
     const declineRequest = firebase
       .functions()
       .httpsCallable(Callables.DECLINE_REQUEST);
-      console.log("30");
     await declineRequest({
       request: _.toPlainObject(request)
     });
-    console.log("70");
   };
 
   // FriendRequest
