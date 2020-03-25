@@ -157,7 +157,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
           title="SAY COUCOU"
           onPress={this.routeToSendKIT}
           isHidden={false}
-          trailingIcon="➡️"
+          trailingIcon={require("../../../assets/arrow-right-blue.png")}
           buttonStyle={ButtonStyle.PRIMARY}
         />
       </SafeAreaView>

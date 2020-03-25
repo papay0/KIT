@@ -10,7 +10,7 @@ interface IButtonProps {
   onPress: () => void;
   title: string;
   isHidden: boolean;
-  trailingIcon: string;
+  trailingIcon?: any;
   leadingIcon?: any;
   buttonStyle: ButtonStyle;
 }
@@ -56,8 +56,11 @@ export default class Button extends React.Component<
             <View style={styles.baseStyleTitleView}>
               <Text style={this.getStyleTitleText()}>{this.props.title}</Text>
             </View>
-            <View style={styles.styleTrailingIcon}>
-              <Text style={{ fontSize: 30 }}>{this.props.trailingIcon}</Text>
+            <View style={styles.styleTrailingIconContainer}>
+              <Image
+                source={this.props.trailingIcon}
+                style={styles.styleTrailingIcon}
+              />
             </View>
           </TouchableOpacity>
         )}
@@ -115,11 +118,14 @@ const styles = StyleSheet.create({
     left: 40
   },
   styleTrailingIcon: {
+    height: 35,
+    width: 35
+  },
+  styleTrailingIconContainer: {
     justifyContent: "center",
-    alignItems: "flex-end",
-    margin: 12,
+    top: 0,
+    bottom: 0,
     position: "absolute",
-    right: 0,
-    alignContent: "center"
+    right: 15
   }
 });

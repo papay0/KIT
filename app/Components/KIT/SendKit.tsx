@@ -172,7 +172,7 @@ export default class SendKit extends React.Component<
           title={title}
           onPress={this.routeToSummarySendKit}
           isHidden={isContinueButtonHidden}
-          trailingIcon="➡️"
+          trailingIcon={require("../../../assets/arrow-right-blue.png")}
           buttonStyle={ButtonStyle.SECONDARY}
         />
       </SafeAreaView>

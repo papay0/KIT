@@ -144,14 +144,13 @@ export default class Friends extends React.Component<
       <View style={styles.container}>
         <Button
           title="INVITE FRIENDS TO USE COUCOU"
-          trailingIcon=""
           onPress={this.onPressInviteFriends}
           isHidden={false}
           buttonStyle={ButtonStyle.PRIMARY}
         />
         <Button
           title="ADD FRIENDS"
-          trailingIcon="➕"
+          trailingIcon={require("../../../assets/plus-blue.png")}
           onPress={this.onPressAddFriends}
           isHidden={false}
           buttonStyle={ButtonStyle.PRIMARY}
@@ -159,7 +158,7 @@ export default class Friends extends React.Component<
         {this.state.friendRequestsNumber > 0 && (
           <Button
             title={this.getFriendRequestsTitle()}
-            trailingIcon="➡️"
+            trailingIcon={require("../../../assets/arrow-right-blue.png")}
             onPress={this.onPressFriendRequests}
             isHidden={false}
             buttonStyle={ButtonStyle.SECONDARY}
