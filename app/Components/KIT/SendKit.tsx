@@ -17,7 +17,7 @@ import IRequestKit from "../../Models/RequestKit";
 import { UserProfile } from "../../Models/UserProfile";
 import NetworkManager from "../../Network/NetworkManager";
 import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
-import UserListItem from "../PlatformUI/UserListItem";
+import UserListItem, { TralingType } from "../PlatformUI/UserListItem";
 import { Profile } from "../../Models/Profile";
 import moment from "moment-timezone";
 import { addOpcacityToRGB, getLocalTime } from "../Utils/Utils";
@@ -156,7 +156,7 @@ export default class SendKit extends React.Component<
                 item.profile.color,
                 0.8
               )}
-              containsTrailingIcon={true}
+              tralingType={TralingType.ICON}
               photoUrl={item.profile.photoUrl}
               trailingIcon={this.getTrailingIcon(item)}
               backgroundTrailingIcon={this.getTrailingIconBackgroungColor(item)}

@@ -12,7 +12,7 @@ import NetworkManager from "../../Network/NetworkManager";
 import AddFriendsListItem from "./AddFriendsListItem";
 import IFriendRequest from "../../Models/FriendRequest";
 import { getDateNow, addOpcacityToRGB, sortUserProfilesAlphabetically } from "../Utils/Utils";
-import UserListItem from "../PlatformUI/UserListItem";
+import UserListItem, { TralingType } from "../PlatformUI/UserListItem";
 
 interface IAddFriendsProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -128,7 +128,7 @@ export default class AddFriends extends React.Component<
                 item.profile.color,
                 0.8
               )}
-              containsTrailingIcon={true}
+              tralingType={TralingType.ICON}
               photoUrl={item.profile.photoUrl}
               trailingIcon={this.getTrailingIcon(item)}
               backgroundTrailingIcon={this.getBackgroundTrailingIcon(item)}
@@ -140,22 +140,6 @@ export default class AddFriends extends React.Component<
           )}
           keyExtractor={item => item.user.userUuid}
         />
-        {/* <FlatList
-          data={this.state.userProfiles}
-          renderItem={({ item }) =>
-            item.user.userUuid !== user.userUuid && (
-              <AddFriendsListItem
-                user={item.user}
-                profile={item.profile}
-                onPress={() => {
-                  this.addFriend(item.user.userUuid);
-                }}
-                currentFriendsUuid={this.props.route.params.currentFriendsUuid}
-              />
-            )
-          }
-          keyExtractor={item => item.user.userUuid}
-        /> */}
       </View>
     );
   }

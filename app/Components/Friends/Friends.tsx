@@ -12,7 +12,7 @@ import { UserProfile } from "../../Models/UserProfile";
 import NetworkManager from "../../Network/NetworkManager";
 import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 import Button, { ButtonStyle } from "../Button/Button";
-import UserListItem from "../PlatformUI/UserListItem";
+import UserListItem, { TralingType } from "../PlatformUI/UserListItem";
 import {
   getLocalTime,
   addOpcacityToRGB,
@@ -209,7 +209,7 @@ export default class Friends extends React.Component<
                 item.profile.color,
                 0.8
               )}
-              containsTrailingIcon={false}
+              tralingType={TralingType.NONE}
               photoUrl={item.profile.photoUrl}
               trailingIcon={undefined}
               backgroundTrailingIcon={undefined}

@@ -14,7 +14,7 @@ import { UserProfile } from "../../Models/UserProfile";
 import { getDateNow, addOpcacityToRGB } from "../Utils/Utils";
 import NetworkManager from "../../Network/NetworkManager";
 import PillButton from "../PlatformUI/PillButton";
-import UserListItem from "../PlatformUI/UserListItem";
+import UserListItem, { TralingType } from "../PlatformUI/UserListItem";
 import { Profile } from "../../Models/Profile";
 import moment from "moment-timezone";
 
@@ -125,7 +125,7 @@ export default class SummarySendKit extends React.Component<
               trailingIcon={undefined}
               onPress={() => {}}
               backgroundTrailingIcon={undefined}
-              containsTrailingIcon={false}
+              tralingType={TralingType.NONE}
               backgroundColorBorderPhoto={addOpcacityToRGB(
                 item.profile.color,
                 0.8

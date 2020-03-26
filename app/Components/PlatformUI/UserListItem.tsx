@@ -5,22 +5,24 @@
 // trailing button style: one / two
 
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity
-} from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+
+export enum TralingType {
+  NONE,
+  ICON,
+  TEXT
+}
 
 interface IUserListItemProps {
   title: string;
   subtitle: string | undefined;
   photoUrl: string | undefined;
   backgroundColorBorderPhoto: string | undefined;
-  containsTrailingIcon: boolean;
+  tralingType: TralingType;
   backgroundTrailingIcon: string | undefined;
+  backgroundTrailingText: string | undefined;
   trailingIcon?: any;
+  trailingText?: string;
   onPress: () => void;
   disabled: boolean;
 }
@@ -64,7 +66,7 @@ export default class UserListItem extends React.Component<
           <Text style={styles.title}>{title}</Text>
           {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
         </View>
-        {this.props.containsTrailingIcon && (
+        {this.props.tralingType == TralingType.ICON && (
           <View
             style={{
               display: "flex",
@@ -86,6 +88,23 @@ export default class UserListItem extends React.Component<
             </View>
           </View>
         )}
+        {this.props.tralingType == TralingType.TEXT && (
+          <View
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 70,
+              marginRight: 20
+            }}
+          >
+            <View style={{...styles.containerAcceptDeclineFriendRequest, backgroundColor: this.props.backgroundTrailingText}}>
+              <Text style={styles.acceptDeclineFriendRequestText}>
+                {this.props.trailingText}
+              </Text>
+            </View>
+          </View>
+        )}
       </TouchableOpacity>
     );
   }
@@ -101,6 +120,21 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     borderRadius: 18,
     backgroundColor: "#F7F7F7"
+  },
+  containerAcceptDeclineFriendRequest: {
+    borderRadius: 16,
+    width: 100,
+    height: 50,
+    flexDirection: "column",
+    textAlign: "center",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  acceptDeclineFriendRequestText: {
+    fontSize: 17,
+    color: "white",
+    fontWeight: "600"
   },
   selectCheckbox: {
     justifyContent: "center"
@@ -138,7 +172,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     // marginLeft: 12,
-    justifyContent: "center",
+    justifyContent: "center"
   },
   description: {
     fontSize: 11,
@@ -151,5 +185,5 @@ const styles = StyleSheet.create({
   styleTrailingIcon: {
     height: 20,
     width: 20
-  },
+  }
 });
