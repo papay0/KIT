@@ -16,11 +16,10 @@ import UserListItem from "../PlatformUI/UserListItem";
 import {
   getLocalTime,
   addOpcacityToRGB,
-  sortAlphabetically,
   sortUserProfilesAlphabetically
 } from "../Utils/Utils";
 import * as Sharing from "expo-sharing";
-import IFriendRequest from "../../Models/FriendRequest";
+import IFriendRequest, { IFriendRequestUserProfile } from "../../Models/FriendRequest";
 
 interface IFriendsProps {
   user: User;
@@ -31,6 +30,7 @@ interface IFriendsProps {
 interface IFriendsState {
   friendUserProfiles: UserProfile[];
   userFriendRequestsSent: IFriendRequest[];
+  friendRequestUserProfiles: IFriendRequestUserProfile[];
   friendRequestsNumber: number;
 }
 
@@ -43,12 +43,13 @@ export default class Friends extends React.Component<
     this.state = {
       friendUserProfiles: props.friendUserProfiles,
       userFriendRequestsSent: [],
+      friendRequestUserProfiles: [],
       friendRequestsNumber: 0
     };
   }
 
   componentDidMount = async () => {
-    this.listenerToFriendRequestsNumber();
+    this.listenerToFriendRequests();
     this.getCurrentFriends(this.props.user.userUuid);
     this.getUserFriendRequestsSent(this.props.user.userUuid);
   };
@@ -61,12 +62,30 @@ export default class Friends extends React.Component<
   unsubscribeFriendRequests = () => {};
   unsubscribeFriends = () => {};
 
-  listenerToFriendRequestsNumber = async () => {
+  listenerToFriendRequests = async () => {
     const db = firebase.firestore();
     db.collection(Collections.FRIEND_REQUESTS)
       .where("receiverUuid", "==", this.props.user.userUuid)
       .onSnapshot(async documents => {
         this.setState({ friendRequestsNumber: documents.docs.length });
+        const friendRequestUserProfiles = Array<IFriendRequestUserProfile>();
+        for (const document of documents.docs) {
+          if (document.exists) {
+            const data = document.data();
+            const friendRequest = FirebaseModelUtils.getFriendRequestFromFirebaseFriendRequest(
+              data
+            );
+            const userProfile = await NetworkManager.getUserProfileByUuid(
+              friendRequest.senderUuid
+            );
+            const friendRequestUserProfile: IFriendRequestUserProfile = {
+              friendRequest: friendRequest,
+              userProfile: userProfile
+            };
+            friendRequestUserProfiles.push(friendRequestUserProfile);
+          }
+        }
+        this.setState({ friendRequestUserProfiles: friendRequestUserProfiles });
       });
   };
 
@@ -120,7 +139,7 @@ export default class Friends extends React.Component<
 
   onPressFriendRequests = () => {
     this.props.navigation.navigate(Routes.FRIEND_REQUESTS, {
-      user: this.props.user
+      friendRequestUserProfiles: this.state.friendRequestUserProfiles
     });
   };
 

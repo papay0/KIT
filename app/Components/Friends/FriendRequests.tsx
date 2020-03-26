@@ -23,13 +23,11 @@ interface IFriendRequestsProps {
 
 type FriendRequestsNavigatorParams = {
   [Routes.FRIEND_REQUESTS]: {
-    user: User;
+    friendRequestUserProfiles: IFriendRequestUserProfile[];
   };
 };
 
-interface IFriendRequestsState {
-  friendRequestUserProfiles: IFriendRequestUserProfile[];
-}
+interface IFriendRequestsState {}
 
 export default class FriendRequests extends React.Component<
   IFriendRequestsProps,
@@ -39,36 +37,6 @@ export default class FriendRequests extends React.Component<
     super(props);
     this.state = { friendRequestUserProfiles: [] };
   }
-  unsubscribe = () => {};
-  componentDidMount = async () => {
-    const db = firebase.firestore();
-    this.unsubscribe = db
-      .collection(Collections.FRIEND_REQUESTS)
-      .where("receiverUuid", "==", this.props.route.params.user.userUuid)
-      .onSnapshot(async documents => {
-        const friendRequestUserProfiles = Array<IFriendRequestUserProfile>();
-        for (const document of documents.docs) {
-          if (document.exists) {
-            const data = document.data();
-            const friendRequest = FirebaseModelUtils.getFriendRequestFromFirebaseFriendRequest(
-              data
-            );
-            const userProfile = await NetworkManager.getUserProfileByUuid(
-              friendRequest.senderUuid
-            );
-            const friendRequestUserProfile: IFriendRequestUserProfile = {
-              friendRequest: friendRequest,
-              userProfile: userProfile
-            };
-            friendRequestUserProfiles.push(friendRequestUserProfile);
-          }
-        }
-        this.setState({ friendRequestUserProfiles: friendRequestUserProfiles });
-      });
-  };
-  componentWillUnmount = () => {
-    this.unsubscribe();
-  };
 
   onAck = async (
     accepted: boolean,
@@ -86,25 +54,22 @@ export default class FriendRequests extends React.Component<
   };
 
   render() {
-    const friendRequestUserProfiles = this.state.friendRequestUserProfiles;
+    const friendRequestUserProfiles = this.props.route.params
+      .friendRequestUserProfiles;
     return (
       <View style={styles.container}>
-        {friendRequestUserProfiles.length > 0 ? (
-          <FlatList
-            data={friendRequestUserProfiles}
-            renderItem={({ item }) => (
-              <FriendRequestsListItem
-                friendRequestUserProfile={item.userProfile}
-                onAck={accepted => {
-                  this.onAck(accepted, item);
-                }}
-              />
-            )}
-            keyExtractor={item => item.userProfile.user.userUuid}
-          />
-        ) : (
-          <Text>Here will be an image to say no friend request</Text>
-        )}
+        <FlatList
+          data={friendRequestUserProfiles}
+          renderItem={({ item }) => (
+            <FriendRequestsListItem
+              friendRequestUserProfile={item.userProfile}
+              onAck={accepted => {
+                this.onAck(accepted, item);
+              }}
+            />
+          )}
+          keyExtractor={item => item.userProfile.user.userUuid}
+        />
       </View>
     );
   }
