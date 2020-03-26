@@ -20,7 +20,7 @@ interface IUserListItemProps {
   backgroundColorBorderPhoto: string | undefined;
   tralingType: TralingType;
   backgroundTrailingIcon: string | undefined;
-  backgroundTrailingText: string | undefined;
+  backgroundTrailingText?: string;
   trailingIcon?: any;
   trailingText?: string;
   onPress: () => void;
