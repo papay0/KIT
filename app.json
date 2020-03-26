@@ -9,9 +9,8 @@
     "orientation": "portrait",
     "icon": "./assets/Icon-Coucou.png",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./assets/Hand-splash.png",
+      "backgroundColor": "#566df6"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
