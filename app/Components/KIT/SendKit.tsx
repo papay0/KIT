@@ -127,9 +127,9 @@ export default class SendKit extends React.Component<
     return isSelected ? "#5468FF" : "white";
   }
 
-  getTrailingIcon = (userProfile: UserProfile): string => {
+  getTrailingIcon = (userProfile: UserProfile): any => {
     const isSelected = this.state.selectedFriendUserProfiles.includes(userProfile);
-    return isSelected ? "✔" : "➕";
+    return isSelected ? require("../../../assets/check-white.png") : require("../../../assets/plus-gray.png");
   }
 
   render() {

@@ -97,7 +97,7 @@ export default class AddFriends extends React.Component<
               )}
               containsTrailingIcon={true}
               photoUrl={item.profile.photoUrl}
-              trailingIcon="➕"
+              trailingIcon={require("../../../assets/plus-gray.png")}
               backgroundTrailingIcon="white"
               onPress={() => {
                 this.addFriend(item.user.userUuid);

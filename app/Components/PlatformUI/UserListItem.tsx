@@ -20,7 +20,7 @@ interface IUserListItemProps {
   backgroundColorBorderPhoto: string | undefined;
   containsTrailingIcon: boolean;
   backgroundTrailingIcon: string | undefined;
-  trailingIcon: string | undefined;
+  trailingIcon?: any;
   onPress: () => void;
   disabled: boolean;
 }
@@ -79,7 +79,10 @@ export default class UserListItem extends React.Component<
                 backgroundColor: backgroundTrailingIcon
               }}
             >
-              <Text style={{ fontSize: 30 }}>{this.props.trailingIcon}</Text>
+              <Image
+                source={this.props.trailingIcon}
+                style={styles.styleTrailingIcon}
+              />
             </View>
           </View>
         )}
@@ -144,5 +147,9 @@ const styles = StyleSheet.create({
   photo: {
     height: 50,
     width: 50
-  }
+  },
+  styleTrailingIcon: {
+    height: 20,
+    width: 20
+  },
 });
