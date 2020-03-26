@@ -13,8 +13,14 @@ import NetworkManager from "../../Network/NetworkManager";
 import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 import Button, { ButtonStyle } from "../Button/Button";
 import UserListItem from "../PlatformUI/UserListItem";
-import { getLocalTime, addOpcacityToRGB, sortAlphabetically, sortUserProfilesAlphabetically } from "../Utils/Utils";
+import {
+  getLocalTime,
+  addOpcacityToRGB,
+  sortAlphabetically,
+  sortUserProfilesAlphabetically
+} from "../Utils/Utils";
 import * as Sharing from "expo-sharing";
+import IFriendRequest from "../../Models/FriendRequest";
 
 interface IFriendsProps {
   user: User;
@@ -24,6 +30,7 @@ interface IFriendsProps {
 
 interface IFriendsState {
   friendUserProfiles: UserProfile[];
+  userFriendRequestsSent: IFriendRequest[];
   friendRequestsNumber: number;
 }
 
@@ -35,34 +42,24 @@ export default class Friends extends React.Component<
     super(props);
     this.state = {
       friendUserProfiles: props.friendUserProfiles,
+      userFriendRequestsSent: [],
       friendRequestsNumber: 0
     };
   }
 
   componentDidMount = async () => {
     this.listenerToFriendRequestsNumber();
-    await this.getCurrentFriends(this.props.user.userUuid);
+    this.getCurrentFriends(this.props.user.userUuid);
+    this.getUserFriendRequestsSent(this.props.user.userUuid);
   };
 
   componentWillUnmount() {
-    this.unsubscribe();
+    this.unsubscribeFriends();
+    this.unsubscribeFriendRequests();
   }
 
-  getUserByUuid = async (userUuid: string): Promise<User | undefined> => {
-    const db = firebase.firestore();
-    const document = await db
-      .collection(Collections.USERS)
-      .doc(userUuid)
-      .get();
-    if (document.exists) {
-      const data = document.data();
-      const user = FirebaseModelUtils.getUserFromFirebaseUser(data);
-      return user;
-    }
-    return undefined;
-  };
-
-  unsubscribe = () => {};
+  unsubscribeFriendRequests = () => {};
+  unsubscribeFriends = () => {};
 
   listenerToFriendRequestsNumber = async () => {
     const db = firebase.firestore();
@@ -75,7 +72,7 @@ export default class Friends extends React.Component<
 
   getCurrentFriends = async (userUuid: string) => {
     const db = firebase.firestore();
-    this.unsubscribe = db
+    this.unsubscribeFriends = db
       .collection(Collections.FRIENDS)
       .doc(userUuid)
       .onSnapshot(async document => {
@@ -94,12 +91,30 @@ export default class Friends extends React.Component<
       });
   };
 
+  getUserFriendRequestsSent = async (userUuid: string) => {
+    const db = firebase.firestore();
+    this.unsubscribeFriendRequests = db
+      .collection(Collections.FRIEND_REQUESTS)
+      .where("senderUuid", "==", userUuid)
+      .onSnapshot(async documents => {
+        const userFriendRequestsSent = Array<IFriendRequest>();
+        for (const doc of documents.docs) {
+          const friendRequest = FirebaseModelUtils.getFriendRequestFromFirebaseFriendRequest(
+            doc.data()
+          );
+          userFriendRequestsSent.push(friendRequest);
+        }
+        this.setState({ userFriendRequestsSent });
+      });
+  };
+
   onPressAddFriends = () => {
     this.props.navigation.navigate(Routes.ADD_FRIENDS, {
       user: this.props.user,
       currentFriendsUuid: this.state.friendUserProfiles.map(
         friendProfile => friendProfile.user.userUuid
-      )
+      ),
+      userFriendRequestsSent: this.state.userFriendRequestsSent
     });
   };
 

@@ -23,11 +23,13 @@ type AddFriendsNavigatorParams = {
   [Routes.ADD_FRIENDS]: {
     user: User;
     currentFriendsUuid: string[];
+    userFriendRequestsSent: IFriendRequest[];
   };
 };
 
 interface IAddFriendsState {
   userProfiles: UserProfile[];
+  userFriendRequestsSent: IFriendRequest[];
 }
 
 export default class AddFriends extends React.Component<
@@ -36,12 +38,11 @@ export default class AddFriends extends React.Component<
 > {
   constructor(props: IAddFriendsProps) {
     super(props);
+    this.state = {
+      userProfiles: Array<UserProfile>(),
+      userFriendRequestsSent: props.route.params.userFriendRequestsSent
+    };
   }
-
-  state = {
-    userProfiles: Array<UserProfile>(),
-    currentFriends: Array<string>()
-  };
 
   componentDidMount = async () => {
     this.getUsers();
@@ -78,8 +79,40 @@ export default class AddFriends extends React.Component<
       createdAt: getDateNow(),
       updatedAt: getDateNow()
     };
-    await NetworkManager.createFriendRequest(friendRequest);
+    const localFriendRequestsSent = this.state.userFriendRequestsSent;
+    localFriendRequestsSent.push(friendRequest)
+    this.setState({userFriendRequestsSent: localFriendRequestsSent});
+    NetworkManager.createFriendRequest(friendRequest);
   };
+
+  getTrailingIcon = (userProfile: UserProfile): any => {
+    const alreadySent = this.isFriendRequestAlreadySent(userProfile);
+    if (alreadySent) {
+      return require("../../../assets/plane-white.png");
+    } else {
+      return require("../../../assets/plus-gray.png");
+    }
+  }
+
+  isFriendRequestAlreadySent = (userProfile: UserProfile): boolean => {
+    const userFriendRequestsSent = this.props.route.params.userFriendRequestsSent;
+    return userFriendRequestsSent.filter(friendRequest => {
+      return friendRequest.receiverUuid == userProfile.user.userUuid;
+    }).length > 0;
+  }
+
+  getBackgroundTrailingIcon = (userProfile: UserProfile): string => {
+    const alreadySent = this.isFriendRequestAlreadySent(userProfile);
+    if (alreadySent) {
+      return "#5468FF";
+    } else {
+      return "white";
+    }
+  }
+
+  getDisabledState = (userProfile: UserProfile): boolean => {
+    return this.isFriendRequestAlreadySent(userProfile);
+  }
 
   render() {
     const user = this.props.route.params.user;
@@ -89,20 +122,20 @@ export default class AddFriends extends React.Component<
           data={this.state.userProfiles}
           renderItem={({ item }) => (
             <UserListItem
-              title={item.user.displayName}
-              subtitle={undefined}
+              title={item.user.firstname}
+              subtitle={item.user.lastname}
               backgroundColorBorderPhoto={addOpcacityToRGB(
                 item.profile.color,
                 0.8
               )}
               containsTrailingIcon={true}
               photoUrl={item.profile.photoUrl}
-              trailingIcon={require("../../../assets/plus-gray.png")}
-              backgroundTrailingIcon="white"
+              trailingIcon={this.getTrailingIcon(item)}
+              backgroundTrailingIcon={this.getBackgroundTrailingIcon(item)}
               onPress={() => {
                 this.addFriend(item.user.userUuid);
               }}
-              disabled={false}
+              disabled={this.getDisabledState(item)}
             />
           )}
           keyExtractor={item => item.user.userUuid}
