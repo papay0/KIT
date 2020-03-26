@@ -48,6 +48,8 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   unsubscribeFriends = () => {};
   unsubscribeUser = () => {};
   componentDidMount() {
+    this.setBaseHeaderOptions();
+    this.setHeaderLeftOption(this.state.user.firstname);
     const db = firebase.firestore();
     const userUuid = this.props.userProfile.user.userUuid;
     this.unsubscribeProfile = db
@@ -58,7 +60,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
           const data = document.data();
           const profile = FirebaseModelUtils.getProfileFromFirebaseUser(data);
           this.setState({ profile });
-          this.setHeaderOptions();
+          this.setHeaderRightOption();
         }
       });
     this.unsubscribeUser = db
@@ -95,11 +97,15 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       });
   };
 
-  setHeaderOptions = () => {
-    const user = this.state.user;
+  setBaseHeaderOptions = () => {
     this.props.navigation.setOptions({
       headerShown: true,
-      headerTitle: null,
+      headerTitle: null
+    })
+  }
+
+  setHeaderLeftOption = (firstname: string) => {
+    this.props.navigation.setOptions({
       headerLeft: () => (
         <View
           style={{
@@ -109,9 +115,14 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
           }}
         >
           <Text style={styles.headerTitleCoucou}>Coucou, </Text>
-          <Text style={styles.headerTitleName}>{user.firstname}</Text>
+          <Text style={styles.headerTitleName}>{firstname}</Text>
         </View>
-      ),
+      )
+    })
+  }
+
+  setHeaderRightOption = () => {
+    this.props.navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
           onPress={() => {
