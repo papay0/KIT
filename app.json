@@ -7,9 +7,8 @@
     "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/Icon-Coucou.png",
     "splash": {
-      "image": "./assets/Hand-splash.png",
+      "image": "./assets/hand-splash.png",
       "backgroundColor": "#566df6"
     },
     "updates": {
@@ -20,11 +19,13 @@
       "supportsTablet": true,
       "usesAppleSignIn": true,
       "bundleIdentifier": "com.coucou.exporeactnative",
-      "buildNumber": "1.0.0"
+      "buildNumber": "1.0.0",
+      "icon":"./assets/icon-app-ios.png"
     },
     "android": {
       "package": "com.coucou.exporeactnative",
-      "versionCode": 1
+      "versionCode": 1,
+      "icon":"./assets/icon-app-android.png"
     }
   }
 }
