@@ -102,7 +102,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       () => this.setState({ time: Date.now() }),
       10000
     );
-  }
+  };
 
   getFriends = async (userUuid: string) => {
     const db = firebase.firestore();
@@ -229,13 +229,15 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
             />
           )}
         />
-        <Button
-          title="SAY COUCOU"
-          onPress={this.routeToSendKIT}
-          isHidden={false}
-          trailingIcon={require("../../../assets/arrow-right-blue.png")}
-          buttonStyle={ButtonStyle.PRIMARY}
-        />
+        {this.state.friendUserProfiles.length > 0 && (
+          <Button
+            title="SAY COUCOU"
+            onPress={this.routeToSendKIT}
+            isHidden={false}
+            trailingIcon={require("../../../assets/arrow-right-blue.png")}
+            buttonStyle={ButtonStyle.PRIMARY}
+          />
+        )}
       </SafeAreaView>
     );
   }

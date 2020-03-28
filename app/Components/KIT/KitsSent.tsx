@@ -119,11 +119,19 @@ export default class KitsSent extends React.Component<
     return Math.floor(duration.asMinutes());
   };
 
+  filterKitsSent = (kitsSent: IRequestUser[]): IRequestUser[] => {
+    return kitsSent.filter(kitSent => {
+      const duration = this.getDuration(kitSent.request);
+      return duration > 0;
+    });
+  }
+
   render() {
-    return this.state.kitsSent.length > 0 ? (
+    const kitsSent = this.filterKitsSent(this.state.kitsSent);
+    return kitsSent.length > 0 ? (
       <View style={styles.container}>
         <FlatList
-          data={this.state.kitsSent}
+          data={kitsSent}
           renderItem={({ item }) => (
             <UserListItem
               title={item.userProfile.user.displayName}
