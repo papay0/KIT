@@ -40,17 +40,20 @@ interface IHomeState {
   friendUserProfiles: UserProfile[];
   index: number;
   routes: ROUTE_TAB_VIEW[];
+  time: number;
 }
 
 export default class Home extends React.Component<IHomeProps, IHomeState> {
-  constructor(props) {
+  interval: NodeJS.Timeout;
+  constructor(props: IHomeProps) {
     super(props);
     this.state = {
       profile: this.props.userProfile.profile,
       friendUserProfiles: [],
       user: this.props.userProfile.user,
       index: 0,
-      routes: this.loadRoutes()
+      routes: this.loadRoutes(),
+      time: 0
     };
   }
 
@@ -65,6 +68,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   unsubscribeFriends = () => {};
   unsubscribeUser = () => {};
   componentDidMount() {
+    this.setUpTimer();
     this.setBaseHeaderOptions();
     this.setHeaderLeftOption(this.state.user.firstname);
     const db = firebase.firestore();
@@ -91,6 +95,13 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         }
       });
     this.getFriends(this.props.userProfile.user.userUuid);
+  }
+
+  setUpTimer = () => {
+    this.interval = setInterval(
+      () => this.setState({ time: Date.now() }),
+      10000
+    );
   }
 
   getFriends = async (userUuid: string) => {
@@ -167,6 +178,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     this.unsubscribeProfile();
     this.unsubscribeFriends();
     this.unsubscribeUser();
+    clearInterval(this.interval);
   }
 
   routeToSendKIT = () => {
@@ -183,7 +195,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       case "received":
         return <RequestsKit user={this.state.user} />;
       case "sent":
-        return <RequestsKit user={this.state.user} />;
+        return <KitsSent user={this.state.user} />;
       default:
         return null;
     }
@@ -217,9 +229,6 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
             />
           )}
         />
-        {/* <View style={styles.contentView}>
-          <RequestsKit user={user} />
-        </View> */}
         <Button
           title="SAY COUCOU"
           onPress={this.routeToSendKIT}

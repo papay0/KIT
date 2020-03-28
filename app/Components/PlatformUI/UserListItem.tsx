@@ -18,8 +18,10 @@ interface IUserListItemProps {
   subtitle: string | undefined;
   photoUrl: string | undefined;
   backgroundColorBorderPhoto: string | undefined;
+  backgroundColorBorderListItem?: string;
+  subtitleTextColor?: string;
   tralingType: TralingType;
-  backgroundTrailingIcon: string | undefined;
+  backgroundTrailingIcon?: string
   backgroundTrailingText?: string;
   trailingIcon?: any;
   trailingText?: string;
@@ -45,9 +47,12 @@ export default class UserListItem extends React.Component<
     const backgroundColorBorderPhoto = this.props.backgroundColorBorderPhoto;
     const backgroundTrailingIcon = this.props.backgroundTrailingIcon;
     const disabled = this.props.disabled;
+    const backgroundColorBorderListItem = this.props.backgroundColorBorderListItem;
+    const borderWidthListItem = this.props.backgroundColorBorderListItem === undefined ? 0 : 2;
+    const subtitleTextColor = this.props.subtitleTextColor === undefined ? "grey" : this.props.subtitleTextColor;
     return (
       <TouchableOpacity
-        style={styles.container}
+        style={{...styles.container, borderColor: backgroundColorBorderListItem, borderWidth: borderWidthListItem}}
         onPress={this.props.onPress}
         disabled={disabled}
       >
@@ -64,7 +69,7 @@ export default class UserListItem extends React.Component<
         )}
         <View style={styles.container_content}>
           <Text style={styles.title}>{title}</Text>
-          {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+          {subtitle && <Text style={{...styles.subtitle, color: subtitleTextColor}}>{subtitle}</Text>}
         </View>
         {this.props.tralingType == TralingType.ICON && (
           <View

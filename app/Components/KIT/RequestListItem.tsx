@@ -16,20 +16,9 @@ export default class RequestListItem extends React.Component<
   IRequestListItemProps,
   IRequestListItemState
 > {
-  interval: NodeJS.Timeout;
   constructor(props: IRequestListItemProps) {
     super(props);
     this.state = {};
-  }
-
-  componentDidMount() {
-    this.interval = setInterval(
-      () => this.setState({ time: Date.now() }),
-      10000
-    );
-  }
-  componentWillUnmount() {
-    clearInterval(this.interval);
   }
 
   remainingTime = (availableUntil: string): number | undefined => {

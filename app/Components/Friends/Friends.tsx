@@ -18,7 +18,6 @@ import {
   addOpcacityToRGB,
   sortUserProfilesAlphabetically
 } from "../Utils/Utils";
-import * as Sharing from "expo-sharing";
 import IFriendRequest, { IFriendRequestUserProfile } from "../../Models/FriendRequest";
 
 interface IFriendsProps {
