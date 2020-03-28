@@ -46,14 +46,14 @@ export default class SummarySendKit extends React.Component<
   sendRequest = async () => {
     const db = firebase.firestore();
     const friendUserProfiles = this.props.route.params.friendUserProfiles;
-    const time = this.props.route.params.time + 1;
+    const time = this.props.route.params.time;
     const user = this.props.route.params.user;
     const requests = Array<IRequestKit>();
     const now = new Date();
     const requestUuid = uuid.v1();
     for (const friendUserProfile of friendUserProfiles) {
       const availableUntil = new Date(now);
-      availableUntil.setMinutes(now.getMinutes() + time);
+      availableUntil.setMinutes(now.getMinutes() + time + 1);
       const requestObject: IRequestKit = {
         senderUuid: user.userUuid,
         receiverUuid: friendUserProfile.user.userUuid,

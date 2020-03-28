@@ -115,7 +115,6 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     );
     requestUsers = requestUsers.filter(requestUser => {
       const minutes = this.getDuration(requestUser.request);
-      console.log("minutes = " + minutes);
       return minutes > 0;
     })
     this.setState({ requestUsers: requestUsers });
@@ -132,11 +131,9 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     const requestsSent = this.state.kitsSent;
     const currentIndex = this.state.index;
     var index = 0;
-    console.log(requestsReceived.length)
     if (requestsReceived.length === 0 && requestsSent.length > 0) {
       index = 1;
     }
-    // console.log(index);
     if (currentIndex !== index) {
       this.setState({ index: index });
     }
@@ -190,7 +187,6 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
             data
           );
           const minutes = this.getDuration(request);
-          console.log("minutes = " + minutes);
           if (minutes > 0) {
             requests.push(request);
           }
