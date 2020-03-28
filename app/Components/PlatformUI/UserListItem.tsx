@@ -184,6 +184,6 @@ const styles = StyleSheet.create({
   },
   styleTrailingIcon: {
     height: 20,
-    width: 20
+    width: 20,
   }
 });
