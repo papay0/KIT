@@ -110,9 +110,14 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   }
 
   getRequests = async () => {
-    const requestUsers = await NetworkManager.getRequestUsersForUserUuid(
+    let requestUsers = await NetworkManager.getRequestUsersForUserUuid(
       this.props.userProfile.user.userUuid
     );
+    requestUsers = requestUsers.filter(requestUser => {
+      const minutes = this.getDuration(requestUser.request);
+      console.log("minutes = " + minutes);
+      return minutes > 0;
+    })
     this.setState({ requestUsers: requestUsers });
   };
 
@@ -120,6 +125,21 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     const now = moment(getDateNow());
     const duration = moment.duration(moment(request.availableUntil).diff(now));
     return Math.floor(duration.asMinutes());
+  };
+
+  routeToCorrectIndexTabView = () => {
+    const requestsReceived = this.state.requestUsers;
+    const requestsSent = this.state.kitsSent;
+    const currentIndex = this.state.index;
+    var index = 0;
+    console.log(requestsReceived.length)
+    if (requestsReceived.length === 0 && requestsSent.length > 0) {
+      index = 1;
+    }
+    // console.log(index);
+    if (currentIndex !== index) {
+      this.setState({ index: index });
+    }
   };
 
   listenerToKitsSent = async () => {
@@ -153,9 +173,9 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
           kitsSent.push(kitSent);
         }
         this.setState({ kitsSent: kitsSent });
+        this.routeToCorrectIndexTabView();
       });
   };
-
 
   listenToRequests = async () => {
     const db = firebase.firestore();
@@ -169,12 +189,17 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
           const request = FirebaseModelUtils.getRequestFromFirebaseRequest(
             data
           );
-          requests.push(request);
+          const minutes = this.getDuration(request);
+          console.log("minutes = " + minutes);
+          if (minutes > 0) {
+            requests.push(request);
+          }
         }
         const requestUsers = await NetworkManager.getRequestUsersFromRequests(
           requests
         );
         this.setState({ requestUsers: requestUsers });
+        this.routeToCorrectIndexTabView();
       });
   };
 
@@ -276,10 +301,16 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   _renderScene = ({ route }) => {
     switch (route.key) {
       case "received":
-        return <RequestsKit user={this.state.user} requestUsers={this.state.requestUsers} />;
+        return (
+          <RequestsKit
+            user={this.state.user}
+            requestUsers={this.state.requestUsers}
+          />
+        );
       case "sent":
-        console.log("n = " + this.state.kitsSent.length);
-        return <KitsSent user={this.state.user} kitsSent={this.state.kitsSent} />;
+        return (
+          <KitsSent user={this.state.user} kitsSent={this.state.kitsSent} />
+        );
       default:
         return null;
     }
