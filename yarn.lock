@@ -3010,6 +3010,11 @@ expo-google-app-auth@^8.0.1:
     expo-app-auth "~8.0.0"
     expo-constants "~8.0.0"
 
+expo-intent-launcher@~8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/expo-intent-launcher/-/expo-intent-launcher-8.0.0.tgz#1242d4e9122f69a1ec9637a621a35caf6ae73cca"
+  integrity sha512-Rf+AprbFKJx4YH1+DooCGg92Y4jjlP3iMpW3rpinTD4N1TJzqkpsflMphARGsF/GKxcrhzvqX52D/JrmXrcjhA==
+
 expo-keep-awake@~8.0.0:
   version "8.0.0"
   resolved "https://unpm.uberinternal.com/expo-keep-awake/-/expo-keep-awake-8.0.0.tgz#f9200a876a5db86e3f0aec8843428a918cdc08d6"
@@ -3038,11 +3043,6 @@ expo-permissions@~8.0.0:
   version "8.0.0"
   resolved "https://unpm.uberinternal.com/expo-permissions/-/expo-permissions-8.0.0.tgz#5a45e8451dd7ff37c9e6ce5e2447818372547813"
   integrity sha1-WkXoRR3X/zfJ5s5eJEeBg3JUeBM=
-
-expo-sharing@~8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/expo-sharing/-/expo-sharing-8.0.0.tgz#71195e6a24d6e36839e80d15581017d9cf02099c"
-  integrity sha512-pucK9IaO7ZgKumUlQtmiKENP1zfZeh6TDyWF9Nlt37GJDBl+j9pPW+fS6dYfhF7UoPGEjactpYCtozoMu2fF2A==
 
 expo-sqlite@~8.0.0:
   version "8.0.0"

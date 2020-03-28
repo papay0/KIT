@@ -3,8 +3,6 @@ import { StyleSheet, Image, View, Text } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
 import * as firebase from "firebase";
-import { Notifications } from "expo";
-import * as Permissions from "expo-permissions";
 import * as Google from "expo-google-app-auth";
 import * as AppleAuthentication from "expo-apple-authentication";
 import ApiKeys from "../../Constants/ApiKeys";
@@ -70,20 +68,13 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
             .createUserWithEmailAndPassword(result.user.email, result.user.id);
         }
         const userUuid = firebase.auth().currentUser.uid;
-        const { status } = await Permissions.askAsync(
-          Permissions.NOTIFICATIONS
-        );
-        const token =
-          status === "granted"
-            ? await Notifications.getExpoPushTokenAsync()
-            : "";
         const user = new User(
           result.user.name,
           userUuid,
           result.user.givenName,
           result.user.familyName,
           result.user.email,
-          token,
+          "",
           "",
           getDateNow(),
           Localization.locale
@@ -156,9 +147,6 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
         rawNonce: nonce
       });
       await firebase.auth().signInWithCredential(credential);
-      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-      const token =
-        status === "granted" ? await Notifications.getExpoPushTokenAsync() : "";
       const userUuid = firebase.auth().currentUser.uid;
       const user = new User(
         fullName.givenName + " " + fullName.familyName,
@@ -166,7 +154,7 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
         fullName.givenName,
         fullName.familyName,
         email,
-        token,
+        "",
         "",
         getDateNow(),
         Localization.locale
