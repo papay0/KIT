@@ -22,16 +22,24 @@ import KitsSent from "../KIT/KitsSent";
 import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 import { User } from "../../Models/User";
 import { sortUserProfilesAlphabetically } from "../Utils/Utils";
+import { TabView, TabBar } from "react-native-tab-view";
 
 interface IHomeProps {
   userProfile: UserProfile;
   navigation: StackNavigationProp<ParamListBase>;
 }
 
+interface ROUTE_TAB_VIEW {
+  key: string;
+  title: string;
+}
+
 interface IHomeState {
   profile: Profile;
   user: User;
   friendUserProfiles: UserProfile[];
+  index: number;
+  routes: ROUTE_TAB_VIEW[];
 }
 
 export default class Home extends React.Component<IHomeProps, IHomeState> {
@@ -40,9 +48,18 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     this.state = {
       profile: this.props.userProfile.profile,
       friendUserProfiles: [],
-      user: this.props.userProfile.user
+      user: this.props.userProfile.user,
+      index: 0,
+      routes: this.loadRoutes()
     };
   }
+
+  loadRoutes = (): ROUTE_TAB_VIEW[] => {
+    return [
+      { key: "received", title: "RECEIVED" },
+      { key: "sent", title: "SENT" }
+    ];
+  };
 
   unsubscribeProfile = () => {};
   unsubscribeFriends = () => {};
@@ -70,7 +87,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         if (document.exists) {
           const data = document.data();
           const user = FirebaseModelUtils.getUserFromFirebaseUser(data);
-          this.setState({user: user});
+          this.setState({ user: user });
         }
       });
     this.getFriends(this.props.userProfile.user.userUuid);
@@ -101,8 +118,8 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     this.props.navigation.setOptions({
       headerShown: true,
       headerTitle: null
-    })
-  }
+    });
+  };
 
   setHeaderLeftOption = (firstname: string) => {
     this.props.navigation.setOptions({
@@ -118,8 +135,8 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
           <Text style={styles.headerTitleName}>{firstname}</Text>
         </View>
       )
-    })
-  }
+    });
+  };
 
   setHeaderRightOption = () => {
     this.props.navigation.setOptions({
@@ -159,13 +176,50 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     });
   };
 
+  _handleIndexChange = (index: number) => this.setState({ index });
+
+  _renderScene = ({ route }) => {
+    switch (route.key) {
+      case "received":
+        return <RequestsKit user={this.state.user} />;
+      case "sent":
+        return <RequestsKit user={this.state.user} />;
+      default:
+        return null;
+    }
+  };
+
   render() {
-    const user = this.props.userProfile.user;
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.contentView}>
+        <TabView
+          navigationState={{
+            index: this.state.index,
+            routes: this.state.routes
+          }}
+          renderScene={this._renderScene}
+          onIndexChange={this._handleIndexChange}
+          renderTabBar={props => (
+            <TabBar
+              {...props}
+              renderLabel={({ route, focused, color }) => (
+                <Text
+                  style={{
+                    color: focused ? "#5468FF" : "grey",
+                    fontWeight: "bold"
+                  }}
+                >
+                  {route.title}
+                </Text>
+              )}
+              indicatorStyle={{ backgroundColor: "#5468FF" }}
+              style={{ backgroundColor: "white" }}
+            />
+          )}
+        />
+        {/* <View style={styles.contentView}>
           <RequestsKit user={user} />
-        </View>
+        </View> */}
         <Button
           title="SAY COUCOU"
           onPress={this.routeToSendKIT}
@@ -193,7 +247,7 @@ const styles = StyleSheet.create({
   },
   contentView: {
     flex: 1,
-    flexDirection: "column" 
+    flexDirection: "column"
   },
   profileImage: {
     width: 40,
