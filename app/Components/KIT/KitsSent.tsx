@@ -15,10 +15,10 @@ import moment from "moment";
 
 interface IKitsSentProps {
   user: User;
+  kitsSent: IRequestUser[];
 }
 
 interface IKitsSentState {
-  kitsSent: IRequestUser[];
 }
 
 export default class KitsSent extends React.Component<
@@ -29,50 +29,6 @@ export default class KitsSent extends React.Component<
     super(props);
     this.state = { kitsSent: [] };
   }
-
-  componentDidMount() {
-    this.getKitSent();
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-  unsubscribe = () => {};
-
-  getKitSent = async () => {
-    const db = firebase.firestore();
-    this.unsubscribe = db
-      .collection(Collections.REQUESTS)
-      .where("senderUuid", "==", this.props.user.userUuid)
-      .onSnapshot(async documents => {
-        const requests = Array<IRequestKit>();
-        for (const doc of documents.docs) {
-          const data = doc.data();
-          const request = FirebaseModelUtils.getRequestFromFirebaseRequest(
-            data
-          );
-          const minutes = this.getDuration(request);
-          if (minutes > 0) {
-            requests.push(request);
-          }
-        }
-        const kitsSent = Array<IRequestUser>();
-        for (const request of requests) {
-          const user = await NetworkManager.getUserByUuid(request.receiverUuid);
-          const profile = await NetworkManager.getProfileByUuid(
-            request.receiverUuid
-          );
-          const userProfile = new UserProfile(user, profile);
-          const kitSent: IRequestUser = {
-            userProfile: userProfile,
-            request: request
-          };
-          kitsSent.push(kitSent);
-        }
-        this.setState({ kitsSent: kitsSent });
-      });
-  };
 
   getBackgroundColorAcceptDecline = (
     requestUser: IRequestUser
@@ -127,7 +83,7 @@ export default class KitsSent extends React.Component<
   }
 
   render() {
-    const kitsSent = this.filterKitsSent(this.state.kitsSent);
+    const kitsSent = this.filterKitsSent(this.props.kitsSent);
     return kitsSent.length > 0 ? (
       <View style={styles.container}>
         <FlatList

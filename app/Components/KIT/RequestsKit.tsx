@@ -19,11 +19,11 @@ import moment from "moment";
 
 interface IRequestsKitProps {
   user: User;
+  requestUsers: IRequestUser[];
   // showActionSheetWithOptions: (options: ActionSheetOptions, callback: (i: number) => void) => void;
 }
 
 interface IRequestsKitState {
-  requestUsers: IRequestUser[];
 }
 
 class RequestsKit extends React.Component<
@@ -34,45 +34,6 @@ class RequestsKit extends React.Component<
     super(props);
     this.state = { requestUsers: [] };
   }
-
-  componentDidMount() {
-    this.getRequests();
-    this.listenToRequests();
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-  unsubscribe = () => {};
-
-  getRequests = async () => {
-    const requestUsers = await NetworkManager.getRequestUsersForUserUuid(
-      this.props.user.userUuid
-    );
-    this.setState({ requestUsers: requestUsers });
-  };
-
-  listenToRequests = async () => {
-    const db = firebase.firestore();
-    this.unsubscribe = db
-      .collection(Collections.REQUESTS)
-      .where("receiverUuid", "==", this.props.user.userUuid)
-      .onSnapshot(async documents => {
-        const requests = Array<IRequestKit>();
-        for (const doc of documents.docs) {
-          const data = doc.data();
-          const request = FirebaseModelUtils.getRequestFromFirebaseRequest(
-            data
-          );
-          requests.push(request);
-        }
-        const requestUsers = await NetworkManager.getRequestUsersFromRequests(
-          requests
-        );
-        this.setState({ requestUsers: requestUsers });
-      });
-  };
 
   acceptCall = async (messagingPlatform: string, kitSent: IRequestUser) => {
     const request = kitSent.request;
@@ -152,7 +113,7 @@ class RequestsKit extends React.Component<
   };
 
   render() {
-    const requestUsers = this.filterActionableRequests(this.state.requestUsers);
+    const requestUsers = this.filterActionableRequests(this.props.requestUsers);
     return requestUsers.length > 0 ? (
       <View style={styles.container}>
         <FlatList

@@ -21,8 +21,11 @@ import NetworkManager from "../../Network/NetworkManager";
 import KitsSent from "../KIT/KitsSent";
 import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 import { User } from "../../Models/User";
-import { sortUserProfilesAlphabetically } from "../Utils/Utils";
+import { sortUserProfilesAlphabetically, getDateNow } from "../Utils/Utils";
 import { TabView, TabBar } from "react-native-tab-view";
+import IRequestKit from "../../Models/RequestKit";
+import IRequestUser from "../../Models/RequestUser";
+import moment from "moment";
 
 interface IHomeProps {
   userProfile: UserProfile;
@@ -38,6 +41,8 @@ interface IHomeState {
   profile: Profile;
   user: User;
   friendUserProfiles: UserProfile[];
+  requestUsers: IRequestUser[];
+  kitsSent: IRequestUser[];
   index: number;
   routes: ROUTE_TAB_VIEW[];
   time: number;
@@ -51,6 +56,8 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       profile: this.props.userProfile.profile,
       friendUserProfiles: [],
       user: this.props.userProfile.user,
+      requestUsers: [],
+      kitsSent: [],
       index: 0,
       routes: this.loadRoutes(),
       time: 0
@@ -67,10 +74,15 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   unsubscribeProfile = () => {};
   unsubscribeFriends = () => {};
   unsubscribeUser = () => {};
+  unsubscribeRequestsReceived = () => {};
+  unsubscribeRequestsSent = () => {};
   componentDidMount() {
     this.setUpTimer();
     this.setBaseHeaderOptions();
     this.setHeaderLeftOption(this.state.user.firstname);
+    this.getRequests();
+    this.listenToRequests();
+    this.listenerToKitsSent();
     const db = firebase.firestore();
     const userUuid = this.props.userProfile.user.userUuid;
     this.unsubscribeProfile = db
@@ -96,6 +108,75 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       });
     this.getFriends(this.props.userProfile.user.userUuid);
   }
+
+  getRequests = async () => {
+    const requestUsers = await NetworkManager.getRequestUsersForUserUuid(
+      this.props.userProfile.user.userUuid
+    );
+    this.setState({ requestUsers: requestUsers });
+  };
+
+  getDuration = (request: IRequestKit): number => {
+    const now = moment(getDateNow());
+    const duration = moment.duration(moment(request.availableUntil).diff(now));
+    return Math.floor(duration.asMinutes());
+  };
+
+  listenerToKitsSent = async () => {
+    const db = firebase.firestore();
+    this.unsubscribeRequestsSent = db
+      .collection(Collections.REQUESTS)
+      .where("senderUuid", "==", this.props.userProfile.user.userUuid)
+      .onSnapshot(async documents => {
+        const requests = Array<IRequestKit>();
+        for (const doc of documents.docs) {
+          const data = doc.data();
+          const request = FirebaseModelUtils.getRequestFromFirebaseRequest(
+            data
+          );
+          const minutes = this.getDuration(request);
+          if (minutes > 0) {
+            requests.push(request);
+          }
+        }
+        const kitsSent = Array<IRequestUser>();
+        for (const request of requests) {
+          const user = await NetworkManager.getUserByUuid(request.receiverUuid);
+          const profile = await NetworkManager.getProfileByUuid(
+            request.receiverUuid
+          );
+          const userProfile = new UserProfile(user, profile);
+          const kitSent: IRequestUser = {
+            userProfile: userProfile,
+            request: request
+          };
+          kitsSent.push(kitSent);
+        }
+        this.setState({ kitsSent: kitsSent });
+      });
+  };
+
+
+  listenToRequests = async () => {
+    const db = firebase.firestore();
+    this.unsubscribeRequestsReceived = db
+      .collection(Collections.REQUESTS)
+      .where("receiverUuid", "==", this.props.userProfile.user.userUuid)
+      .onSnapshot(async documents => {
+        const requests = Array<IRequestKit>();
+        for (const doc of documents.docs) {
+          const data = doc.data();
+          const request = FirebaseModelUtils.getRequestFromFirebaseRequest(
+            data
+          );
+          requests.push(request);
+        }
+        const requestUsers = await NetworkManager.getRequestUsersFromRequests(
+          requests
+        );
+        this.setState({ requestUsers: requestUsers });
+      });
+  };
 
   setUpTimer = () => {
     this.interval = setInterval(
@@ -178,6 +259,8 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     this.unsubscribeProfile();
     this.unsubscribeFriends();
     this.unsubscribeUser();
+    this.unsubscribeRequestsReceived();
+    this.unsubscribeRequestsSent();
     clearInterval(this.interval);
   }
 
@@ -193,9 +276,10 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
   _renderScene = ({ route }) => {
     switch (route.key) {
       case "received":
-        return <RequestsKit user={this.state.user} />;
+        return <RequestsKit user={this.state.user} requestUsers={this.state.requestUsers} />;
       case "sent":
-        return <KitsSent user={this.state.user} />;
+        console.log("n = " + this.state.kitsSent.length);
+        return <KitsSent user={this.state.user} kitsSent={this.state.kitsSent} />;
       default:
         return null;
     }
