@@ -13,6 +13,9 @@ import UserListItem, { TralingType } from "../PlatformUI/UserListItem";
 import { addOpcacityToRGB, getDateNow, getLocalTime } from "../Utils/Utils";
 import moment from "moment";
 import IReminder, { UserProfileReminder } from "../../Models/Reminder";
+import {
+    connectActionSheet
+  } from "@expo/react-native-action-sheet";
 
 interface IReminderProps {
   userProfileReminders: UserProfileReminder[];
@@ -20,13 +23,47 @@ interface IReminderProps {
 
 interface IReminderState {}
 
-export default class Reminders extends React.Component<
+class Reminders extends React.Component<
   IReminderProps,
   IReminderState
 > {
   constructor(props: IReminderProps) {
     super(props);
     this.state = {};
+  }
+
+  updateReminderLocally = (userProfileReminders: UserProfileReminder) => {
+
+  }
+
+  onChooseAction = async (index: number, userProfileReminder: UserProfileReminder) => {
+    this.updateReminderLocally(userProfileReminder);
+    if (index === 0) {
+      // Send coucou now
+    } else if (index === 1) {
+      const reminderToUpdate = userProfileReminder.reminder;
+      reminderToUpdate.lastCallDate = getDateNow();
+      await NetworkManager.updateReminder(reminderToUpdate);
+    }
+  };
+
+  onPressMoreOptions = (userProfileReminders: UserProfileReminder) => {
+    const options = [
+        "Send a Coucou now",
+        "Mark as already called",
+        "Cancel"
+      ];
+      const cancelButtonIndex = 2;
+  
+      this.props.showActionSheetWithOptions(
+        {
+          options,
+          cancelButtonIndex
+        },
+        buttonIndex => {
+          this.onChooseAction(buttonIndex, userProfileReminders);
+        }
+      );
   }
 
   render() {
@@ -46,7 +83,7 @@ export default class Reminders extends React.Component<
               tralingType={TralingType.ICON}
               trailingIcon={require("../../../assets/3-dots.png")}
               photoUrl={item.userProfile.profile.photoUrl}
-              onPress={() => {}}
+              onPress={() => {this.onPressMoreOptions(item)}}
               disabled={false}
             />
           )}
@@ -99,3 +136,5 @@ const styles = StyleSheet.create({
     textAlign: "center"
   }
 });
+
+export default connectActionSheet(Reminders);

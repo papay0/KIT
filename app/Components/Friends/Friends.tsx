@@ -21,10 +21,8 @@ import IFriendRequest, {
   IFriendRequestUserProfile
 } from "../../Models/FriendRequest";
 import {
-  ActionSheetOptions,
   connectActionSheet
 } from "@expo/react-native-action-sheet";
-import IRequestKit from "../../Models/RequestKit";
 import IReminder from "../../Models/Reminder";
 
 interface IFriendsProps {
