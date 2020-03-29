@@ -26,6 +26,8 @@ import { TabView, TabBar } from "react-native-tab-view";
 import IRequestKit from "../../Models/RequestKit";
 import IRequestUser from "../../Models/RequestUser";
 import moment from "moment";
+import IReminder from "../../Models/Reminder";
+import Reminders from "../Reminders/Reminders";
 
 interface IHomeProps {
   userProfile: UserProfile;
@@ -43,6 +45,7 @@ interface IHomeState {
   friendUserProfiles: UserProfile[];
   requestUsers: IRequestUser[];
   kitsSent: IRequestUser[];
+  reminders: IReminder[];
   index: number;
   routes: ROUTE_TAB_VIEW[];
   time: number;
@@ -58,17 +61,26 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       user: this.props.userProfile.user,
       requestUsers: [],
       kitsSent: [],
+      reminders: [],
       index: 0,
-      routes: this.loadRoutes(),
+      routes: this.loadRoutes(false),
       time: 0
     };
   }
 
-  loadRoutes = (): ROUTE_TAB_VIEW[] => {
-    return [
-      { key: "received", title: "RECEIVED" },
-      { key: "sent", title: "SENT" }
-    ];
+  loadRoutes = (shouldShowReminders: boolean): ROUTE_TAB_VIEW[] => {
+    if (shouldShowReminders) {
+      return [
+        { key: "received", title: "RECEIVED" },
+        { key: "sent", title: "SENT" },
+        { key: "reminders", title: "REMINDERS" }
+      ];
+    } else {
+      return [
+        { key: "received", title: "RECEIVED" },
+        { key: "sent", title: "SENT" }
+      ];
+    }
   };
 
   unsubscribeProfile = () => {};
@@ -83,6 +95,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     this.getRequests();
     this.listenToRequests();
     this.listenerToKitsSent();
+    this.listenToReminders();
     const db = firebase.firestore();
     const userUuid = this.props.userProfile.user.userUuid;
     this.unsubscribeProfile = db
@@ -107,6 +120,48 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         }
       });
     this.getFriends(this.props.userProfile.user.userUuid);
+  }
+
+  listenToReminders = async () => {
+    const db = firebase.firestore();
+    db.collection(Collections.REMINDERS)
+      .where("senderUuid", "==", this.props.userProfile.user.userUuid)
+      .onSnapshot(async documents => {
+        const reminders = Array<IReminder>();
+        const now = moment(getDateNow());
+        for (const document of documents.docs) {
+          if (document.exists) {
+            const data = document.data();
+            const reminder = FirebaseModelUtils.getReminderFromFirebaseReminder(
+              data
+            );
+            if (reminder.lastCallDate === "") {
+              reminders.push(reminder);
+            } else if (reminder.lastCallDate && this.isCallDue(reminder.lastCallDate, reminder.frequency)) {
+              reminders.push(reminder);
+            }
+          }
+        }
+        this.setState({ reminders });
+        this.setState({routes: this.loadRoutes(reminders.length > 0)});
+      });
+  };
+
+  isCallDue = (lastCallDate: string, frequency: string): boolean => {
+    let dateToCompare = moment(lastCallDate);
+    if (frequency === "6_months") {
+      dateToCompare = dateToCompare.add("6", "months");
+    } else if (frequency === "2_months") {
+      dateToCompare = dateToCompare.add("2", "months");
+    } else if (frequency === "1_month") {
+      dateToCompare = dateToCompare.add("1", "months");
+    } else if (frequency === "2_weeks") {
+      dateToCompare = dateToCompare.add("2", "weeks");
+    } else if (frequency === "1_week") {
+      dateToCompare = dateToCompare.add("1", "weeks");
+    }
+    const now = moment(getDateNow());
+    return dateToCompare.isBefore(now);
   }
 
   getRequests = async () => {
@@ -306,6 +361,10 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       case "sent":
         return (
           <KitsSent user={this.state.user} kitsSent={this.state.kitsSent} />
+        );
+      case "reminders":
+        return (
+          <Reminders />
         );
       default:
         return null;
