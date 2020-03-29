@@ -7,7 +7,6 @@ import { User } from "../../Models/User";
 import Routes from "../Routes/Routes";
 import * as firebase from "firebase";
 import Collections from "../Collections/Collections";
-import FriendsListItem from "./FriendsListItem";
 import { UserProfile } from "../../Models/UserProfile";
 import NetworkManager from "../../Network/NetworkManager";
 import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
@@ -19,6 +18,10 @@ import {
   sortUserProfilesAlphabetically
 } from "../Utils/Utils";
 import IFriendRequest, { IFriendRequestUserProfile } from "../../Models/FriendRequest";
+import {
+  ActionSheetOptions,
+  connectActionSheet
+} from "@expo/react-native-action-sheet";
 
 interface IFriendsProps {
   user: User;
@@ -33,7 +36,7 @@ interface IFriendsState {
   friendRequestsNumber: number;
 }
 
-export default class Friends extends React.Component<
+class Friends extends React.Component<
   IFriendsProps,
   IFriendsState
 > {
@@ -173,6 +176,35 @@ export default class Friends extends React.Component<
     }
   };
 
+  onPressFriendMoreOptions = (userProfile: UserProfile) => {
+    const options = [
+      "6 months",
+      "2 months",
+      "1 month",
+      "2 weeks",
+      "1 week",
+      "Remove friend",
+      "Cancel"
+    ];
+    const destructiveButtonIndex = 5;
+    const cancelButtonIndex = 6;
+    const title = "Set call reminders";
+    const message = "Select the frequency of the reminder. You will receive a notification only if you haven't called this person."
+
+    this.props.showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+        title,
+        message
+      },
+      buttonIndex => {
+        // onChooseAction(buttonIndex);
+      }
+    );
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -208,12 +240,12 @@ export default class Friends extends React.Component<
                 item.profile.color,
                 0.8
               )}
-              tralingType={TralingType.NONE}
+              tralingType={TralingType.ICON}
               photoUrl={item.profile.photoUrl}
-              trailingIcon={undefined}
+              trailingIcon={require("../../../assets/3-dots.png")}
               backgroundTrailingIcon={undefined}
-              onPress={() => {}}
-              disabled={true}
+              onPress={() => {this.onPressFriendMoreOptions(item)}}
+              disabled={false}
             />
           )}
           keyExtractor={item => item.user.userUuid}
@@ -228,3 +260,5 @@ const styles = StyleSheet.create({
     flex: 1
   }
 });
+
+export default connectActionSheet(Friends);

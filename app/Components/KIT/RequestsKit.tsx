@@ -7,7 +7,6 @@ import { User } from "../../Models/User";
 import NetworkManager from "../../Network/NetworkManager";
 import RequestListItem from "./RequestListItem";
 import IRequestUser from "../../Models/RequestUser";
-import { UserProfile } from "../../Models/UserProfile";
 import AppLink from "react-native-app-link";
 import {
   ActionSheetOptions,
