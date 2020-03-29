@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, FlatList, Text, Image } from "react-native";
+import { StyleSheet, View, FlatList, Text, Image, ScrollView } from "react-native";
 import * as firebase from "firebase";
 import IRequestKit from "../../Models/RequestKit";
 import Collections from "../Collections/Collections";
@@ -94,15 +94,15 @@ class Reminders extends React.Component<
         />
       </View>
     ) : (
-      <View>
+      <ScrollView>
         <View style={styles.emptyRequestStyleContainer}>
           <Image
             source={require("../../../assets/illustration-mail-box.png")}
             style={styles.emptyRequestStyle}
           />
         </View>
-        <Text style={styles.titleText}>Feature coming soon</Text>
-      </View>
+        <Text style={styles.titleText}>Your reminders are loading...</Text>
+      </ScrollView>
     );
   }
 }

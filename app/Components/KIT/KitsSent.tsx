@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, FlatList, Text, Image } from "react-native";
+import { StyleSheet, View, FlatList, Text, Image, ScrollView } from "react-native";
 import * as firebase from "firebase";
 import IRequestKit from "../../Models/RequestKit";
 import Collections from "../Collections/Collections";
@@ -114,7 +114,7 @@ export default class KitsSent extends React.Component<
         />
       </View>
     ) : (
-      <View>
+      <ScrollView>
         <View style={styles.emptyRequestStyleContainer}>
           <Image
             source={require("../../../assets/illustration-mail-box.png")}
@@ -123,7 +123,7 @@ export default class KitsSent extends React.Component<
         </View>
         <Text style={styles.titleText}>There is no one here right now...</Text>
         <Text style={styles.subtitleText}>Why not say Coucou to a friend?</Text>
-      </View>
+      </ScrollView>
     );
   }
 }

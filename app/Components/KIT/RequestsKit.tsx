@@ -15,6 +15,7 @@ import {
 import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 import { getDateNow } from "../Utils/Utils";
 import moment from "moment";
+import { ScrollView } from "react-native-gesture-handler";
 
 interface IRequestsKitProps {
   user: User;
@@ -137,7 +138,7 @@ class RequestsKit extends React.Component<
         />
       </View>
     ) : (
-      <View>
+      <ScrollView>
         <View style={styles.emptyRequestStyleContainer}>
           <Image
             source={require("../../../assets/illustration-mail-box.png")}
@@ -146,7 +147,7 @@ class RequestsKit extends React.Component<
         </View>
         <Text style={styles.titleText}>There is no one here right now...</Text>
         <Text style={styles.subtitleText}>Why not say Coucou to a friend?</Text>
-      </View>
+      </ScrollView>
     );
   }
 }
