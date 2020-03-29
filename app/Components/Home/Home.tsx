@@ -26,7 +26,7 @@ import { TabView, TabBar } from "react-native-tab-view";
 import IRequestKit from "../../Models/RequestKit";
 import IRequestUser from "../../Models/RequestUser";
 import moment from "moment";
-import IReminder from "../../Models/Reminder";
+import IReminder, { UserProfileReminder } from "../../Models/Reminder";
 import Reminders from "../Reminders/Reminders";
 
 interface IHomeProps {
@@ -45,7 +45,7 @@ interface IHomeState {
   friendUserProfiles: UserProfile[];
   requestUsers: IRequestUser[];
   kitsSent: IRequestUser[];
-  reminders: IReminder[];
+  userProfileReminders: UserProfileReminder[];
   index: number;
   routes: ROUTE_TAB_VIEW[];
   time: number;
@@ -61,7 +61,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       user: this.props.userProfile.user,
       requestUsers: [],
       kitsSent: [],
-      reminders: [],
+      userProfileReminders: [],
       index: 0,
       routes: this.loadRoutes(false),
       time: 0
@@ -137,13 +137,25 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
             );
             if (reminder.lastCallDate === "") {
               reminders.push(reminder);
-            } else if (reminder.lastCallDate && this.isCallDue(reminder.lastCallDate, reminder.frequency)) {
+            } else if (
+              reminder.lastCallDate &&
+              this.isCallDue(reminder.lastCallDate, reminder.frequency)
+            ) {
               reminders.push(reminder);
             }
           }
         }
-        this.setState({ reminders });
-        this.setState({routes: this.loadRoutes(reminders.length > 0)});
+        const userProfileReminders = Array<UserProfileReminder>();
+        for (const reminder of reminders) {
+          const userProfile = await NetworkManager.getUserProfileByUuid(
+            reminder.receiverUuid
+          );
+          userProfileReminders.push(
+            new UserProfileReminder(userProfile, reminder)
+          );
+        }
+        this.setState({ userProfileReminders });
+        this.setState({ routes: this.loadRoutes(reminders.length > 0) });
       });
   };
 
@@ -162,7 +174,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     }
     const now = moment(getDateNow());
     return dateToCompare.isBefore(now);
-  }
+  };
 
   getRequests = async () => {
     let requestUsers = await NetworkManager.getRequestUsersForUserUuid(
@@ -171,7 +183,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     requestUsers = requestUsers.filter(requestUser => {
       const minutes = this.getDuration(requestUser.request);
       return minutes > 0;
-    })
+    });
     this.setState({ requestUsers: requestUsers });
   };
 
@@ -364,7 +376,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         );
       case "reminders":
         return (
-          <Reminders />
+          <Reminders userProfileReminders={this.state.userProfileReminders} />
         );
       default:
         return null;

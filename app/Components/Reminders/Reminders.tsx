@@ -10,10 +10,13 @@ import IRequestUser from "../../Models/RequestUser";
 import { UserProfile } from "../../Models/UserProfile";
 import FirebaseModelUtils from "../Utils/FirebaseModelUtils";
 import UserListItem, { TralingType } from "../PlatformUI/UserListItem";
-import { addOpcacityToRGB, getDateNow } from "../Utils/Utils";
+import { addOpcacityToRGB, getDateNow, getLocalTime } from "../Utils/Utils";
 import moment from "moment";
+import IReminder, { UserProfileReminder } from "../../Models/Reminder";
 
-interface IReminderProps {}
+interface IReminderProps {
+  userProfileReminders: UserProfileReminder[];
+}
 
 interface IReminderState {}
 
@@ -27,7 +30,32 @@ export default class Reminders extends React.Component<
   }
 
   render() {
-    return (
+    const userProfileReminders = this.props.userProfileReminders;
+    return userProfileReminders.length > 0 ? (
+      <View style={styles.container}>
+        <FlatList
+          data={userProfileReminders}
+          renderItem={({ item }) => (
+            <UserListItem
+              title={item.userProfile.user.firstname}
+              subtitle={getLocalTime(item.userProfile.profile)}
+              backgroundColorBorderPhoto={addOpcacityToRGB(
+                item.userProfile.profile.color,
+                0.8
+              )}
+              tralingType={TralingType.ICON}
+              trailingIcon={require("../../../assets/3-dots.png")}
+              photoUrl={item.userProfile.profile.photoUrl}
+              onPress={() => {}}
+              disabled={false}
+            />
+          )}
+          keyExtractor={item =>
+            item.userProfile.user.userUuid + item.reminder.createdAt
+          }
+        />
+      </View>
+    ) : (
       <View>
         <View style={styles.emptyRequestStyleContainer}>
           <Image

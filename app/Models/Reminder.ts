@@ -9,16 +9,16 @@ export default interface IReminder {
   updatedAt: string;
 }
 
-// export interface IUserProfileReminder {
-//     userProfile: UserProfile;
-//     reminder: IReminder;
-// }
+export interface IUserProfileReminder {
+    userProfile: UserProfile;
+    reminder: IReminder;
+}
 
-// export class UserProfileReminder implements IUserProfileReminder {
-//     userProfile: UserProfile;
-//     reminder: IReminder;
-//     constructor(userProfile: UserProfile, reminder: IReminder) {
-//       this.userProfile = userProfile;
-//       this.reminder = reminder;
-//     }
-//   }
+export class UserProfileReminder implements IUserProfileReminder {
+    userProfile: UserProfile;
+    reminder: IReminder;
+    constructor(userProfile: UserProfile, reminder: IReminder) {
+      this.userProfile = userProfile;
+      this.reminder = reminder;
+    }
+  }
