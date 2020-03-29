@@ -376,7 +376,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
         );
       case "reminders":
         return (
-          <Reminders userProfileReminders={this.state.userProfileReminders} />
+          <Reminders userProfileReminders={this.state.userProfileReminders} sendCoucou={this.routeToSendKIT} />
         );
       default:
         return null;

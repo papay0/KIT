@@ -19,6 +19,7 @@ import {
 
 interface IReminderProps {
   userProfileReminders: UserProfileReminder[];
+  sendCoucou: () => void;
 }
 
 interface IReminderState {}
@@ -39,7 +40,7 @@ class Reminders extends React.Component<
   onChooseAction = async (index: number, userProfileReminder: UserProfileReminder) => {
     this.updateReminderLocally(userProfileReminder);
     if (index === 0) {
-      // Send coucou now
+      this.props.sendCoucou();
     } else if (index === 1) {
       const reminderToUpdate = userProfileReminder.reminder;
       reminderToUpdate.lastCallDate = getDateNow();
@@ -49,7 +50,7 @@ class Reminders extends React.Component<
 
   onPressMoreOptions = (userProfileReminders: UserProfileReminder) => {
     const options = [
-        "Send a Coucou now",
+        "Send Coucou now",
         "Mark as already called",
         "Cancel"
       ];

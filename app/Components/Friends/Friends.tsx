@@ -304,7 +304,7 @@ class Friends extends React.Component<IFriendsProps, IFriendsState> {
           isHidden={false}
           buttonStyle={ButtonStyle.PRIMARY}
         />
-        {this.state.friendRequestsNumber > 0 && (
+        {this.state.friendRequestUserProfiles.length > 0 && (
           <Button
             title={this.getFriendRequestsTitle()}
             trailingIcon={require("../../../assets/arrow-right-blue.png")}
