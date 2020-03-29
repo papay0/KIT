@@ -83,7 +83,6 @@ class Friends extends React.Component<IFriendsProps, IFriendsState> {
             reminders.push(reminder);
           }
         }
-        console.log("reminders = " + reminders);
         this.setState({ reminders });
       });
   };
@@ -276,7 +275,6 @@ class Friends extends React.Component<IFriendsProps, IFriendsState> {
       reminder => reminder.receiverUuid === userProfile.user.userUuid
     );
     if (reminder === undefined) {
-      console.log("1 frequency = ");
       return undefined;
     }
     if (reminder.frequency === "6_months") {
@@ -290,7 +288,6 @@ class Friends extends React.Component<IFriendsProps, IFriendsState> {
     } else if (reminder.frequency === "1_week") {
       return "Every week";
     }
-    console.log("frequency = " + reminder.frequency);
   };
 
   render() {
