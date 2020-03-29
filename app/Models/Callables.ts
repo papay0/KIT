@@ -12,7 +12,9 @@ enum Callables {
 
   CREATE_FRIEND_REQUEST = "createFriendRequestCallable",
   ACCEPT_FRIEND_REQUEST = "acceptFriendRequestCallable",
-  DECLINE_FRIEND_REQUEST = "declineFriendRequestCallable"
+  DECLINE_FRIEND_REQUEST = "declineFriendRequestCallable",
+
+  UPDATE_REMINDER = "updateReminderCallable"
 }
 
 export default Callables;

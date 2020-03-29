@@ -3,6 +3,7 @@ import { Profile } from "../../Models/Profile";
 import IFriendRequest from "../../Models/FriendRequest";
 import IRequestKit from "../../Models/RequestKit";
 import { getDateNow } from "./Utils";
+import IReminder from "../../Models/Reminder";
 
 export default class FirebaseModelUtils {
   static getUserFromFirebaseUser = (
@@ -51,6 +52,20 @@ export default class FirebaseModelUtils {
       updatedAt: data.updatedAt,
       receiverDeclined: data.receiverDeclined
     };
+  };
+
+  static getReminderFromFirebaseReminder = (
+    documentData: firebase.firestore.DocumentData
+  ): IReminder => {
+    const reminder: IReminder = {
+      senderUuid: documentData.senderUuid,
+      receiverUuid: documentData.receiverUuid,
+      frequency: documentData.frequency,
+      lastCallDate: documentData.lastCallDate,
+      createdAt: documentData.createdAt,
+      updatedAt: documentData.updatedAt
+    };
+    return reminder;
   };
 
   static getFriendRequestFromFirebaseFriendRequest = (

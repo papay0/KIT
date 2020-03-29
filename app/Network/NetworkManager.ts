@@ -11,6 +11,7 @@ import { getDateNow } from "../Components/Utils/Utils";
 import CallableManager from "./CallableManager";
 import FriendRequests from "../Components/Friends/FriendRequests";
 import IRequestUser from "../Models/RequestUser";
+import IReminder from "../Models/Reminder";
 
 export default class NetworkManager {
   constructor() {}
@@ -39,12 +40,14 @@ export default class NetworkManager {
 
   static createProfile = async (profile: Profile) => {
     await CallableManager.createProfile(profile);
-  }
+  };
 
   static profileExists = async (profile: Profile): Promise<boolean> => {
-    const profileFromBackend = await NetworkManager.getProfileByUuid(profile.userUuid);
+    const profileFromBackend = await NetworkManager.getProfileByUuid(
+      profile.userUuid
+    );
     return profileFromBackend !== undefined;
-  }
+  };
 
   // User
 
@@ -54,12 +57,12 @@ export default class NetworkManager {
 
   static createUser = async (user: User) => {
     await CallableManager.createUser(user);
-  }
+  };
 
   static userExists = async (user: User): Promise<boolean> => {
     const userFromBackend = await NetworkManager.getUserByUuid(user.userUuid);
     return userFromBackend !== undefined;
-  }
+  };
 
   static getUserByUuid = async (
     userUuid: string
@@ -102,23 +105,30 @@ export default class NetworkManager {
 
   static createRequest = async (request: IRequestKit) => {
     await CallableManager.createRequest(request);
-  }
+  };
 
   static updateRequest = async (request: IRequestKit) => {
     await CallableManager.updateRequest(request);
   };
 
-  static acceptRequest = async (request: IRequestKit, inCallVia: string, inCallWith: string) => {
+  static acceptRequest = async (
+    request: IRequestKit,
+    inCallVia: string,
+    inCallWith: string
+  ) => {
     await CallableManager.acceptRequest(request, inCallVia, inCallWith);
-  }
+  };
 
   static declineRequest = async (request: IRequestKit) => {
     await CallableManager.declineRequest(request);
-  }
+  };
 
-  static getRequestsForUserUuid = async (userUuid: string): Promise<IRequestKit[]> => {
+  static getRequestsForUserUuid = async (
+    userUuid: string
+  ): Promise<IRequestKit[]> => {
     const db = firebase.firestore();
-    const documents = await db.collection(Collections.REQUESTS)
+    const documents = await db
+      .collection(Collections.REQUESTS)
       .where("receiverUuid", "==", userUuid)
       .get();
     const requests = Array<IRequestKit>();
@@ -128,19 +138,21 @@ export default class NetworkManager {
       requests.push(request);
     }
     return requests;
-  }
+  };
 
-  static getRequestUsersFromRequests = async (requests: IRequestKit[]): Promise<IRequestUser[]> => {
+  static getRequestUsersFromRequests = async (
+    requests: IRequestKit[]
+  ): Promise<IRequestUser[]> => {
     const requestUsers = Array<IRequestUser>();
     const hashmapUser = new Map<string, User>();
     const hashmapProfile = new Map<string, Profile>();
     for (const request of requests) {
-      let user: User
-      let profile: Profile
+      let user: User;
+      let profile: Profile;
       const senderUuid = request.senderUuid;
       const cachedUser = hashmapUser.get(senderUuid);
       if (cachedUser !== undefined) {
-        user = cachedUser
+        user = cachedUser;
       } else {
         user = await NetworkManager.getUserByUuid(senderUuid);
         hashmapUser.set(senderUuid, user);
@@ -148,11 +160,9 @@ export default class NetworkManager {
 
       const cachedprofile = hashmapProfile.get(senderUuid);
       if (cachedprofile !== undefined) {
-        profile = cachedprofile
+        profile = cachedprofile;
       } else {
-        profile = await NetworkManager.getProfileByUuid(
-          request.senderUuid
-        );
+        profile = await NetworkManager.getProfileByUuid(request.senderUuid);
         hashmapProfile.set(senderUuid, profile);
       }
       const userProfile = new UserProfile(user, profile);
@@ -163,24 +173,49 @@ export default class NetworkManager {
       requestUsers.push(requestUser);
     }
     return requestUsers;
-  }
+  };
 
-  static getRequestUsersForUserUuid = async (userUuid: string): Promise<IRequestUser[]> => {
+  static getRequestUsersForUserUuid = async (
+    userUuid: string
+  ): Promise<IRequestUser[]> => {
     const requests = await NetworkManager.getRequestsForUserUuid(userUuid);
     return await NetworkManager.getRequestUsersFromRequests(requests);
-  }
+  };
 
   // FriendRequests
 
   static createFriendRequest = async (friendRequest: IFriendRequest) => {
     await CallableManager.createFriendRequest(friendRequest);
-  }
+  };
 
   static acceptFriendRequest = async (friendRequest: IFriendRequest) => {
     await CallableManager.acceptFriendRequest(friendRequest);
-  }
+  };
 
   static declineFriendRequest = async (friendRequest: IFriendRequest) => {
     await CallableManager.declineFriendRequest(friendRequest);
+  };
+
+  // Reminders
+
+  static getRemindersForUserUuid = async (
+    userUuid: string
+  ): Promise<IReminder[]> => {
+    const db = firebase.firestore();
+    const documents = await db
+      .collection(Collections.REMINDERS)
+      .where("senderUuid", "==", userUuid)
+      .get();
+    const reminders = Array<IReminder>();
+    for (const doc of documents.docs) {
+      const data = doc.data();
+      const reminder = FirebaseModelUtils.getReminderFromFirebaseReminder(data);
+      reminders.push(reminder);
+    }
+    return reminders;
+  };
+
+  static updateReminder = async (reminder: IReminder) => {
+    await CallableManager.updateReminder(reminder);
   }
 }

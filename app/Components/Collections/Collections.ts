@@ -3,7 +3,8 @@ enum Collections {
     PROFILES = "profiles",
     FRIENDS = "friends",
     REQUESTS = "requests",
-    FRIEND_REQUESTS = "friendRequests"
+    FRIEND_REQUESTS = "friendRequests",
+    REMINDERS = "reminders"
 }
 
 export default Collections;

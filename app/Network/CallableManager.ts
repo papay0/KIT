@@ -5,6 +5,7 @@ import _ from "lodash";
 import { Profile } from "../Models/Profile";
 import IRequestKit from "../Models/RequestKit";
 import IFriendRequest from "../Models/FriendRequest";
+import IReminder from "../Models/Reminder";
 
 export default class CallableManager {
   // User
@@ -109,4 +110,13 @@ export default class CallableManager {
       friendRequest: _.toPlainObject(friendRequest)
     });
   };
+
+  static updateReminder = async (reminder: IReminder) => {
+    const updateReminder = firebase
+      .functions()
+      .httpsCallable(Callables.UPDATE_REMINDER);
+    await updateReminder({
+      reminder: _.toPlainObject(reminder)
+    });
+  }
 }

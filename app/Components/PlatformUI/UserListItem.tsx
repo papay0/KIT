@@ -15,13 +15,14 @@ export enum TralingType {
 
 interface IUserListItemProps {
   title: string;
-  subtitle: string | undefined;
+  subtitle?: string;
+  secondSubtitle?: string;
   photoUrl: string | undefined;
   backgroundColorBorderPhoto: string | undefined;
   backgroundColorBorderListItem?: string;
   subtitleTextColor?: string;
   tralingType: TralingType;
-  backgroundTrailingIcon?: string
+  backgroundTrailingIcon?: string;
   backgroundTrailingText?: string;
   trailingIcon?: any;
   trailingText?: string;
@@ -43,16 +44,26 @@ export default class UserListItem extends React.Component<
   render() {
     const title = this.props.title;
     const subtitle = this.props.subtitle;
+    const secondSubtitle = this.props.secondSubtitle;
     const photoUrl = this.props.photoUrl;
     const backgroundColorBorderPhoto = this.props.backgroundColorBorderPhoto;
     const backgroundTrailingIcon = this.props.backgroundTrailingIcon;
     const disabled = this.props.disabled;
-    const backgroundColorBorderListItem = this.props.backgroundColorBorderListItem;
-    const borderWidthListItem = this.props.backgroundColorBorderListItem === undefined ? 0 : 2;
-    const subtitleTextColor = this.props.subtitleTextColor === undefined ? "grey" : this.props.subtitleTextColor;
+    const backgroundColorBorderListItem = this.props
+      .backgroundColorBorderListItem;
+    const borderWidthListItem =
+      this.props.backgroundColorBorderListItem === undefined ? 0 : 2;
+    const subtitleTextColor =
+      this.props.subtitleTextColor === undefined
+        ? "grey"
+        : this.props.subtitleTextColor;
     return (
       <TouchableOpacity
-        style={{...styles.container, borderColor: backgroundColorBorderListItem, borderWidth: borderWidthListItem}}
+        style={{
+          ...styles.container,
+          borderColor: backgroundColorBorderListItem,
+          borderWidth: borderWidthListItem
+        }}
         onPress={this.props.onPress}
         disabled={disabled}
       >
@@ -69,7 +80,16 @@ export default class UserListItem extends React.Component<
         )}
         <View style={styles.container_content}>
           <Text style={styles.title}>{title}</Text>
-          {subtitle && <Text style={{...styles.subtitle, color: subtitleTextColor}}>{subtitle}</Text>}
+          {subtitle && (
+            <Text style={{ ...styles.subtitle, color: subtitleTextColor }}>
+              {subtitle}
+            </Text>
+          )}
+          {secondSubtitle && (
+            <Text style={{ ...styles.subtitle, color: subtitleTextColor }}>
+              {secondSubtitle}
+            </Text>
+          )}
         </View>
         {this.props.tralingType == TralingType.ICON && (
           <View
@@ -103,7 +123,12 @@ export default class UserListItem extends React.Component<
               marginRight: 20
             }}
           >
-            <View style={{...styles.containerAcceptDeclineFriendRequest, backgroundColor: this.props.backgroundTrailingText}}>
+            <View
+              style={{
+                ...styles.containerAcceptDeclineFriendRequest,
+                backgroundColor: this.props.backgroundTrailingText
+              }}
+            >
               <Text style={styles.acceptDeclineFriendRequestText}>
                 {this.props.trailingText}
               </Text>
@@ -189,6 +214,6 @@ const styles = StyleSheet.create({
   },
   styleTrailingIcon: {
     height: 20,
-    width: 20,
+    width: 20
   }
 });
