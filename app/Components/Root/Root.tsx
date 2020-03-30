@@ -101,7 +101,8 @@ export default class Root extends React.Component<IRootProps, IRootState> {
     return (
       <View style={styles.container}>
         {!currentFirebaseUserLoaded || !this.state.pushNotificationsChecked ? (
-          <Text>Loading...</Text>
+          <View/>
+          // <Text>Loading...</Text>
         ) : user && !this.state.userHasEnabledPushNotifications ? (
           <PushNotificationPermissionRequest
             didAcceptPushNotificationPermission={

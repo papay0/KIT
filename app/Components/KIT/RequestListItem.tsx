@@ -48,7 +48,7 @@ export default class RequestListItem extends React.Component<
           <Text style={styles.firstname}>{user.firstname}</Text>
           {senderIsAvailable ? (
             <Text style={styles.availability}>
-              can to talk for {remainingTime} min
+              can talk for {remainingTime} min
             </Text>
           ) : isOnCallWithMe ? (
             <Text style={styles.availability}>

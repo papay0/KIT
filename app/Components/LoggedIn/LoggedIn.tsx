@@ -60,10 +60,10 @@ export default class LoggedIn extends React.Component<
           <Home userProfile={userProfile} navigation={this.props.navigation} />
         ) : (
           <View>
-            <Text>
+            {/* <Text>
               Here I need a loading screen because I have not received my user
               yet.
-            </Text>
+            </Text> */}
           </View>
         )}
       </View>

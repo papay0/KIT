@@ -97,7 +97,7 @@ export default class PushNotificationPermissionRequest extends React.Component<
       <SafeAreaView style={styles.container}>
         {!this.state.pushNotificationsChecked ? (
           <View>
-            <Text>Loading view...</Text>
+            {/* <Text>Loading view...</Text> */}
           </View>
         ) : this.state.userAlreadySaidNo ? (
           <View style={{ flex: 1, margin: 5 }}>
