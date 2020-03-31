@@ -43,6 +43,7 @@ interface IHomeState {
   profile: Profile;
   user: User;
   friendUserProfiles: UserProfile[];
+  friendUserProfilesLoaded: boolean;
   requestUsers: IRequestUser[];
   kitsSent: IRequestUser[];
   userProfileReminders: UserProfileReminder[];
@@ -58,6 +59,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     this.state = {
       profile: this.props.userProfile.profile,
       friendUserProfiles: [],
+      friendUserProfilesLoaded: false,
       user: this.props.userProfile.user,
       requestUsers: [],
       kitsSent: [],
@@ -290,7 +292,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
           }
         }
         friendUserProfiles = sortUserProfilesAlphabetically(friendUserProfiles);
-        this.setState({ friendUserProfiles });
+        this.setState({ friendUserProfiles, friendUserProfilesLoaded: true });
       });
   };
 
@@ -323,14 +325,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       headerRight: () => (
         <TouchableOpacity
           onPress={() => {
-            const userProfile = new UserProfile(
-              this.state.user,
-              this.state.profile
-            );
-            this.props.navigation.navigate(Routes.PROFILE, {
-              userProfile: userProfile,
-              friendUserProfiles: this.state.friendUserProfiles
-            });
+            this.routeToProfile()
           }}
           style={{
             backgroundColor: "transparent",
@@ -342,6 +337,17 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       )
     });
   };
+
+  routeToProfile = () => {
+    const userProfile = new UserProfile(
+      this.state.user,
+      this.state.profile
+    );
+    this.props.navigation.navigate(Routes.PROFILE, {
+      userProfile: userProfile,
+      friendUserProfiles: this.state.friendUserProfiles
+    });
+  }
 
   componentWillUnmount() {
     this.unsubscribeProfile();
@@ -411,6 +417,15 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
             />
           )}
         />
+        {this.state.friendUserProfilesLoaded && this.state.friendUserProfiles.length == 0 && (
+          <Button
+            title="INVITE/ADD FRIENDS"
+            onPress={this.routeToProfile}
+            isHidden={false}
+            trailingIcon={require("../../../assets/arrow-right-blue.png")}
+            buttonStyle={ButtonStyle.PRIMARY}
+          />
+        )}
         {this.state.friendUserProfiles.length > 0 && (
           <Button
             title="SAY COUCOU"

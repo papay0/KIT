@@ -73,7 +73,7 @@ export default class NetworkManager {
       .doc(userUuid)
       .get();
     if (document.exists) {
-      const data = document.data();
+      const data = document.data(); 
       return FirebaseModelUtils.getUserFromFirebaseUser(data);
     }
     return undefined;

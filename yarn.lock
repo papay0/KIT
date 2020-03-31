@@ -2945,10 +2945,10 @@ expand-brackets@^2.1.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-expo-app-auth@~8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/expo-app-auth/-/expo-app-auth-8.0.0.tgz#607813705bf7c56178cc427dfb2b67e0b180aa89"
-  integrity sha512-sb1gsmS4C2YB1ZnBKmQ2RBnjcW0oPfSJ6OTCyQkineY99qIQ37nqkOCReLEMj/fAhDDbGzIqrlLdCXUyzhr7zQ==
+expo-app-auth@~9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/expo-app-auth/-/expo-app-auth-9.0.0.tgz#879893b90bb083acd705012495bc907cd5d700e7"
+  integrity sha512-loDPUxVNhCJVxjDdLevoApOBQkcK8QQXSNyWqKIAvzwjuxQQ7EtwSXOVMThsPU/wWCHOW/Zbj7ykBYUmJi6jLA==
   dependencies:
     invariant "^2.2.4"
 
@@ -2978,6 +2978,11 @@ expo-constants@~8.0.0:
   dependencies:
     ua-parser-js "^0.7.19"
 
+expo-constants@~9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-9.0.0.tgz#35c600079ee91d38fe4f56375caae6e90f122fdd"
+  integrity sha512-1kqZMM8Ez5JT3sTEx8I69fP6NYFLOJjeM6Z63dD/m2NiwvzSADiO5+BhghnWNGN1L3bxbgOjXS6EHtS7CdSfxA==
+
 expo-crypto@~8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/expo-crypto/-/expo-crypto-8.0.0.tgz#2aeab604cfced71e4be25cd7daf01cc8c5b3dace"
@@ -3002,13 +3007,13 @@ expo-font@~8.0.0:
   dependencies:
     fontfaceobserver "^2.1.0"
 
-expo-google-app-auth@^8.0.1:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/expo-google-app-auth/-/expo-google-app-auth-8.0.1.tgz#38f30f1285e55a94956a1898f7d75bd3119d3ed6"
-  integrity sha512-CCZ15ZR6ffRsoEFjakEbraqsJ4/Upl6uEl4jc7cly6tGeuOpx4Ow0y3bsTk2oyU9AgEImLImoG28kEGD7BNRXw==
+expo-google-app-auth@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/expo-google-app-auth/-/expo-google-app-auth-8.1.0.tgz#2f173cdd47733311ccdae911a1a6c74963a3593b"
+  integrity sha512-7daHlFd9zNMOpY49EPBVtgY+KUeI1/dFooEGNoQZcXPQGDo1Sw9AYqyYJvYNXni4n0sFHCFFHxEHL11ECXZzaw==
   dependencies:
-    expo-app-auth "~8.0.0"
-    expo-constants "~8.0.0"
+    expo-app-auth "~9.0.0"
+    expo-constants "~9.0.0"
 
 expo-intent-launcher@~8.0.0:
   version "8.0.0"
