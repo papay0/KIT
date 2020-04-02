@@ -109,7 +109,7 @@ export default class KitsSent extends React.Component<
             />
           )}
           keyExtractor={item =>
-            item.userProfile.user.userUuid + item.request.receiverUuid
+            item.userProfile.user.userUuid + item.request.requestUuid
           }
         />
       </View>
