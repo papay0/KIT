@@ -20,6 +20,8 @@
     "expo": "^37.0.0",
     "expo-apple-authentication": "~2.1.0",
     "expo-crypto": "~8.1.0",
+    "expo-firebase-analytics": "~2.1.0",
+    "expo-firebase-core": "~1.0.0",
     "expo-google-app-auth": "^8.1.0",
     "expo-intent-launcher": "~8.1.0",
     "expo-localization": "~8.1.0",
