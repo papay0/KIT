@@ -28,6 +28,7 @@ interface ILoginState {
 interface IConfigGoogleAuth {
   androidClientId: string;
   iosClientId: string;
+  iosStandaloneAppClientId: string;
   scopes: string[];
 }
 
@@ -48,6 +49,7 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
     return {
       androidClientId: ApiKeys.GoogleAuthConfig.androidClientId,
       iosClientId: ApiKeys.GoogleAuthConfig.iosClientId,
+      iosStandaloneAppClientId: ApiKeys.GoogleAuthConfig.iosStandaloneAppClientId,
       scopes: ["profile", "email"]
     };
   }
