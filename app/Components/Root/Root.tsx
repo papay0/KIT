@@ -9,7 +9,7 @@ import { ParamListBase } from "@react-navigation/native";
 import NetworkManager from "../../Network/NetworkManager";
 import * as Permissions from "expo-permissions";
 import PushNotificationPermissionRequest from "../PushNotificationPermissionRequest/PushNotificationPermissionRequest";
-import * as Analytics from 'expo-firebase-analytics'; 
+import * as Analytics from "expo-firebase-analytics";
 
 interface IRootProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -33,7 +33,9 @@ export default class Root extends React.Component<IRootProps, IRootState> {
       userHasEnabledPushNotifications: false,
       pushNotificationsChecked: false
     };
-    this.focusListener = this.props.navigation.addListener("focus", payload => {this.checkForPushNotifications()});
+    this.focusListener = this.props.navigation.addListener("focus", payload => {
+      this.checkForPushNotifications();
+    });
   }
 
   unsubscribe = () => {};
@@ -58,7 +60,7 @@ export default class Root extends React.Component<IRootProps, IRootState> {
     this.unsubscribe();
   }
 
-  focusListener = () => {}
+  focusListener = () => {};
 
   checkForPushNotifications = async () => {
     const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
@@ -76,8 +78,7 @@ export default class Root extends React.Component<IRootProps, IRootState> {
   };
 
   signedIn = async (userUuid: string) => {
-    Analytics.logEvent('login_success', {
-    });
+    Analytics.logEvent("login_success", {});
     const updatedUser = await NetworkManager.getUserByUuid(userUuid);
     this.setState({ user: updatedUser });
   };
@@ -104,9 +105,9 @@ export default class Root extends React.Component<IRootProps, IRootState> {
     return (
       <View style={styles.container}>
         {!currentFirebaseUserLoaded || !this.state.pushNotificationsChecked ? (
-          <View/>
-          // <Text>Loading...</Text>
-        ) : user && !this.state.userHasEnabledPushNotifications ? (
+          <View />
+        ) : // <Text>Loading...</Text>
+        user && !this.state.userHasEnabledPushNotifications ? (
           <PushNotificationPermissionRequest
             didAcceptPushNotificationPermission={
               this.didAcceptPushNotificationPermission

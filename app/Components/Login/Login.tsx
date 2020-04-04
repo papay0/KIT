@@ -15,6 +15,7 @@ import { getDateNow } from "../Utils/Utils";
 import { Profile } from "../../Models/Profile";
 import { ProfileColor } from "../../Models/ProfileColor";
 import Button, { ButtonStyle } from "../Button/Button";
+import { Notifications } from "expo";
 
 interface ILoginProps {
   signedIn: (userUuid: string) => Promise<void>;
@@ -49,7 +50,8 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
     return {
       androidClientId: ApiKeys.GoogleAuthConfig.androidClientId,
       iosClientId: ApiKeys.GoogleAuthConfig.iosClientId,
-      iosStandaloneAppClientId: ApiKeys.GoogleAuthConfig.iosStandaloneAppClientId,
+      iosStandaloneAppClientId:
+        ApiKeys.GoogleAuthConfig.iosStandaloneAppClientId,
       scopes: ["profile", "email"]
     };
   }
@@ -70,13 +72,14 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
             .createUserWithEmailAndPassword(result.user.email, result.user.id);
         }
         const userUuid = firebase.auth().currentUser.uid;
+        const token = await this.getPushNotificationToken();
         const user = new User(
           result.user.name,
           userUuid,
           result.user.givenName,
           result.user.familyName,
           result.user.email,
-          "",
+          token,
           "",
           getDateNow(),
           Localization.locale
@@ -85,6 +88,7 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
         if (currentUser) {
           // update
           currentUser.locale = Localization.locale;
+          currentUser.pushNotificationToken = token;
           await NetworkManager.updateUser(currentUser);
         } else {
           // create
@@ -150,13 +154,14 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
       });
       await firebase.auth().signInWithCredential(credential);
       const userUuid = firebase.auth().currentUser.uid;
+      const token = await this.getPushNotificationToken();
       const user = new User(
         fullName.givenName + " " + fullName.familyName,
         userUuid,
         fullName.givenName,
         fullName.familyName,
         email,
-        "",
+        token,
         "",
         getDateNow(),
         Localization.locale
@@ -165,6 +170,7 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
       if (currentUser) {
         // update
         currentUser.locale = Localization.locale;
+        currentUser.pushNotificationToken = token;
         await NetworkManager.updateUser(currentUser);
       } else {
         // create
@@ -192,6 +198,16 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
       }
       this.props.signedIn(userUuid);
     }
+  };
+
+  getPushNotificationToken = async (): Promise<string> => {
+    let token = "";
+    try {
+      token = await Notifications.getExpoPushTokenAsync();
+    } catch (e) {
+      token = "";
+    }
+    return token;
   };
 
   render() {
