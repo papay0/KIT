@@ -96,9 +96,7 @@ export default class PushNotificationPermissionRequest extends React.Component<
     return (
       <SafeAreaView style={styles.container}>
         {!this.state.pushNotificationsChecked ? (
-          <View>
-            {/* <Text>Loading view...</Text> */}
-          </View>
+          <View>{/* <Text>Loading view...</Text> */}</View>
         ) : this.state.userAlreadySaidNo ? (
           <View style={{ flex: 1, margin: 5 }}>
             <View style={styles.emptyRequestStyleContainer}>
@@ -124,13 +122,24 @@ export default class PushNotificationPermissionRequest extends React.Component<
                 buttonStyle={ButtonStyle.PRIMARY}
               />
             ) : (
-              <Button
-                title="OPEN SETTINGS"
-                onPress={this.onPressOpenSettings}
-                isHidden={false}
-                trailingIcon={require("../../../assets/arrow-right-blue.png")}
-                buttonStyle={ButtonStyle.PRIMARY}
-              />
+              <View>
+                <Button
+                  title="OPEN SETTINGS"
+                  onPress={this.onPressOpenSettings}
+                  isHidden={false}
+                  trailingIcon={require("../../../assets/arrow-right-blue.png")}
+                  buttonStyle={ButtonStyle.PRIMARY}
+                />
+                <Button
+                  title="SKIP"
+                  onPress={() => {
+                    this.props.didAcceptPushNotificationPermission("");
+                  }}
+                  isHidden={false}
+                  trailingIcon={require("../../../assets/arrow-right-blue.png")}
+                  buttonStyle={ButtonStyle.SECONDARY}
+                />
+              </View>
             )}
           </View>
         ) : (

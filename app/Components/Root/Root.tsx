@@ -21,6 +21,7 @@ interface IRootState {
   user: User | undefined;
   userHasEnabledPushNotifications: boolean;
   pushNotificationsChecked: boolean;
+  alreadyAskedUserForPushNotificationAndRefused: boolean;
 }
 
 export default class Root extends React.Component<IRootProps, IRootState> {
@@ -31,16 +32,14 @@ export default class Root extends React.Component<IRootProps, IRootState> {
       currentFirebaseUserLoaded: false,
       user: undefined,
       userHasEnabledPushNotifications: false,
-      pushNotificationsChecked: false
+      pushNotificationsChecked: false,
+      alreadyAskedUserForPushNotificationAndRefused: false
     };
-    this.focusListener = this.props.navigation.addListener("focus", payload => {
-      this.checkForPushNotifications();
-    });
   }
 
   unsubscribe = () => {};
   componentDidMount = async () => {
-    this.checkForPushNotifications();
+    this.checkForPushNotifications(false);
     this.unsubscribe = firebase
       .auth()
       .onAuthStateChanged(async firebaseUser => {
@@ -62,17 +61,19 @@ export default class Root extends React.Component<IRootProps, IRootState> {
 
   focusListener = () => {};
 
-  checkForPushNotifications = async () => {
+  checkForPushNotifications = async (alreadyAskedUser: boolean) => {
     const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
     if (status !== "granted") {
       this.setState({
         pushNotificationsChecked: true,
-        userHasEnabledPushNotifications: false
+        userHasEnabledPushNotifications: false,
+        alreadyAskedUserForPushNotificationAndRefused: alreadyAskedUser
       });
     } else {
       this.setState({
         pushNotificationsChecked: true,
-        userHasEnabledPushNotifications: true
+        userHasEnabledPushNotifications: true,
+        alreadyAskedUserForPushNotificationAndRefused: alreadyAskedUser
       });
     }
   };
@@ -92,7 +93,7 @@ export default class Root extends React.Component<IRootProps, IRootState> {
   };
 
   didAcceptPushNotificationPermission = (token: string) => {
-    this.checkForPushNotifications();
+    this.checkForPushNotifications(true);
     const user = this.state.user;
     user.pushNotificationToken = token;
     NetworkManager.updateUser(user);
@@ -107,14 +108,14 @@ export default class Root extends React.Component<IRootProps, IRootState> {
         {!currentFirebaseUserLoaded || !this.state.pushNotificationsChecked ? (
           <View />
         ) : // <Text>Loading...</Text>
-        user && !this.state.userHasEnabledPushNotifications ? (
+        user && !this.state.userHasEnabledPushNotifications && !this.state.alreadyAskedUserForPushNotificationAndRefused ? (
           <PushNotificationPermissionRequest
             didAcceptPushNotificationPermission={
               this.didAcceptPushNotificationPermission
             }
             navigation={this.props.navigation}
           />
-        ) : user && this.state.userHasEnabledPushNotifications ? (
+        ) : user ? (
           <LoggedIn
             user={user}
             signOut={this.signOut}
