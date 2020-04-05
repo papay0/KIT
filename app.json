@@ -24,7 +24,7 @@
       "supportsTablet": true,
       "usesAppleSignIn": true,
       "bundleIdentifier": "com.coucou.friends.exporeactnative",
-      "buildNumber": "4",
+      "buildNumber": "5",
       "icon": "./assets/icon-app-ios.png",
       "googleServicesFile": "./App/Constants/GoogleServices/GoogleService-Info.plist",
       "config": {
@@ -38,6 +38,18 @@
       "versionCode": 2,
       "icon": "./assets/icon-app-android.png",
       "googleServicesFile": "./App/Constants/GoogleServices/google-services.json"
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "coucou-rs",
+            "project": "coucou",
+            "authToken": "7969daf751684287a904d2237062ca5b875467b8b69a4d8f8d415835e961ae8b"
+          }
+        }
+      ]
     }
   }
 }

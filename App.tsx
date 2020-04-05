@@ -4,6 +4,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
+import * as Sentry from 'sentry-expo';
+import Constants from 'expo-constants';
+
 import "firebase/firestore";
 import "firebase/functions";
 
@@ -26,6 +29,13 @@ console.disableYellowBox = true;
 YellowBox.ignoreWarnings([
   "VirtualizedLists should never be nested" // TODO: Remove when fixed
 ]);
+
+Sentry.init({
+  dsn: ApiKeys.Sentry.dsn,
+  enableInExpoDevelopment: true,
+  debug: true
+});
+Sentry.setRelease(Constants.manifest.revisionId);
 
 export default class App extends React.Component {
   constructor(props) {
