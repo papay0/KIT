@@ -72,9 +72,13 @@ export default class PushNotificationPermissionRequest extends React.Component<
   onPressAllowButton = async () => {
     const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
     if (status === "granted") {
-      const token =
+      try {
+        const token =
         status === "granted" ? await Notifications.getExpoPushTokenAsync() : "";
       this.props.didAcceptPushNotificationPermission(token);
+      } catch (e) {
+        console.error("error onPressAllowButton = " + e);
+      }
     } else {
       this.setState({ userAlreadySaidNo: true });
     }

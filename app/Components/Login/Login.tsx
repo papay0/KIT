@@ -206,6 +206,7 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
       token = await Notifications.getExpoPushTokenAsync();
     } catch (e) {
       token = "";
+      console.error("error getPushNotificationToken = " + e);
     }
     return token;
   };
