@@ -245,11 +245,11 @@ class Friends extends React.Component<IFriendsProps, IFriendsState> {
       "1 month",
       "2 weeks",
       "1 week",
-      "Remove friend (coming soon)",
+      // "Remove friend (coming soon)",
       "Cancel"
     ];
-    const destructiveButtonIndex = 5;
-    const cancelButtonIndex = 6;
+    // const destructiveButtonIndex = 5;
+    const cancelButtonIndex = 5;
     const title = "Set call reminders";
     const message =
       "Select the frequency of the reminder. You will receive a notification only if you haven't called this person.";
@@ -258,7 +258,7 @@ class Friends extends React.Component<IFriendsProps, IFriendsState> {
       {
         options,
         cancelButtonIndex,
-        destructiveButtonIndex,
+        // destructiveButtonIndex,
         title,
         message
       },
