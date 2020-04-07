@@ -42,7 +42,7 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
   componentDidMount = async () => {
     this.props.navigation.setOptions({ headerShown: false });
     this.setState({
-      signInWithAppleAvailable: await isAvailableSignInWithApple()
+      signInWithAppleAvailable: await isAvailableSignInWithApple(),
     });
   };
 
@@ -52,7 +52,7 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
       iosClientId: ApiKeys.GoogleAuthConfig.iosClientId,
       iosStandaloneAppClientId:
         ApiKeys.GoogleAuthConfig.iosStandaloneAppClientId,
-      scopes: ["profile", "email"]
+      scopes: ["profile", "email"],
     };
   }
 
@@ -127,12 +127,8 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
   };
 
   loginWithApple = async () => {
-    const csrf = Math.random()
-      .toString(36)
-      .substring(2, 15);
-    const nonce = Math.random()
-      .toString(36)
-      .substring(2, 10);
+    const csrf = Math.random().toString(36).substring(2, 15);
+    const nonce = Math.random().toString(36).substring(2, 10);
     const hashedNonce = await Crypto.digestStringAsync(
       Crypto.CryptoDigestAlgorithm.SHA256,
       nonce
@@ -140,17 +136,17 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
     const appleCredential = await AppleAuthentication.signInAsync({
       requestedScopes: [
         AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-        AppleAuthentication.AppleAuthenticationScope.EMAIL
+        AppleAuthentication.AppleAuthenticationScope.EMAIL,
       ],
       state: csrf,
-      nonce: hashedNonce
+      nonce: hashedNonce,
     });
     const { identityToken, email, fullName } = appleCredential;
     if (identityToken) {
       const provider = new firebase.auth.OAuthProvider("apple.com");
       const credential = provider.credential({
         idToken: identityToken,
-        rawNonce: nonce
+        rawNonce: nonce,
       });
       await firebase.auth().signInWithCredential(credential);
       const userUuid = firebase.auth().currentUser.uid;
@@ -219,7 +215,8 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
       <View style={styles.container}>
         <Image
           source={require("../../../assets/login_gif.gif")}
-          style={{ flex: 1 }}
+          style={{ flex: 1, marginLeft: "auto", marginRight: "auto" }}
+          resizeMode="cover"
         />
         <LoginDescription />
         <View style={styles.containerButton}>
@@ -232,13 +229,16 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
             buttonStyle={ButtonStyle.SECONDARY}
           />
           {signInWithAppleAvailable && (
-            <Button
-              title="Sign in with Apple"
+            <AppleAuthentication.AppleAuthenticationButton
+              buttonType={
+                AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN
+              }
+              buttonStyle={
+                AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
+              }
+              cornerRadius={5}
+              style={{ height: 60, margin: 10, borderRadius: 16 }}
               onPress={this.loginWithApple}
-              isHidden={false}
-              trailingIcon=""
-              leadingIcon={AppleLogo}
-              buttonStyle={ButtonStyle.SECONDARY}
             />
           )}
         </View>
@@ -259,27 +259,27 @@ const LoginDescription = (): JSX.Element => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   containerButton: {
     position: "absolute",
     bottom: "5%",
-    width: "100%"
+    width: "100%",
   },
   containerDescription: {
     position: "absolute",
     bottom: "40%",
     width: "100%",
-    margin: 20
+    margin: 20,
   },
   title: {
     fontSize: 40,
     color: "white",
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   subtitle: {
     fontSize: 20,
     color: "white",
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+  },
 });
