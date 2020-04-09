@@ -214,9 +214,8 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
     return (
       <View style={styles.container}>
         <Image
-          source={require("../../../assets/login_gif.gif")}
-          style={{ flex: 1, marginLeft: "auto", marginRight: "auto" }}
-          resizeMode="cover"
+          source={require("../../../assets/cat.gif")}
+          style={{ flex: 1, height: "100%", width: "100%" }}
         />
         <LoginDescription />
         <View style={styles.containerButton}>

@@ -24,7 +24,7 @@
       "supportsTablet": true,
       "usesAppleSignIn": true,
       "bundleIdentifier": "com.coucou.friends.exporeactnative",
-      "buildNumber": "5",
+      "buildNumber": "7",
       "icon": "./assets/icon-app-ios.png",
       "googleServicesFile": "./App/Constants/GoogleServices/GoogleService-Info.plist",
       "config": {
