@@ -30,6 +30,7 @@ interface IConfigGoogleAuth {
   androidClientId: string;
   iosClientId: string;
   iosStandaloneAppClientId: string;
+  androidStandaloneAppClientId: string;
   scopes: string[];
 }
 
@@ -52,6 +53,8 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
       iosClientId: ApiKeys.GoogleAuthConfig.iosClientId,
       iosStandaloneAppClientId:
         ApiKeys.GoogleAuthConfig.iosStandaloneAppClientId,
+      androidStandaloneAppClientId:
+        ApiKeys.GoogleAuthConfig.androidStandaloneAppClientId,
       scopes: ["profile", "email"],
     };
   }
@@ -228,16 +231,13 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
             buttonStyle={ButtonStyle.SECONDARY}
           />
           {signInWithAppleAvailable && (
-            <AppleAuthentication.AppleAuthenticationButton
-              buttonType={
-                AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN
-              }
-              buttonStyle={
-                AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
-              }
-              cornerRadius={5}
-              style={{ height: 60, margin: 10, borderRadius: 16 }}
+            <Button
+              title="Sign in with Apple"
               onPress={this.loginWithApple}
+              isHidden={false}
+              trailingIcon=""
+              leadingIcon={AppleLogo}
+              buttonStyle={ButtonStyle.SECONDARY}
             />
           )}
         </View>

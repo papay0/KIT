@@ -35,9 +35,10 @@
     },
     "android": {
       "package": "com.coucou.exporeactnative",
-      "versionCode": 3,
+      "versionCode": 4,
       "icon": "./assets/icon-app-android.png",
       "googleServicesFile": "./App/Constants/GoogleServices/google-services.json"
+      }
     },
     "hooks": {
       "postPublish": [

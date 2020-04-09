@@ -16,3 +16,4 @@ web-report/
 # custom KIT
 app/constants/ApiKeys.ts
 app/constants/GoogleServices/*
+app.json
