@@ -94,7 +94,7 @@ class FriendRequests extends React.Component<
     } else if (isDeclined) {
       return "rgb(236,77,61)";
     } else {
-      return "rgba(84,104,255,0.8)";
+      return "rgb(84,104,255)";
     }
   };
 

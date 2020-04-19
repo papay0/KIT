@@ -36,8 +36,8 @@ export default class ProfileColorPickerListItem extends React.Component<
           <View
             style={{
               position: "absolute",
-              top: 22,
-              left: 24
+              top: 20,
+              left: 21
             }}
           >
             <Image
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     borderRadius: 16,
-    margin: 10
+    margin: 8
   },
   containerColorInfo: {
     flexDirection: "column",

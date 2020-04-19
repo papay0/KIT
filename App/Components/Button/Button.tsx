@@ -73,7 +73,10 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     height: 60,
-    margin: 10
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 5,
+    marginBottom: 5
   },
   primaryStyleTouchableOpacity: {
     backgroundColor: "#5468FF"
@@ -107,15 +110,15 @@ const styles = StyleSheet.create({
     paddingRight: 20
   },
   styleLeadingIcon: {
-    height: 30,
-    width: 30
+    height: 24,
+    width: 24
   },
   styleLeadingIconContainer: {
     justifyContent: "center",
     top: 0,
     bottom: 0,
     position: "absolute",
-    left: 40
+    left: 50
   },
   styleTrailingIcon: {
     height: 35,

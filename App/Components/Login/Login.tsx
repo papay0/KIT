@@ -279,6 +279,6 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 20,
     color: "white",
-    fontWeight: "bold",
+    fontWeight: "500",
   },
 });

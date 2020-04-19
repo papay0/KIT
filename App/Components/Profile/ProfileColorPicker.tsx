@@ -64,7 +64,7 @@ export default class ProfileColorPicker extends React.Component<
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {marginLeft: 2, marginRight: 2},
   colorComponent: {
     height: 70,
     width: 70,

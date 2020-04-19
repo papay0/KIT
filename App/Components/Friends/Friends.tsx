@@ -181,14 +181,14 @@ class Friends extends React.Component<IFriendsProps, IFriendsState> {
   onPressInviteFriends = async () => {
     if (Platform.OS === "ios") {
       await Share.share({
-        url: "http://www.google.com",
+        url: "http://onelink.to/2h6tnx",
         message: "Hey 👋 download & join me on Coucou 🥳"
       });
     } else {
       await Share.share(
         {
           title: "Hey 👋 download & join me on Coucou 🥳",
-          message: "http://www.google.com"
+          message: "http://onelink.to/2h6tnx"
         },
         {
           dialogTitle: "Invite a friend to use Coucou 🥳"
@@ -292,12 +292,6 @@ class Friends extends React.Component<IFriendsProps, IFriendsState> {
     return (
       <View style={styles.container}>
         <Button
-          title="INVITE FRIENDS TO USE COUCOU"
-          onPress={this.onPressInviteFriends}
-          isHidden={false}
-          buttonStyle={ButtonStyle.PRIMARY}
-        />
-        <Button
           title="ADD FRIENDS"
           trailingIcon={require("../../../assets/plus-blue.png")}
           onPress={this.onPressAddFriends}
@@ -313,6 +307,12 @@ class Friends extends React.Component<IFriendsProps, IFriendsState> {
             buttonStyle={ButtonStyle.SECONDARY}
           />
         )}
+        <Button
+          title="INVITE FRIENDS"
+          onPress={this.onPressInviteFriends}
+          isHidden={false}
+          buttonStyle={ButtonStyle.SECONDARY}
+        />
         <FlatList
           data={this.state.friendUserProfiles}
           renderItem={({ item }) => (

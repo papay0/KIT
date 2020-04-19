@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     width: 130,
     height: 130,
     borderColor: "rgba(0,0,0,0.2)",
-    borderWidth: 4,
+    borderWidth: 5,
     borderRadius: 150
   }
 });

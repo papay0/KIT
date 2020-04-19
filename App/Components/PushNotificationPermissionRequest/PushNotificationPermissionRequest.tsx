@@ -200,6 +200,9 @@ const styles = StyleSheet.create({
   subtitleText: {
     fontSize: 17,
     color: "#8E8E93",
-    textAlign: "center"
+    textAlign: "center",
+    margin: 10,
+    marginTop: 16,
+    lineHeight: 22
   }
 });

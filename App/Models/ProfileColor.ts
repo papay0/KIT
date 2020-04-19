@@ -1,16 +1,15 @@
 export enum ProfileColor {
-  BLUE = "rgb(97,79,255)",
+  BLUE = "rgb(84,104,255)",
   ORANGE = "rgb(255,102,76)",
-  BLUE2 = "rgb(90,200,250)",
-  YELLOW = "rgb(250,233,101)",
-  GREEN = "rgb(76,217,100)",
-  PINK = "rgb(120, 208, 255)",
-  RED = "	rgb(255,20,20)",
-  NONE = ""
+  BLUE2 = "rgb(114,221,247)",
+  YELLOW = "rgb(255,211,90)",
+  GREEN = "rgb(61,220,151)",
+  PINK = "rgb(247,174,248)",
+  RED = "rgb(255,73,92)",
+  NONE = "",
 }
 
 export default class ProfileColorManager {
-
   static getAllColors = (): ProfileColor[] => {
     const orange = ProfileColor.ORANGE;
     const blue = ProfileColor.BLUE;
